@@ -18,7 +18,7 @@ def user(id):
     cur.execute("Select * from testTable where user_id="+ id +";")
     for row in cur.fetchall():
         testData = row[1]
-    return testData
+    return jsonify(result={testData:id})
 
 #this is an example of adding something to the database.
 @app.route("/user/add/<string:email>/<string:password>", methods=['GET', 'POST'])
