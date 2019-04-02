@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
-import MySQLdb
+import pymysql
+pymysql.install_as_MySQLdb()
 
-db= MySQLdb.connect(host="localhost", user="root", password="password", db="Tenda")
+db= pymysql.connect(host="localhost", user="root", password="password", db="Tenda")
 cur=db.cursor()
 app = Flask(__name__)
 
