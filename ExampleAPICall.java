@@ -10,7 +10,7 @@ public class ExampleAPICall {
 	public static void main (String[] args) throws IOException 
 	{
 		try {
-			//Format the URL to retrieve.
+			//Format the URL to retrieve. Our app input and current page needs to define whats after the server address.
 			URL url = new URL("http://34.217.162.221/user/lookup/1");
 			
 			//Open connection.
