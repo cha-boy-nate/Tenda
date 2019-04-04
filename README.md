@@ -1,5 +1,7 @@
 # Tenda
 
+pip install Flask-HTTPAuth
+
 Installation:
 1. Steps for Database:
     a. Install mysql to machine. Setting root password to "password" during install (this can be changed later).
