@@ -1,22 +1,16 @@
 from flask import Flask, request, jsonify
+import pymysql
+pymysql.install_as_MySQLdb()
 
-os = input("Please select:\n1 - for Linux\n2 - for MacOS\n")
-if os == "1":
-    import MySQLdb
-    db = MySQLdb.connect(host="localhost", user="root", password="password", db="Tenda")
-    cur=db.cursor()
-    app = Flask(__name__)
-elif os == "2":
-    import pymysql
-    pymysql.install_as_MySQLdb()
-    db = pymysql.connect(host="localhost", user="root", password="password", db="Tenda")
-    cur=db.cursor()
-    app = Flask(__name__)
+db= pymysql.connect(host="localhost", user="root", password="Q2sgTc0e9", db="Tenda")
+cur=db.cursor()
+app = Flask(__name__)
 
 #this is a basic example of how flask routes are set up for application server
 @app.route("/")
 def index():
     return "This is the application server for Tenda"
+
 
 #this is an example of retreiving something from the database.
 @app.route("/user/lookup/<user_id>", methods=['GET'])

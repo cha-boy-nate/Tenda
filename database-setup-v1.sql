@@ -1,3 +1,5 @@
+#mysql -h localhost -u root -p <-log into ubuntu server's database
+
 CREATE DATABASE Tenda;
 use Tenda;
 
