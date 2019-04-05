@@ -1,45 +1,39 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect, url_for
 from flask_httpauth import HTTPBasicAuth
 import json
+import setup
 
-value = 0;
-while value == 0:
-	os = input("Please select:\n1 - for Linux\n2 - for MacOS\nEnter: ")
-	if os == "1":
-	    import MySQLdb
-	    db = MySQLdb.connect(host="localhost", user="root", password="password", db="Tenda")
-	    value = 1
-	elif os == "2":
-	    import pymysql
-	    pymysql.install_as_MySQLdb()
-	    db = pymysql.connect(host="localhost", user="root", password="password", db="Tenda")
-	    value = 1
-	else:
-		print("Invalid Input.")
-
+db = setup.getOS()
 cur = db.cursor()
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
 
-@app.route("/")
-def index():
-	return jsonify(result={"status":200})
-
 def verifyPassword(email, testpassword):
 	cur.execute("Select password from User where email='"+email+ "';")
 	password = str(cur.fetchone())
 	if  testpassword == password:
-		print("Password is a match!")
 		return 1
 	else:
-		print("Incorrent Password!")
 		return 0
+
+@app.route("/")
+def index():
+	return jsonify(result={"status":200})
+
+@app.route("/home")
+def home():
+	#email = session.get('email', None)
+	#print(email)
+	return jsonify(result={"value":200})
+
+def printTest(email):
+	print("THIS IS A TEST: " + email)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if request.method == 'POST':
-		response = str(request.get_data()) 		
+		response = str(request.get_data())
 		response = response.replace("'", "")
 		response = response[1:]
 		response = json.loads(response)
@@ -47,24 +41,9 @@ def login():
 		password = response["password"]
 		password = "('" + password + "',)"
 		if verifyPassword(email, password) == 1:
-			return jsonify(result={"status":"sucessfully logged-in"})
-		else:
-			return jsonify(result={"status":"invalid password/email"})
-	else:
-		return jsonify(result={"status":"This is a get request"})
-
-@app.route("/test", methods=['GET', 'POST'])
-def test():
-	if request.method == 'POST':
-		response = str(request.get_data()) 		
-		response = response.replace("'", "")
-		response = response[1:]
-		response = json.loads(response)
-		email = response["email"]
-		password = response["password"]
-		password = "('" + password + "',)"
-		if verifyPassword(email, password) == 1:
-			return jsonify(result={"status":"sucessfully logged-in"})
+			#session['email'] = 'email'
+			return redirect(url_for('home'))
+			#return jsonify(result={"status":"sucessfully logged-in"})
 		else:
 			return jsonify(result={"status":"invalid password/email"})
 	else:
