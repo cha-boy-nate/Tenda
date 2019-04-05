@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, redirect, url_for
-from flask_httpauth import HTTPBasicAuth
 import json
 import setup
 
@@ -7,19 +6,47 @@ db = setup.getOS()
 cur = db.cursor()
 
 app = Flask(__name__)
-auth = HTTPBasicAuth()
 
 def verifyPassword(email, testpassword):
-	cur.execute("Select password from User where email='"+email+ "';")
-	password = str(cur.fetchone())
-	if  testpassword == password:
-		return 1
-	else:
-		return 0
+    email = "\'"+email+"\'"
+    print(email + " : " + testpassword)
+    query = "Select password from User where email="+email+";"
+    print(query)
+    cur.execute(query)
+    password = str(cur.fetchone())
+    print(password)
+    if testpassword == password:
+        return 1
+    else:
+        return 0
 
 @app.route("/")
 def index():
 	return jsonify(result={"status":200})
+
+@app.route("/test", methods=['GET', 'POST'])
+def test():
+    if request.method == 'POST':
+        response = str(request.get_data())
+        response = response.replace("%40", "@")
+        response = response.replace("'", "")
+        response = response.replace("&", "")
+        response = response[1:]
+        response = response.split("=")
+        response = "{\"email\":\""+response[0]+"\",\"password\":\""+response[1]+"\"}"
+        response = json.loads(response)
+        password = "(\'" + response["password"] + "\',)"
+        print(password)
+        checker = verifyPassword(response["email"], password)
+        print(checker)
+        if checker == 1:
+            return jsonify(result={"status":200})
+        else:
+            return jsonify(result={"status":405})
+    else:
+        print("not post request")
+        return jsonify(result={"status":400})
+
 
 @app.route("/home")
 def home():
@@ -45,7 +72,7 @@ def login():
 			return redirect(url_for('home'))
 			#return jsonify(result={"status":"sucessfully logged-in"})
 		else:
-			return jsonify(result={"status":"invalid password/email"})
+			return jsonify(result={"status":"password/email failure"})
 	else:
 		return jsonify(result={"status":"This is a get request"})
 
@@ -111,7 +138,7 @@ def reportIssue():
 @app.route("/notifyUsers/", methods=['GET', 'POST'])
 def notifyUsers():
     return jsonify(result={"status": 200})
-
-app.run(host='0.0.0.0', port=8088)
+    
+app.run(host='0.0.0.0', port=80)
 #if __name__ == '__main__':
-#   app.run()
+#    app.run()
