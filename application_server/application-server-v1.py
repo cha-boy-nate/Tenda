@@ -112,6 +112,6 @@ def reportIssue():
 def notifyUsers():
     return jsonify(result={"status": 200})
 
-#app.run(host='0.0.0.0', port=8088)
-if __name__ == '__main__':
-    app.run()
+app.run(host='0.0.0.0', port=8088)
+#if __name__ == '__main__':
+#   app.run()
