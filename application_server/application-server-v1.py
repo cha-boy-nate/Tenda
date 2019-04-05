@@ -9,12 +9,9 @@ app = Flask(__name__)
 
 def verifyPassword(email, testpassword):
     email = "\'"+email+"\'"
-    print(email + " : " + testpassword)
     query = "Select password from User where email="+email+";"
-    print(query)
     cur.execute(query)
     password = str(cur.fetchone())
-    print(password)
     if testpassword == password:
         return 1
     else:
@@ -24,8 +21,12 @@ def verifyPassword(email, testpassword):
 def index():
 	return jsonify(result={"status":200})
 
-@app.route("/test", methods=['GET', 'POST'])
-def test():
+@app.route("/home")
+def home():
+    return jsonify(result={"value":200})
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
     if request.method == 'POST':
         response = str(request.get_data())
         response = response.replace("%40", "@")
@@ -36,9 +37,7 @@ def test():
         response = "{\"email\":\""+response[0]+"\",\"password\":\""+response[1]+"\"}"
         response = json.loads(response)
         password = "(\'" + response["password"] + "\',)"
-        print(password)
         checker = verifyPassword(response["email"], password)
-        print(checker)
         if checker == 1:
             return jsonify(result={"status":200})
         else:
@@ -47,34 +46,11 @@ def test():
         print("not post request")
         return jsonify(result={"status":400})
 
-
-@app.route("/home")
-def home():
-	#email = session.get('email', None)
-	#print(email)
-	return jsonify(result={"value":200})
-
-def printTest(email):
-	print("THIS IS A TEST: " + email)
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-	if request.method == 'POST':
-		response = str(request.get_data())
-		response = response.replace("'", "")
-		response = response[1:]
-		response = json.loads(response)
-		email = response["email"]
-		password = response["password"]
-		password = "('" + password + "',)"
-		if verifyPassword(email, password) == 1:
-			#session['email'] = 'email'
-			return redirect(url_for('home'))
-			#return jsonify(result={"status":"sucessfully logged-in"})
-		else:
-			return jsonify(result={"status":"password/email failure"})
-	else:
-		return jsonify(result={"status":"This is a get request"})
+@app.route("/user/lookup/email/<user_email>", methods=['GET'])
+def getUserByEmail(user_email):
+    cur.execute("Select user_id, firstName, lastName, email from User where email=\'"+ user_email +"\';")
+    user_id, firstName, lastName, email = cur.fetchone()
+    return jsonify(result={"id":user_id,"first name":firstName, "last name":lastName, "email":email})
 
 #this is an example of retreiving something from the database.
 @app.route("/user/lookup/<user_id>", methods=['GET'])
@@ -82,6 +58,15 @@ def getUser(user_id):
     cur.execute("Select firstName, lastName, email from User where user_id="+ user_id +";")
     firstName, lastName, email = cur.fetchone()
     return jsonify(result={"id":user_id,"first name":firstName, "last name":lastName, "email":email})
+
+#gets invitations for user by id
+@app.route("/user/event/lookup/<user_id>", methods=['GET'])
+def getUsersEventByID(user_id):
+    cur.execute("Select event_id from Events_to_Attendees where user_id="+user_id+";")
+    result = []
+    for row in cur.fetchall():
+        result.append(row)
+    return jsonify(result={"result":result})
 
 #get event details from an eventID
 @app.route("/event/lookup/<event_id>", methods=['GET'])
@@ -122,8 +107,7 @@ def createResponse(event_id, user_id, response):
     db.commit()
     return jsonify(result={"status": 200})
 
-
-
+#Needs to be implemented
 #Description: The manager is able to view the details of the event, the people that opened the link as well as their response. As well as the duration of the user at the event. Recurring events will also have a page for statistical data. 
 @app.route("/manageEvent/", methods=['GET', 'POST'])
 def manageEvent():
@@ -138,7 +122,8 @@ def reportIssue():
 @app.route("/notifyUsers/", methods=['GET', 'POST'])
 def notifyUsers():
     return jsonify(result={"status": 200})
-    
+
 app.run(host='0.0.0.0', port=80)
 #if __name__ == '__main__':
 #    app.run()
+
