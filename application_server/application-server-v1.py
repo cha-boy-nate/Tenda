@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify, redirect, url_for
+from flask import Flask, request, jsonify
+
 import json
 import setup
 
