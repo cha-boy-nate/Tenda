@@ -13,8 +13,10 @@ public class test {
 		try {
 			//Format the URL to retrieve. Our app input and current page needs to define whats after the server address.
 			URL url = new URL("http://127.0.0.1:5000/login");
-			
-			String data = "{\"email\":\"nathanj@spu.edu\",\"password\":\"password\"}";
+			String email = "nathanj@spu.edu";
+			String password = "password";
+			String data = "{\"email\":\""+email+"\",\"password\":\""+password+"\"}";
+			//String data = "{\"email\":\"nathanj@spu.edu\",\"password\":\"password\"}";
 			System.out.println(data);
 			//String data = "\"{"\"user"\": "\"Nathan"\","\"password"\":"\"test"\"}";
 			//Open connection.
