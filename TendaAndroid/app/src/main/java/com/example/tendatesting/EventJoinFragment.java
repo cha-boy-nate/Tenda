@@ -12,6 +12,7 @@ public class EventJoinFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+        getActivity().setTitle("Join Event");
         return inflater.inflate(R.layout.fragment_event_join, container, false);
     }
 }

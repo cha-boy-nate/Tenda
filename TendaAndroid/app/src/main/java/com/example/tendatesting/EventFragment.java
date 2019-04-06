@@ -12,6 +12,7 @@ public class EventFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+        getActivity().setTitle("Manage Event");
         return inflater.inflate(R.layout.fragment_event, container, false);
     }
 }

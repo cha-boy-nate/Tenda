@@ -12,6 +12,7 @@ public class ReportFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+        getActivity().setTitle("Report");
         return inflater.inflate(R.layout.fragment_report, container, false);
     }
 }

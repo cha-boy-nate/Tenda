@@ -12,6 +12,7 @@ public class AccountFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+        getActivity().setTitle("Account Information");
         return inflater.inflate(R.layout.fragment_account, container, false);
     }
 }
