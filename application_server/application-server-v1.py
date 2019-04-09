@@ -1,22 +1,57 @@
 from flask import Flask, request, jsonify
 
-os = input("Please select:\n1 - for Linux\n2 - for MacOS\n")
-if os == "1":
-    import MySQLdb
-    db = MySQLdb.connect(host="localhost", user="root", password="password", db="Tenda")
-    cur=db.cursor()
-    app = Flask(__name__)
-elif os == "2":
-    import pymysql
-    pymysql.install_as_MySQLdb()
-    db = pymysql.connect(host="localhost", user="root", password="password", db="Tenda")
-    cur=db.cursor()
-    app = Flask(__name__)
+import json
+import setup
 
-#this is a basic example of how flask routes are set up for application server
+db = setup.getOS()
+cur = db.cursor()
+
+app = Flask(__name__)
+
+def verifyPassword(email, testpassword):
+    email = "\'"+email+"\'"
+    query = "Select password from User where email="+email+";"
+    cur.execute(query)
+    password = str(cur.fetchone())
+    if testpassword == password:
+        return 1
+    else:
+        return 0
+
 @app.route("/")
 def index():
-    return "This is the application server for Tenda"
+	return jsonify(result={"status":200})
+
+@app.route("/home")
+def home():
+    return jsonify(result={"value":200})
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        response = str(request.get_data())
+        response = response.replace("%40", "@")
+        response = response.replace("'", "")
+        response = response.replace("&", "")
+        response = response[1:]
+        response = response.split("=")
+        response = "{\"email\":\""+response[0]+"\",\"password\":\""+response[1]+"\"}"
+        response = json.loads(response)
+        password = "(\'" + response["password"] + "\',)"
+        checker = verifyPassword(response["email"], password)
+        if checker == 1:
+            return jsonify(result={"status":200})
+        else:
+            return jsonify(result={"status":405})
+    else:
+        print("not post request")
+        return jsonify(result={"status":400})
+
+@app.route("/user/lookup/email/<user_email>", methods=['GET'])
+def getUserByEmail(user_email):
+    cur.execute("Select user_id, firstName, lastName, email from User where email=\'"+ user_email +"\';")
+    user_id, firstName, lastName, email = cur.fetchone()
+    return jsonify(result={"id":user_id,"first name":firstName, "last name":lastName, "email":email})
 
 #this is an example of retreiving something from the database.
 @app.route("/user/lookup/<user_id>", methods=['GET'])
@@ -24,6 +59,15 @@ def getUser(user_id):
     cur.execute("Select firstName, lastName, email from User where user_id="+ user_id +";")
     firstName, lastName, email = cur.fetchone()
     return jsonify(result={"id":user_id,"first name":firstName, "last name":lastName, "email":email})
+
+#gets invitations for user by id
+@app.route("/user/event/lookup/<user_id>", methods=['GET'])
+def getUsersEventByID(user_id):
+    cur.execute("Select event_id from Events_to_Attendees where user_id="+user_id+";")
+    result = []
+    for row in cur.fetchall():
+        result.append(row)
+    return jsonify(result={"result":result})
 
 #get event details from an eventID
 @app.route("/event/lookup/<event_id>", methods=['GET'])
@@ -64,8 +108,7 @@ def createResponse(event_id, user_id, response):
     db.commit()
     return jsonify(result={"status": 200})
 
-
-
+#Needs to be implemented
 #Description: The manager is able to view the details of the event, the people that opened the link as well as their response. As well as the duration of the user at the event. Recurring events will also have a page for statistical data. 
 @app.route("/manageEvent/", methods=['GET', 'POST'])
 def manageEvent():
@@ -82,3 +125,6 @@ def notifyUsers():
     return jsonify(result={"status": 200})
 
 app.run(host='0.0.0.0', port=80)
+#if __name__ == '__main__':
+#    app.run()
+
