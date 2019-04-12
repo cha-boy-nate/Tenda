@@ -18,6 +18,15 @@ def verifyPassword(email, testpassword):
     else:
         return 0
 
+def getAll(query, resultTitle):
+    cur = db.cursor()
+    cur.execute(query)
+    result = []
+    for row in cur.fetchall():
+        result.append(row)
+    print("query complete. returning ")
+    return jsonify(result={resultTitle:result})
+
 @app.route("/")
 def index():
 	return jsonify(result={"status":200})
@@ -63,11 +72,7 @@ def getUser(user_id):
 #gets invitations for user by id
 @app.route("/user/event/lookup/<user_id>", methods=['GET'])
 def getUsersEventByID(user_id):
-    cur.execute("Select event_id from Events_to_Attendees where user_id="+user_id+";")
-    result = []
-    for row in cur.fetchall():
-        result.append(row)
-    return jsonify(result={"result":result})
+    return getAll("Select event_id from Events_to_Attendees where user_id="+user_id+";", "result")
 
 #get event details from an eventID
 @app.route("/event/lookup/<event_id>", methods=['GET'])
@@ -79,11 +84,7 @@ def getEventDetails(event_id):
 #complete
 @app.route("/event/attendees/<event_id>/<response>", methods=["GET"])
 def getEventAttendees(event_id, response):
-    cur.execute("Select user_id from Events_to_Attendees where event_id="+ event_id +" AND response='"+response+"';")
-    result = []
-    for row in cur.fetchall():
-        result.append(row)
-    return jsonify(result={"result":result})
+    return getAll("Select user_id from Events_to_Attendees where event_id="+ event_id +" AND response='"+response+"';", "result")
 
 #Description: Users and managers can sign up with their email address and set the username and password for the account.
 @app.route("/user/add/<string:firstName>/<string:lastName>/<string:email>/<string:password>", methods=['GET', 'POST'])
