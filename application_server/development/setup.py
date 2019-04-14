@@ -1,4 +1,4 @@
 def getOS():
     import MySQLdb
-    db = MySQLdb.connect(host="localhost", user="flask", password="password", db="Tenda")
+    db = MySQLdb.connect(host="localhost", user="testuser", password="test!Password1", db="Tenda")
     return db
