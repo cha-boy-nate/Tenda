@@ -35,7 +35,7 @@ CREATE TABLE Reported_Issues(
 	description VARCHAR(255)
 );
 
-create user 'flaskapp'@'localhost' identified by 'test!Password1";
+create user 'flaskapp'@'localhost' identified by 'test!Password1';
 
 Insert Into User(firstName, lastName, email, password) values('Nate', 'Jenkins', 'test@spu.edu', 'password');
 Insert Into User(firstName, lastName, email, password) values('Steve', 'Jenson', 'test-email@hotmail.com', 'test');
