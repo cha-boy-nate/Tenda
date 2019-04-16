@@ -33,7 +33,6 @@ def login():
         response = response.replace("%40", "@")
         response = response.replace("'", "")
         response = response.replace("&", "")
-        response = response[1:]
         response = response.split("=")
         response = "{\"email\":\""+response[0]+"\",\"password\":\""+response[1]+"\"}"
         response = json.loads(response)
@@ -46,3 +45,23 @@ def login():
     else:
         print("not post request")
         return jsonify(result={"status":400})
+
+@application.route("/createAccount", methods=["GET", "POST"])
+def createAccount():
+	if request.method == 'POST':
+		#print("post method detected")
+		#print(str(request.get_data()))
+                response = str(request.get_data())
+                response = response.replace("%40", "@")
+                response = response.replace("key=", "")
+                response = response[:-1]
+                email, firstName, lastName, password = response.split("+", 4)
+                #print(email + firstName + lastName + password)
+                sql = "insert into User(firstName, lastName, email, password) values('"+firstName+"','"+lastName+"','"+email+"','"+password+"');"
+                cur.execute(sql)
+                db.commit()
+		return jsonify(result={"status":200})
+	else:
+		print("get method detected")
+		return jsonify(result={"status":400})
+
