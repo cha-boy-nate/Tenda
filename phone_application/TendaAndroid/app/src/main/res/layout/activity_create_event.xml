@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,7 +20,7 @@
             android:layout_height="wrap_content"
             android:hint="Event Title"
             android:inputType="text"
-            android:textColor="@color/colorText" />
+            android:textColor="#000000" />
     </android.support.design.widget.TextInputLayout>
 
     <!--Text box for Event Description-->
@@ -35,51 +34,45 @@
             android:layout_height="wrap_content"
             android:hint="Event Description"
             android:inputType="text"
-            android:textColor="@color/colorText" />
+            android:textColor="#000000" />
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <Button
+        android:id="@+id/dateAndTimePicker"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="Pick Date and Time" />
 
-        <TextView
-            android:layout_width="match_parent"
+    <!--<Button-->
+        <!--android:id="@+id/eventLocation"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Pick Location"-->
+        <!--android:backgroundTint="@color/colorPrimary"/>-->
+
+    <TextView
+        android:id="@+id/dateTimeResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="20dp"
+        android:textAlignment="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:gravity="center|bottom"
+        android:orientation="vertical">
+        <!--Create Event Button-->
+        <Button
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:hint="Event Date and Time:"
-            android:textSize="17dp"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/colorText" />
-    </android.support.design.widget.TextInputLayout>
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:text="Create Event" />
 
-    <Button
-        android:id="@+id/eventDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pick Date"
-        android:backgroundTint="@color/colorPrimary"/>
-
-    <Button
-        android:id="@+id/eventTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pick Time"
-        android:backgroundTint="@color/colorPrimary"/>
-
-    <Button
-        android:id="@+id/eventLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pick Location"
-        android:backgroundTint="@color/colorPrimary"/>
-
-
-    <!--Create Event Button-->
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:text="Create Event" />
+    </LinearLayout>
 
 
 
