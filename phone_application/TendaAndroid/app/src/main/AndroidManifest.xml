@@ -12,9 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".CreateEventActivity">
-
-        </activity>
-        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
@@ -22,13 +19,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".LoginActivity"></activity>
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/AppThemeRegistration" />
         <activity
             android:name=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
 
         </activity>
     </application>
