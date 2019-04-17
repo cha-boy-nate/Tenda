@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,15 @@ public class EventFragment extends Fragment {
             @Override
             public void onClick(View v){
                 Intent myIntent = new Intent(getActivity(), LocationActivity.class);
+                startActivity(myIntent);
+            }
+        });
+
+        FloatingActionButton buttonEvent = v.findViewById(R.id.floatEventButton);
+        buttonEvent.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent myIntent = new Intent(getActivity(), CreateEventActivity.class);
                 startActivity(myIntent);
             }
         });
