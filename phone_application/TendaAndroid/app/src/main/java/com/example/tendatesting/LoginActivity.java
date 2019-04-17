@@ -24,12 +24,19 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private Button button;
     //When screen is loaded show the designed layout
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Button buttonLocation = findViewById(R.id.btn_login);
+        buttonLocation.setOnClickListener(new View.OnClickListener(){
+            @Override public void onClick(View v){
+                openActivityHome();
+
+            }
+
+        });
     }
 
     //Function will be called when the button is clicked.
@@ -90,6 +97,10 @@ public class LoginActivity extends AppCompatActivity {
     //Go to Create Account page when the create button is clicked
     public void ClickToSignUpPage(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+    public void openActivityHome(){
+        Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
     }
 }

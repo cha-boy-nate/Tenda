@@ -17,7 +17,6 @@
         android:backgroundTint="@color/colorPrimary"
         android:tint="@color/colorText"
         app:fabSize="normal"
-        android:onClick="ClickToCreateEvent"
         app:srcCompat="@drawable/baseline_add_circle_black_24"
         />
 
