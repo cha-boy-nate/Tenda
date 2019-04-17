@@ -1,5 +1,5 @@
 <resources>
-    <string name="google_map_api_key">AIzaSyBxHjw01nJqeBOPLKJsFh4KSySzDWeZvDY</string>
+    <string name="google_maps_api_key">AIzaSyBxHjw01nJqeBOPLKJsFh4KSySzDWeZvDY</string>
     
     <string name="app_name">TendaTesting</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
