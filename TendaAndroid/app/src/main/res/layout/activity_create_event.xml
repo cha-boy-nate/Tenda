@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="30dp"
+    android:paddingTop="50dp"
+    android:paddingRight="30dp"
+    tools:context=".CreateEventActivity">
+
+    <!--Text box for Event Title-->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/eventTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Title"
+            android:inputType="text"
+            android:textColor="#000000" />
+    </android.support.design.widget.TextInputLayout>
+
+    <!--Text box for Event Description-->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/eventDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Description"
+            android:inputType="text"
+            android:textColor="#000000" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/dateAndTimePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="Pick Date and Time" />
+
+    <!--<Button-->
+    <!--android:id="@+id/eventLocation"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Pick Location"-->
+    <!--android:backgroundTint="@color/colorPrimary"/>-->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.design.widget.TextInputLayout>
+
+    <SeekBar
+        android:id="@+id/seekBarEvent"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="match_parent"
+        android:thumb="@drawable/ic_fiber"
+        android:layout_height="wrap_content"
+        android:max="10"
+        android:progress="3" />
+
+    <TextView
+        android:id="@+id/dateTimeResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="100"
+        android:gravity="center|bottom"
+        android:orientation="vertical">
+        <!--Create Event Button-->
+
+
+        <com.google.android.gms.maps.MapView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map_View"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="Create Event" />
+
+
+</LinearLayout>
