@@ -64,4 +64,18 @@ def createAccount():
 	else:
 		print("get method detected")
 		return jsonify(result={"status":400})
-
+	
+@application.route("/event/<idVal>/", methods=['GET'])
+def getEvent(idVal):
+    query = "Select distinct event_id from Events_to_Attendees where user_id="+idVal+" and response='yes';"
+    cur.execute(query)
+    val = cur.fetchall()
+    resultsVal = "events:["
+    for x in val:
+        q = "select eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription from Event where event_id="+str(x[0])+";"
+        cur.execute(q)
+        responseVal = cur.fetchone()
+        #j = jsonify(event={"eventName": str(responseVal[0]), "eventDate":str(responseVal[1]), "eventTime":str(responseVal[2]), "eventDuration":str(responseVal[3]), "eventRadius":str(responseVal[4]), "eventDuration":str(responseVal[5])})
+        resultsVal = resultsVal + "{eventName:\'"+str(responseVal[0])+"\', eventName:\'"+str(responseVal[1])+"\', eventTime:\'"+str(responseVal[2])+"\', eventDuration:\'"+str(responseVal[3])+"\', eventRaidus:\'"+str(responseVal[4])+"\', eventDescription:\'"+str(responseVal[5])+"\'},"
+    resultsVal = resultsVal + "]"
+    return json.dumps(resultsVal)
