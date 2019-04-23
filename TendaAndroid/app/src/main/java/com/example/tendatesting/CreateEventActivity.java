@@ -47,10 +47,7 @@ public class CreateEventActivity extends AppCompatActivity implements
 
 
 
-    //RecyclerView Initialization
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private ArrayList<Event> eventArrayList;
+
     //private RecyclerView.LayoutManager layoutManager;
 
     @Override
@@ -83,28 +80,10 @@ public class CreateEventActivity extends AppCompatActivity implements
         mMapView.onCreate(mapViewBundle);
         mMapView.getMapAsync(this);
 
-        //Recyclerview Implementation
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        eventArrayList = new ArrayList<>();
-        adapter = new EventAdapter(this,eventArrayList);
-        recyclerView.setAdapter(adapter);
-        createListData();
+
     }
 
-    private void createListData() {
-        Event event = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
-        eventArrayList.add(event);
-        event = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
-        eventArrayList.add(event);
-        event = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
-        eventArrayList.add(event);
-        event = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
-        eventArrayList.add(event);
-        event = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
-        eventArrayList.add(event);
-        adapter.notifyDataSetChanged();
-    }
+
 
 
 

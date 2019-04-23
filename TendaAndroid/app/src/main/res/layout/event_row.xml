@@ -9,21 +9,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1dp"
+        android:text="Title:"
         android:textSize="18sp" />
     <TextView
         android:id="@+id/textDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Description:"
         android:padding="1dp" />
     <TextView
         android:id="@+id/textTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Event Time:"
         android:padding="1dp" />
     <TextView
         android:id="@+id/textDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Event Date:"
         android:padding="1dp" />
 
 </LinearLayout>
