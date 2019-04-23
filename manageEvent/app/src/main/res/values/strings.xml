@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MyApk</string>
+    <string name="title_activity_maps">MyApk</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="appbar_scrolling_view_behavior">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
+</resources>
