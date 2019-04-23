@@ -90,6 +90,8 @@
     </LinearLayout>
 
     <Button
+        android:clickable="true"
+        android:id="@+id/createEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorPrimaryDark"

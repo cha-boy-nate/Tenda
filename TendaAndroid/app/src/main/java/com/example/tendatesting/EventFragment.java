@@ -22,14 +22,6 @@ public class EventFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_event, container, false);
 
-        Button buttonLocation = v.findViewById(R.id.button_location);
-        buttonLocation.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent myIntent = new Intent(getActivity(), LocationActivity.class);
-                startActivity(myIntent);
-            }
-        });
 
         FloatingActionButton buttonEvent = v.findViewById(R.id.floatEventButton);
         buttonEvent.setOnClickListener(new View.OnClickListener(){

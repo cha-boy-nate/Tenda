@@ -9,6 +9,8 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +29,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CreateEventActivity extends AppCompatActivity implements
@@ -42,6 +44,14 @@ public class CreateEventActivity extends AppCompatActivity implements
 
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
+
+
+
+    //RecyclerView Initialization
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private ArrayList<Event> eventArrayList;
+    //private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +83,27 @@ public class CreateEventActivity extends AppCompatActivity implements
         mMapView.onCreate(mapViewBundle);
         mMapView.getMapAsync(this);
 
+        //Recyclerview Implementation
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        eventArrayList = new ArrayList<>();
+        adapter = new EventAdapter(this,eventArrayList);
+        recyclerView.setAdapter(adapter);
+        createListData();
+    }
 
+    private void createListData() {
+        Event event = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
+        eventArrayList.add(event);
+        event = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
+        eventArrayList.add(event);
+        event = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
+        eventArrayList.add(event);
+        event = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
+        eventArrayList.add(event);
+        event = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
+        eventArrayList.add(event);
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -222,4 +252,6 @@ public class CreateEventActivity extends AppCompatActivity implements
         super.onLowMemory();
         mMapView.onLowMemory();
     }
+
+
 }
