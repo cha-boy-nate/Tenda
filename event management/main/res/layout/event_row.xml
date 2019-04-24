@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp">
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="1dp"
+        android:text="Title:"
+        android:textSize="18sp" />
+    <TextView
+        android:id="@+id/textDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description:"
+        android:padding="1dp" />
+    <TextView
+        android:id="@+id/textTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Event Time:"
+        android:padding="1dp" />
+    <TextView
+        android:id="@+id/textDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Event Date:"
+        android:padding="1dp" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end" >
+    <Button
+        android:id="@+id/item_btn_send"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:text="Send" />
+
+    <Button
+        android:id="@+id/item_btn_edit"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:text="Edit" />
+
+    <Button
+        android:id="@+id/item_btn_invite"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:text="Invite" />
+    </LinearLayout>
+
+</LinearLayout>
