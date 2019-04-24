@@ -30,6 +30,7 @@ def home():
 def login():
     if request.method == 'POST':
         response = str(request.get_data())
+        print("request recieved")
         response = response.replace("%40", "@")
         response = response.replace("'", "")
         response = response.replace("&", "")
@@ -78,4 +79,4 @@ def getEvent(idVal):
         #j = jsonify(event={"eventName": str(responseVal[0]), "eventDate":str(responseVal[1]), "eventTime":str(responseVal[2]), "eventDuration":str(responseVal[3]), "eventRadius":str(responseVal[4]), "eventDuration":str(responseVal[5])})
         resultsVal = resultsVal + "{eventName:\'"+str(responseVal[0])+"\', eventName:\'"+str(responseVal[1])+"\', eventTime:\'"+str(responseVal[2])+"\', eventDuration:\'"+str(responseVal[3])+"\', eventRaidus:\'"+str(responseVal[4])+"\', eventDescription:\'"+str(responseVal[5])+"\'},"
     resultsVal = resultsVal + "]"
-    return json.dumps(resultsVal)
+    return jsonify(result={"status": resultsVal})
