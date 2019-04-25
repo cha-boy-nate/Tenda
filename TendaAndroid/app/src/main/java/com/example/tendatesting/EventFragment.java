@@ -45,8 +45,6 @@ public class EventFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         eventArrayList = new ArrayList<>();
         adapter = new EventAdapter(getActivity(),eventArrayList);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        recyclerView.setAdapter(adapter);
         recyclerView.setAdapter(adapter);
         createListData();
         return v;
@@ -56,10 +54,16 @@ public class EventFragment extends Fragment {
     private void createListData() {
         Event event = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
         eventArrayList.add(event);
-        Event event1 = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
+        Event event1 = new Event("Comic Conference", "Multi-genre entertainment and comic convention", "2:30", "4/04/2019");
         eventArrayList.add(event1);
         Event event2 = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
         eventArrayList.add(event2);
+        Event event3 = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
+        eventArrayList.add(event3);
+        Event event4 = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
+        eventArrayList.add(event4);
+        Event event5 = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
+        eventArrayList.add(event5);
         adapter.notifyDataSetChanged();
     }
 

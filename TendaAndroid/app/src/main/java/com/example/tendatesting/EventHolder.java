@@ -16,7 +16,7 @@ public class EventHolder extends RecyclerView.ViewHolder {
     }
 
     public void setDetails(Event event) {
-        textTitle.setText("Event Title:" %d",event.getEventTitle());
+        textTitle.setText(event.getEventTitle());
         textDescription.setText(event.getEventDescription());
         textTime.setText(event.getEventTime());
         textDate.setText(event.getEventDate());
