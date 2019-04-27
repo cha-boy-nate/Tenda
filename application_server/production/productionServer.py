@@ -153,3 +153,7 @@ def createAccount():
 	else:
 		print("get method detected")
 		return jsonify(result={"status":400})
+
+@application.route("/accountInformation/<idVal>/", methods=["GET"])
+def accountInformation(idVal):
+	return jsonify(result={"result":str(getUserData(idVal))})
