@@ -64,8 +64,7 @@ public class CreateEventActivity extends AppCompatActivity implements
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     AutocompleteSupportFragment placeAutoComplete;
-//    private EditText mSearchText;
-//    private static final String TAG = CreateEventActivity.class.getSimpleName();
+
 
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
@@ -350,8 +349,7 @@ public class CreateEventActivity extends AppCompatActivity implements
 
 
 
-            //}
-        //});
+
 
 
 
