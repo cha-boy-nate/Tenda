@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="30dp"
+    android:paddingTop="10dp"
+    android:paddingRight="30dp"
+    tools:context=".EventPageActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/ic_edit_bg"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/page_textTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Title:"
+        android:textSize="21sp" />
+    <TextView
+        android:id="@+id/page_textDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description:"
+        android:padding="5dp"
+        android:textSize="18sp"/>
+    <TextView
+        android:id="@+id/page_textTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Event Time:"
+        android:padding="5dp"
+        android:textSize="18sp"/>
+    <TextView
+        android:id="@+id/page_textDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Event Date:"
+        android:padding="5dp"
+        android:textSize="18sp"/>
+     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/page_lable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="In Attendance: 02"
+            android:textSize="21sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/ic_edit_bg"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/page_name1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="AkShy Palanisamy"
+            android:textSize="21sp"/>
+        <TextView
+            android:id="@+id/page_name2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Hung Nguyen"
+            android:textSize="21sp"/>
+        <TextView
+            android:id="@+id/page_name3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Nathan Jenkins         01hr10min"
+            android:textSize="21sp"/>
+        <TextView
+            android:id="@+id/page_name4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Jiahao Cai"
+            android:textSize="21sp"/>
+    </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="0"
+        android:gravity="bottom" >
+        <Button
+            android:id="@+id/page_btn_4"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:background="@drawable/button4" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center" >
+        <Button
+            android:id="@+id/page_btn_1"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:background="@drawable/button1" />
+
+        <Button
+            android:id="@+id/page_btn_2"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:background="@drawable/button2" />
+
+        <Button
+            android:id="@+id/page_btn_3"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:background="@drawable/button3" />
+    </LinearLayout>
+    </LinearLayout>
+
+
+
+</LinearLayout>
