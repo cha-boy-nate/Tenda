@@ -1,35 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Background">
+    android:background="@color/Background"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Manage Event"
-        android:textSize="30sp" />
+        android:id="@+id/eventDescription"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
-    <Button
-        android:id="@+id/button_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="179dp"
-        android:text="Location Page" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatEventButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:clickable="true"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:text="This is will be a short description of the event uploaded by the creator of the event." />
 
 
-</RelativeLayout>
+</LinearLayout>

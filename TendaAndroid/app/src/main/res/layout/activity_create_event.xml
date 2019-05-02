@@ -1,48 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="30dp"
-    android:paddingTop="50dp"
-    android:paddingRight="30dp"
+    android:background="@color/Background"
     tools:context=".CreateEventActivity">
 
     <!--Text box for Event Title-->
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+
+    <!--Text box for Event Description-->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/eventTitleLayout"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/descriptionLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/eventTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/radius_white"
             android:hint="Event Title"
             android:inputType="text"
-            android:textColor="#000000" />
-    </android.support.design.widget.TextInputLayout>
+            android:paddingLeft="20dp"
+            android:textColor="@color/TextOnWhiteBackground"
+            android:textColorLink="@color/TextOnWhiteBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
-    <!--Text box for Event Description-->
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/descriptionLayout"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/dateAndTimePicker"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventTitleLayout">
 
         <EditText
             android:id="@+id/eventDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/radius_white"
             android:hint="Event Description"
             android:inputType="text"
-            android:textColor="#000000" />
-    </android.support.design.widget.TextInputLayout>
+            android:paddingLeft="20dp"
+            android:textColor="@color/TextOnWhiteBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
     <Button
         android:id="@+id/dateAndTimePicker"
-        android:layout_width="match_parent"
+        android:layout_width="225dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="Pick Date and Time" />
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_green"
+        android:text="Pick Date and Time"
+        android:textColor="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionLayout" />
 
     <!--<Button-->
     <!--android:id="@+id/eventLocation"-->
@@ -50,101 +88,100 @@
     <!--android:layout_height="wrap_content"-->
     <!--android:text="Pick Location"-->
     <!--android:backgroundTint="@color/colorPrimary"/>-->
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-    </android.support.design.widget.TextInputLayout>
-
-
-
-    <TextView
-        android:id="@+id/dateTimeResult"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textAlignment="center"
-        android:textSize="20dp" />
     <SeekBar
         android:id="@+id/seekBarEvent"
         style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="match_parent"
-        android:thumb="@drawable/ic_fiber"
+        android:layout_width="371dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:max="10"
-        android:progress="3" />
+        android:thumb="@drawable/ic_fiber"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relLayout" />
+
+    <TextView
+        android:id="@+id/dateTimeResult"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        android:text=""
+        android:textAlignment="center"
+        android:textColor="@color/TextOnWhiteBackground"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateAndTimePicker" />
+
+
+    <!--Create Event Button-->
+
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="100"
-        android:gravity="center|bottom"
-        android:orientation="vertical">
-        <!--Create Event Button-->
+        android:id="@+id/relLayout"
+        android:layout_width="350dp"
+        android:layout_height="320dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTimeResult" >
 
-
-
-
-
-        <com.google.android.gms.maps.MapView
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/map_View"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-           <RelativeLayout
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/in_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="250dp"
+            android:text="Location" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:elevation="10dp"
+            android:background="@drawable/white_border"
+            android:id="@+id/relLayout1">
+            <fragment
+                android:id="@+id/autocomplete_fragment"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:elevation="10dp"
-                android:background="@drawable/white_border"
-                android:id="@+id/relLayout1">
-               <fragment
-                   android:id="@+id/autocomplete_fragment"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
+                android:layout_height="wrap_content"
 
-                   android:name= "com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-                   />
-
-<!--                <ImageView
-                    android:layout_height="15dp"
-                    android:layout_width="15dp"
-                    android:id="@+id/ic_magnify"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_magnify"/>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_toRightOf="@+id/ic_magnify"
-                    android:layout_centerVertical="true"
-                    android:textSize="15sp"
-                    android:textColor="#000"
-                    android:id="@+id/input_search"
-                    android:background="@null"
-                    android:hint=" Enter Address, City or Zip Code"
-                    android:imeOptions="actionSearch"/>-->
-
-            </RelativeLayout>
+                android:name= "com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                />
 
 
-
-
+        </RelativeLayout>
     </RelativeLayout>
-    <TextView
-        android:id="@+id/in_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Lat Location"/>
+
+
+
 
     <Button
-        android:layout_width="match_parent"
+        android:id="@+id/createEventButton"
+        android:layout_width="225dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_green"
         android:backgroundTint="@color/colorPrimaryDark"
-        android:text="Create Event" />
+        android:onClick="onClick"
+        android:text="Create Event"
+        android:textColor="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarEvent" />
 
 
-</LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

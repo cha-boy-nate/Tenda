@@ -1,15 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout6"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Background">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/emailLabel5"
+        android:layout_width="375dp"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="About"
-        android:textSize="30sp" />
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        android:padding="20dp"
+        android:text="Created for Capstone Project at Seattle Pacific University CSC 4152"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailLabel4" />
 
+    <TextView
+        android:id="@+id/emailLabel3"
+        android:layout_width="375dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        android:padding="20dp"
+        android:text="Tenda is a location based verification system that allows users to create an event and see who attends."
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/emailLabel4"
+        android:layout_width="375dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        android:padding="20dp"
+        android:text="Version 1.0.0"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailLabel2" />
+
+    <TextView
+        android:id="@+id/emailLabel2"
+        android:layout_width="375dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        android:padding="20dp"
+        android:text="Creators: Nathan Jenkins, Akshy Palanisamy, Hung Nugyen, Jahio Cai"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailLabel3" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="215dp"
+        android:layout_height="174dp"
+        android:layout_marginTop="20dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tenda_logo_with_name_and_background" />
+</android.support.constraint.ConstraintLayout>

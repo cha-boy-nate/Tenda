@@ -5,18 +5,13 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -26,7 +21,6 @@ import android.widget.TimePicker;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,34 +31,26 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
-
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class CreateEventActivity extends AppCompatActivity implements
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, OnMapReadyCallback {
 
-
     Button dateAndTimePicker;
     TextView dateTimeResult;
+    EditText eventTitle, eventDescription;
 
     private MapView mMapView;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     AutocompleteSupportFragment placeAutoComplete;
-
 
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
@@ -90,9 +76,6 @@ public class CreateEventActivity extends AppCompatActivity implements
                 datePickerDialog.show();
             }
         });
-
-
-        // mSearchText = (EditText) findViewById(R.id.input_search);
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
@@ -102,7 +85,6 @@ public class CreateEventActivity extends AppCompatActivity implements
         mMapView.onCreate(mapViewBundle);
         mMapView.getMapAsync(this);
 
-
     }
 
     public double inRadius(double markerLattitude, double markerLongitude, double locLatitude, double locLongtitude, double radius) {
@@ -110,6 +92,18 @@ public class CreateEventActivity extends AppCompatActivity implements
         val = val*78710;
         return val;
     }
+
+    public void onClick(View view) {
+        eventTitle = findViewById(R.id.eventTitle);
+        eventDescription = findViewById(R.id.eventDescription);
+        String eventTitleString = eventTitle.getText().toString();
+        String eventDescriptionString = eventDescription.toString();
+        String test = dateTimeResult.getText().toString();
+        String all = eventTitleString + " --- " + eventDescriptionString + " --- " + test;
+        Log.d("CreateEventLog", all);
+    }
+
+
 
 
     @Override
@@ -326,11 +320,11 @@ public class CreateEventActivity extends AppCompatActivity implements
                             TextView radTextView = findViewById(R.id.in_location);
                             double val = inRadius(loc.getPosition().latitude, loc.getPosition().longitude, myLocation.getLatitude(), myLocation.getLongitude(), cir.getRadius());
 
-                           if(val<cir.getRadius()) {
-                               radTextView.setText(Double.toString(val)+"<"+Double.toString(cir.getRadius())+": Within Radius");
+                            if(val<cir.getRadius()) {
+                                radTextView.setText(Double.toString(val)+"<"+Double.toString(cir.getRadius())+": Within Radius");
                             }else{
-                               radTextView.setText(Double.toString(val)+">"+Double.toString(cir.getRadius())+": Not Within Radius");
-                           }
+                                radTextView.setText(Double.toString(val)+">"+Double.toString(cir.getRadius())+": Not Within Radius");
+                            }
                         }
                     }
                 });

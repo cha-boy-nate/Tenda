@@ -6,39 +6,60 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 public class ManageEvent extends AppCompatActivity {
 
-    private TextView mTextMessage;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+    Toolbar toolbar;
 
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
-                    return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
-                    return true;
-            }
-            return false;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_event);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
+
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
+
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+
+
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            toolbar = (Toolbar) findViewById(R.id.messageToolbar);
+            setSupportActionBar(toolbar);
+
+            switch (item.getItemId()) {
+                case R.id.navigation_attendance:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_M_container,
+                            new AttendanceFragment()).commit();
+                    getSupportActionBar().setTitle("Event Management");
+                    return true;
+                case R.id.navigation_map:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_M_container,
+                            new LocationFragment()).commit();
+                    getSupportActionBar().setTitle("Event Location");
+                    return true;
+                case R.id.navigation_stats:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_M_container,
+                            new StatsFragment()).commit();
+                    getSupportActionBar().setTitle("Event Statistics");
+                    return true;
+            }
+            return false;
+        }
+    };
+
+
 
 }

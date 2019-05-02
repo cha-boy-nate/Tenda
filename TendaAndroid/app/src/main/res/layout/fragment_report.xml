@@ -1,15 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Background">
+    android:background="@color/Background" >
 
-    <TextView
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/nameLayout"
+        android:layout_width="350dp"
+        android:layout_height="115dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="Name"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorText" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/descriptionLayout"
+        android:layout_width="350dp"
+        android:layout_height="254dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameLayout">
+
+        <EditText
+            android:id="@+id/description"
+            style="@style/Widget.AppCompat.EditText"
+            android:layout_width="300dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="20dp"
+            android:background="@null"
+            android:ems="10"
+            android:inputType="textMultiLine|text"
+            android:lines="5"
+            android:text="Description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <Button
+        android:id="@+id/submit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Report"
-        android:textSize="30sp" />
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_green"
+        android:textColor="#ffffff"
+        android:text="Submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionLayout" />
 
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

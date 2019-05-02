@@ -30,20 +30,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        button = (Button) findViewById(R.id.btn_login);
-        button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                openActivityHome();
-            }
-        });
     }
 
     //Function will be called when the button is clicked.
     public void login(View view) throws IOException {
         //Get email and password from user text box entries.
-        EditText email = (EditText)findViewById(R.id.email);
+        final EditText email = (EditText)findViewById(R.id.email);
         EditText password = (EditText)findViewById(R.id.password);
         final String emailString = email.getText().toString();
         final String passwordString = password.getText().toString();
@@ -51,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         final Intent homeIntent = new Intent(this, HomeActivity.class);
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://34.217.162.221/login";
+        String url ="http://34.217.162.221:8000/login";
 
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -61,12 +53,13 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     //Convert response to a json and check if the response what 200 (which means password is valid)
                     JSONObject jsonObj = new JSONObject(response.toString());
+
                     String result = jsonObj.getString("result");    //response.toString();
                     boolean containsVal = result.toLowerCase().contains("200");
                     String contains = Boolean.toString(containsVal);
                     Log.d("PasswordLog", contains);
+                    Log.d("PasswordLog", result);
                     if (containsVal == true) {
-                        Log.d("PasswordLog", result);
                         homeIntent.putExtra("Status", result);
                         homeIntent.putExtra("User", emailString);
                         startActivity(homeIntent);
@@ -81,18 +74,21 @@ public class LoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("ERROR", "Error with request response.");
+                Log.d("ERROR", "Error with requ est response.");
             }
         }) {
             protected Map<String, String> getParams() {
                 //Format data that will make up the body of the post request (email and password)
                 Map<String, String> MyData = new HashMap<String, String>();
                 MyData.put(emailString, passwordString);
+                Log.d("PasswordLog", emailString);
+                Log.d("PasswordLog", passwordString);
                 return MyData;
             }
         };
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+
     }
 
     //Go to Create Account page when the create button is clicked
@@ -100,9 +96,4 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
-    public void openActivityHome(){
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
-    }
-
 }
