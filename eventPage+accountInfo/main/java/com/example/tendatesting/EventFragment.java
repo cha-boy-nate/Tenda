@@ -44,6 +44,7 @@ public class EventFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         eventArrayList = new ArrayList<>();
         adapter = new EventAdapter(getActivity(),eventArrayList);
+        adapter = new EventAdapter(getActivity(),eventArrayList);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
 
         adapter.setOnItemClickListener(new EventAdapter.OnItemClickListener() {
