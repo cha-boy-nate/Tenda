@@ -5,22 +5,23 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.SeekBar;
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.google.android.gms.location.Geofence;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -30,7 +31,13 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import java.util.ArrayList;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class CreateEventActivity extends AppCompatActivity implements
@@ -43,14 +50,10 @@ public class CreateEventActivity extends AppCompatActivity implements
     private MapView mMapView;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    AutocompleteSupportFragment placeAutoComplete;
 
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
-
-
-
-
-    //private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +85,23 @@ public class CreateEventActivity extends AppCompatActivity implements
         mMapView.onCreate(mapViewBundle);
         mMapView.getMapAsync(this);
 
-
     }
 
+    public double inRadius(double markerLattitude, double markerLongitude, double locLatitude, double locLongtitude, double radius) {
+        double val = Math.sqrt(Math.pow((markerLattitude - locLatitude), 2) + Math.pow((markerLongitude - locLongtitude), 2));
+        val = val*78710;
+        return val;
+    }
+
+    public void onClick(View view) {
+        eventTitle = findViewById(R.id.eventTitle);
+        eventDescription = findViewById(R.id.eventDescription);
+        String eventTitleString = eventTitle.getText().toString();
+        String eventDescriptionString = eventDescription.toString();
+        String test = dateTimeResult.getText().toString();
+        String all = eventTitleString + " --- " + eventDescriptionString + " --- " + test;
+        Log.d("CreateEventLog", all);
+    }
 
 
 
@@ -148,10 +165,11 @@ public class CreateEventActivity extends AppCompatActivity implements
 
     @Override
     public void onMapReady(final GoogleMap map) {
-         LatLng SPU = new LatLng(47.6496, -122.3615);
+        LatLng SPU = new LatLng(47.6496, -122.3615);
 
-        Marker loc = map.addMarker(new MarkerOptions().position(SPU).title("Set Location").draggable(true));
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(),15.0f));
+
+        final Marker loc = map.addMarker(new MarkerOptions().position(SPU).title("Set Location").draggable(true));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 15.0f));
         final Circle cir = map.addCircle(new CircleOptions().center(loc.getPosition()).radius(100).strokeColor(Color.GREEN).fillColor(0x2290EE90));
         map.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
             @Override
@@ -169,6 +187,9 @@ public class CreateEventActivity extends AppCompatActivity implements
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        map.setMyLocationEnabled(true);
+        final FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
+
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
 
             @Override
@@ -184,34 +205,150 @@ public class CreateEventActivity extends AppCompatActivity implements
             @Override
             public void onMarkerDragEnd(Marker marker) {
 
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),map.getCameraPosition().zoom));
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), map.getCameraPosition().zoom));
                 cir.setCenter(marker.getPosition());
+
+                if (ActivityCompat.checkSelfPermission(CreateEventActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                client.getLastLocation().addOnSuccessListener(CreateEventActivity.this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location myLocation) {
+
+                        TextView radTextView = findViewById(R.id.in_location);
+                        double val = inRadius(loc.getPosition().latitude, loc.getPosition().longitude, myLocation.getLatitude(), myLocation.getLongitude(), cir.getRadius());
+                        if(val<cir.getRadius()) {
+                            radTextView.setText(Double.toString(val)+"<"+Double.toString(cir.getRadius())+": Within Radius");
+                        }else{
+                            radTextView.setText(Double.toString(val)+">"+Double.toString(cir.getRadius())+": Not Within Radius");
+                        }
+                    }
+                });
             }
         });
 
-        SeekBar seekBarDis = findViewById(R.id.seekBarEvent);
-        seekBarDis.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        final DiscreteSeekBar seekBarDis = findViewById(R.id.seekBarEvent);
+        seekBarDis.setProgress(10);
+        seekBarDis.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(fromUser) {
-                    cir.setRadius(progress*10);
+            public void onProgressChanged(DiscreteSeekBar seekBar, int progress, boolean fromUser) {
+
+                if (fromUser) {
+                    if(progress==0){
+                        cir.setRadius(1 * 10);
+                    }else {
+                        cir.setRadius(progress);
+                    }
+                    if (ActivityCompat.checkSelfPermission(CreateEventActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    client.getLastLocation().addOnSuccessListener(CreateEventActivity.this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location myLocation) {
+
+                            if (myLocation != null) {
+                                TextView radTextView = findViewById(R.id.in_location);
+                                double val = inRadius(loc.getPosition().latitude, loc.getPosition().longitude, myLocation.getLatitude(), myLocation.getLongitude(), cir.getRadius());
+                                if(val<cir.getRadius()) {
+                                    radTextView.setText(Double.toString(val)+"<"+Double.toString(cir.getRadius())+": Within Radius");
+                                }else{
+                                    radTextView.setText(Double.toString(val)+">"+Double.toString(cir.getRadius())+": Not Within Radius");
+                                }
+                            }
+                        }
+                    });
                 }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
 
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+
+        });
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
+        }
+
+
+        placeAutoComplete = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        placeAutoComplete.setPlaceFields(Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG));
+
+
+        placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                Log.i("MAPSSSS", "Place: " + place.getLatLng() + ", " + place.getId());
+                loc.setPosition(place.getLatLng());
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), map.getCameraPosition().zoom));
+                cir.setCenter(loc.getPosition());
+
+                if (ActivityCompat.checkSelfPermission(CreateEventActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                client.getLastLocation().addOnSuccessListener(CreateEventActivity.this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location myLocation) {
+
+                        if (myLocation != null) {
+                            TextView radTextView = findViewById(R.id.in_location);
+                            double val = inRadius(loc.getPosition().latitude, loc.getPosition().longitude, myLocation.getLatitude(), myLocation.getLongitude(), cir.getRadius());
+
+                            if(val<cir.getRadius()) {
+                                radTextView.setText(Double.toString(val)+"<"+Double.toString(cir.getRadius())+": Within Radius");
+                            }else{
+                                radTextView.setText(Double.toString(val)+">"+Double.toString(cir.getRadius())+": Not Within Radius");
+                            }
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.i("MAPS", "An error occurred: " + status);
 
             }
         });
 
 
 
-        map.setMyLocationEnabled(true);
+
+
+
+
+
+
+
+
 
 
     }
@@ -233,6 +370,4 @@ public class CreateEventActivity extends AppCompatActivity implements
         super.onLowMemory();
         mMapView.onLowMemory();
     }
-
-
 }

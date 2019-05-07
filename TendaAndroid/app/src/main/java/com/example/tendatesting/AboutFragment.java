@@ -12,7 +12,7 @@ public class AboutFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
-        getActivity().setTitle("About Us");
+        getActivity().setTitle("About");
         return inflater.inflate(R.layout.fragment_info, container, false);
     }
 }

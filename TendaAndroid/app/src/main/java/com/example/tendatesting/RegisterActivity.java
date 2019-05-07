@@ -3,72 +3,96 @@ package com.example.tendatesting;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
-
-    private EditText name, email, password, confirmPassword, contactNumber;
-    private Button btn_regist;
-    private ProgressBar loading;
-    private static String URL_REGIST = "";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-//        loading = findViewById(R.id.loading);
-//        name = findViewById(R.id.name);
-//        email = findViewById(R.id.email);
-//        password = findViewById(R.id.email);
-//        confirmPassword = findViewById(R.id.confirmPassword);
-//        contactNumber = findViewById(R.id.contactNumber);
-//
-//        btn_regist.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //
-//            }
-//        });
+    }
 
+    public void ClickToLoginPage() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    //Function will be called when the button is clicked.
+    public void createAccount(View view) throws IOException, JSONException {
+        EditText name = (EditText)findViewById(R.id.name);
+        EditText email = (EditText)findViewById(R.id.name);
+        EditText password = (EditText)findViewById(R.id.password);
+        final String emailString = email.getText().toString();
+        final String nameString = name.getText().toString();
+        final String passwordString = password.getText().toString();
+
+        final String requestString = emailString + " " + nameString + " " + passwordString;
+
+        /*
+        final String jsonString = new JSONObject()
+                .put("name", nameString
+                .put("email", emailString)
+                .put("password", passwordString).toString();
+        */
+
+        Log.d("RegisterLog", requestString);
+
+        final Intent homeIntent = new Intent(this, HomeActivity.class);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://34.217.162.221:8000/createAccount";
+
+        //Create request
+        final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObj = new JSONObject(response.toString());
+                    String result = jsonObj.getString("result");
+                    Log.d("RegisterLog", result);
+                    boolean success = result.toLowerCase().contains("200");
+                    if(success == true){
+                        ClickToLoginPage();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("ERROR", "Error with request response.");
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> MyData = new HashMap<String, String>();
+                MyData.put("key", requestString);
+                return MyData;
+            }
+        };
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     public void ClickToLoginPage(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
-
-//    private void Regist(){
-//        loading.setVisibility(View.VISIBLE);
-//        btn_regist.setVisibility(View.GONE);
-//
-//        final String name = this.name.getText().toString().trim();
-//        final String email = this.email.getText().toString().trim();
-//        final String password = this.password.getText().toString().trim();
-//
-//        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_REGIST,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//
-//                    }
-//                })
-//        {
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                return super.getParams();
-//            }
-//        };
-//
-//    }
 }

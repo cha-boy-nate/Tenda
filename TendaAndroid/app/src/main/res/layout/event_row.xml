@@ -16,13 +16,13 @@
     android:padding="4dp">
     <TextView
         android:id="@+id/textTitle"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1dp"
         android:text="Title:"
-        android:textStyle="bold"
-        android:textSize="21sp" />
+        android:textSize="21sp"
+        android:textStyle="bold" />
     <TextView
         android:id="@+id/textDescription"
         android:layout_width="match_parent"

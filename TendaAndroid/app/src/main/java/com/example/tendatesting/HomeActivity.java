@@ -9,18 +9,66 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toolbar;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout drawer;
+    public String userIDVal = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        //Basically signing into system
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String value = extras.getString("User");
+            RequestQueue queue = Volley.newRequestQueue(this);
+            String urlUserID ="http://34.217.162.221:8000/getUserIDNum/"+value+"/";
+            //Create request
+            final StringRequest stringRequestUserID = new StringRequest(Request.Method.GET, urlUserID, new Response.Listener<String>() {
+                //When the request is recieved:
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        //Convert response to a json
+                        JSONObject jsonObj = new JSONObject(response.toString());
+                        String result = jsonObj.getJSONObject("result").getString("user_id");
+                        userIDVal = result;
+                        Log.d("HomeLog", userIDVal);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("ERROR", "Error with request response.");
+                }
+            });
+            // Add the request to the RequestQueue.
+            queue.add(stringRequestUserID );
+
+        } else {
+            Log.d("HomeLog", "getting value unsuccessful");
+        }
 
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -35,19 +83,31 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         if(savedInstanceState == null){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new EventFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_event);
+            Bundle bundle = new Bundle();
+            bundle.putString("userID", userIDVal);
+            EventFragment timeline_frag = new EventFragment();
+            timeline_frag.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, timeline_frag).commit();
+            navigationView.setCheckedItem(R.id.nav_timeline);
         }
         requestPermission();
+
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        Bundle bundle = new Bundle();
+        bundle.putString("userID", userIDVal);
         switch(menuItem.getItemId()){
-            case  R.id.nav_event:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new EventFragment()).commit();
+            case  R.id.nav_timeline:
+                EventFragment timeline_frag = new EventFragment();
+                timeline_frag.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, timeline_frag).commit();
+                break;
+            case  R.id.nav_my_event:
+                MyEvents my_event_frag = new MyEvents();
+                my_event_frag.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, my_event_frag).commit();
                 break;
             case  R.id.nav_event_join:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
