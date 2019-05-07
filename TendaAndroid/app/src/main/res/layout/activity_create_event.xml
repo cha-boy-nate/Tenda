@@ -89,9 +89,8 @@
     <!--android:text="Pick Location"-->
     <!--android:backgroundTint="@color/colorPrimary"/>-->
 
-    <SeekBar
+    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
         android:id="@+id/seekBarEvent"
-        style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:layout_width="371dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

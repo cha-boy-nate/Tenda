@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.SeekBar;
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -234,17 +234,17 @@ public class CreateEventActivity extends AppCompatActivity implements
             }
         });
 
-        final SeekBar seekBarDis = findViewById(R.id.seekBarEvent);
+        final DiscreteSeekBar seekBarDis = findViewById(R.id.seekBarEvent);
         seekBarDis.setProgress(10);
-        seekBarDis.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBarDis.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            public void onProgressChanged(DiscreteSeekBar seekBar, int progress, boolean fromUser) {
 
                 if (fromUser) {
                     if(progress==0){
                         cir.setRadius(1 * 10);
                     }else {
-                        cir.setRadius(progress * 10);
+                        cir.setRadius(progress);
                     }
                     if (ActivityCompat.checkSelfPermission(CreateEventActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
@@ -275,14 +275,15 @@ public class CreateEventActivity extends AppCompatActivity implements
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
 
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
 
             }
+
         });
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
