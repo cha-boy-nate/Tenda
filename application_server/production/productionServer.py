@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
-
+from urllib import unquote
+import re
 import json
 import setup
 
@@ -17,32 +18,34 @@ def verifyPassword(email, testpassword):
     cur.execute(query)
     password = str(cur.fetchone())
     if testpassword == password:
-        query2 = "Select user_id from User where email="+email+";"
-        cur.execute(query2)
-        user_id = cur.fetchone()
-        val = stripResponse(user_id)
-        userData = getUserData(val)
-        events = getAssociatedEvents(val)
-        events = stripResponse(events)
-        eventDetails = getEventDetails(events)
-        returnData = {}
-        returnData['user-data'] = userData
-        returnData['event-id'] = events
-        returnData['event-details-for-id-' + events] = eventDetails
-        return returnData
+        return 1
     else:
         return 0
 
-#
 def getUserID(email):
     query = "Select user_id from User where email=\'"+email+"\';"
     cur.execute(query)
-    return cur.fetchone()
+    row = cur.fetchall()
+    num = str(row)
+    num = num.replace(",", "")
+    num = num.replace("(", "")
+    num = num.replace(")", "")
+    num = num.replace("L", "")
+    return num
 
 def getEventDetails(event_id):
-    query = "Select eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription from Event where event_id="+event_id+";"
+    query = "Select eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription, event_id from Event where event_id="+str(event_id)+";"
     cur.execute(query)
-    return cur.fetchone()
+    event = cur.fetchone()
+    returnVal = {}
+    returnVal["name"] = event[0]
+    returnVal["date"] = str(event[1])
+    returnVal["time"] = str(event[2])
+    returnVal["duration"] = str(event[3])
+    returnVal["radius"] = str(event[4])
+    returnVal["description"] = str(event[5])
+    returnVal["event_id"] = str(event[6])
+    return returnVal
 
 def stripResponse(inputVal):
     inputVal = str(re.findall('\d+', str(inputVal)))
@@ -55,13 +58,30 @@ def getUserData(user_id):
     query = "Select firstName, lastName, email from User where user_id="+user_id+";"
     cur.execute(query)
     val = cur.fetchone()
-    return val
+    returnVal = {}
+    returnVal["firstName"] = val[0]
+    returnVal["lastName"] = val[1]
+    returnVal["email"] = val[2]
+    print(returnVal)
+    return returnVal
 
 def getAssociatedEvents(user_id):
     query = "Select distinct event_id from Events_to_Attendees where user_id="+user_id+" and response='yes';"
     cur.execute(query)
-    val = cur.fetchone()
-    return val
+    val = cur.fetchall()
+    returnVal = {}
+    final = []
+    counter = 0
+    for i in val:
+        value = str(i[0])
+        test = returnVal["event_id"] = value
+        final.append(test)
+    return final
+
+def getManagerAssociatedEvents(user_id):
+    query = "Select distinct event_id from Event where manager_id="+user_id+";"
+    cur.execute(query)
+    return cur.fetchall()
 
 def commitEvent(manager_id, eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription):
 	sql = "insert into Event(manager_id, eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription) values ("+manager_id+",'"+eventName+"','"+eventDate+"','"+eventTime+"','"+eventDuration+"','"+eventRadius+"','"+eventDescription+"');"
@@ -71,7 +91,6 @@ def commitEvent(manager_id, eventName, eventDate, eventTime, eventDuration, even
 
 def commitInvitationResponse(event_id, user_id, response):
 	sql = "Insert Into Events_to_Attendees(event_id, user_id, response) values ("+event_id+", "+user_id+", \'"+response+"\');"
-	print(sql)
 	cur.execute(sql)
 	db.commit()
 
@@ -80,49 +99,48 @@ def commitInvitationResponse(event_id, user_id, response):
 def index():
 	return jsonify(result={"status":200})
 
-#This returns all the events that a user has said they will attend.
+#This returns event details matching id given.
 @application.route("/event/<idVal>/", methods=['GET'])
 def event(idVal):
-	query = "Select distinct event_id from Events_to_Attendees where user_id="+idVal+" and response='yes';"
-	cur.execute(query)
-	val = cur.fetchall()
-	resultsVal = "events:["
-	for x in val:
-		q = "select eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription from Event where event_id="+str(x[0])+";"
-		cur.execute(q)
-		responseVal = cur.fetchone()
-		resultsVal = resultsVal + "{eventName:\'"+str(responseVal[0])+"\', eventName:\'"+str(responseVal[1])+"\', eventTime:\'"+str(responseVal[2])+"\', eventDuration:\'"+str(responseVal[3])+"\', eventRaidus:\'"+str(responseVal[4])+"\', eventDescription:\'"+str(responseVal[5])+"\'},"
-		resultsVal = resultsVal + "]"
-	return json.dumps(resultsVal)
+        event = getEventDetails(idVal)
+        if event == None:
+            print("no response")
+            return jsonify(result={"status":"no event with id"})
+        else:
+            return jsonify(result=event)
 
 #route for user's email and password submission. Calls verify password.
-@application.route("/login", methods=['GET', 'POST'])
+@application.route("/login", methods=['POST'])
 def login():
     if request.method == 'POST':
         response = str(request.get_data())
-        response = response.replace("%40", "@")
-        response = response.replace("'", "")
-        response = response.replace("&", "")
-        response = response.split("=")
-        response = "{\"email\":\""+response[0]+"\",\"password\":\""+response[1]+"\"}"
-        response = json.loads(response)
-        password = "(\'" + response["password"] + "\',)"
-        checker = verifyPassword(response["email"], password)
+        print("Login attempted from: " + response)
+        decoded = unquote(response)
+        decoded = decoded.split("&")
+        password = decoded[0].split("=")
+        email = decoded[1].split("=")
+        password = password[1]
+        email = email[1]
+        password = "(\'" + password + "\',)"
+        checker = verifyPassword(email, password)
         if checker != 0:
-            print(str(checker))
             return jsonify(result={"status":200, 'data':str(checker)})
-        else:
-            return jsonify(result={"status":405})
     else:
-        print("not post request")
         return jsonify(result={"status":400})
 
 #may need to add a "maybe" field to the response field in the database.
 #route for users to send a response to a invatation. Calls commitInvitationResponse
-@application.route("/createResponse", methods=["GET", "POST"])
+@application.route("/createResponse", methods=["POST"])
 def createResponse():
-	print('test print val')
-	commitInvitationResponse("3", "1", "yes")
+        decoded = unquote(request.get_data())
+        decoded = decoded.split("&")
+        event_id = decoded[0].split("=")
+        user_id = decoded[1].split("=")
+        response = decoded[2].split("=")
+        event_id = event_id[1]
+        user_id = user_id[1]
+        response = response[1]
+        commitInvitationResponse(event_id, user_id, response)
 	return jsonify(result={"status":200})
 
 #route to create a new event.
@@ -151,9 +169,36 @@ def createAccount():
 		db.commit()
 		return jsonify(result={"status":200})
 	else:
-		print("get method detected")
 		return jsonify(result={"status":400})
 
 @application.route("/accountInformation/<idVal>/", methods=["GET"])
 def accountInformation(idVal):
-	return jsonify(result={"result":str(getUserData(idVal))})
+	return jsonify(result=str(getUserData(idVal)))
+
+@application.route("/getUserIDNum/<email>/", methods=["GET"])
+def getUserIDNum(email):
+    userID = str(getUserID(email))
+    return jsonify(result={"user_id":userID})
+
+@application.route("/timeline/<idVal>/", methods=["GET"])
+def timeline(idVal):
+    events = getAssociatedEvents(idVal)
+    finalDictionary = []
+    result = {}
+    counter = 0
+    test = []
+    for event in events:
+        test.append(int(event))
+    for event in test:
+        result["event"] = str(getEventDetails(event))
+        finalDictionary.append(result.copy())
+    return jsonify(result=finalDictionary)
+
+@application.route("/myEvents/<idVal>/", methods=["GET"])
+def myEvents(idVal):
+    x = getManagerAssociatedEvents(idVal)
+    print("associated events: " + str(x))
+    result = ''
+    for i in x:
+        result += str(getEventDetails(i[0]))
+    return jsonify(result={"status":result})
