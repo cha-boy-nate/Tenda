@@ -3,12 +3,14 @@ package com.example.tendatesting;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 
-public class ManageEvent extends AppCompatActivity {
+public class
+ManageEvent extends AppCompatActivity {
 
 
     Toolbar toolbar;
@@ -24,6 +26,12 @@ public class ManageEvent extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_M_container,
+                new AttendanceFragment()).commit();
+        Toolbar barTitle = findViewById(R.id.messageToolbar);
+        barTitle.setTitle("Event Management");
+        //getSupportActionBar().setTitle("Event Management");
 
 
     }

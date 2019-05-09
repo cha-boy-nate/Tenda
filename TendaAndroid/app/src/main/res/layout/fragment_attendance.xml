@@ -29,7 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Title:"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="Tenda Weekly Meeting"
             android:textSize="18dp" />
 
         <TextView
@@ -37,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Description:"
+            android:text="This week we will discuss good coding practices."
             android:textSize="18sp" />
 
         <TextView
@@ -45,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Event Time:"
+            android:text="10:30"
             android:textSize="18sp" />
 
         <TextView
@@ -53,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Event Date:"
+            android:text="05/08/2019"
             android:textSize="18sp" />
     </LinearLayout>
     </android.support.v7.widget.CardView>
@@ -154,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:padding="5dp"
-                android:text="1hr:10min"
+                android:text="1hr:20min"
                 android:textSize="15sp" />
             </TableRow>
             <TableRow
@@ -179,7 +180,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:padding="5dp"
-                    android:text="1hr:10min"
+                    android:text="1hr:05min"
                     android:textSize="15sp" />
             </TableRow>
             <TableRow
@@ -204,7 +205,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:padding="5dp"
-                    android:text="1hr:10min"
+                    android:text="1hr:08min"
                     android:textSize="15sp" />
             </TableRow>
 
@@ -212,7 +213,17 @@
         </TableLayout>
         </ScrollView>
 
+
     </android.support.v7.widget.CardView>
+    <Button
+        android:id="@+id/sendAlert"
+        android:layout_width="225dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_green"
+        android:text="Send Alert"
+        android:textColor="#ffffff"
+        android:layout_gravity="center" />
 
 
 

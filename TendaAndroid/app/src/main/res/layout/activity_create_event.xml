@@ -82,21 +82,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionLayout" />
 
-    <!--<Button-->
-    <!--android:id="@+id/eventLocation"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="Pick Location"-->
-    <!--android:backgroundTint="@color/colorPrimary"/>-->
+    <TextView
+        android:id="@+id/Radius"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/radius_white"
+        android:text="Event Radius"
+        android:textAlignment="center"
+        android:textColor="@color/TextOnWhiteBackground"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarEvent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relLayout" />
 
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+    <android.support.v7.widget.AppCompatSeekBar
         android:id="@+id/seekBarEvent"
         android:layout_width="371dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:max="10"
+        android:layout_marginTop="40dp"
+        android:max="100"
+        android:min="10"
+        android:progressBackgroundTint="@color/quantum_grey700"
+        android:progressTint="@color/colorPrimaryDark"
         android:thumb="@drawable/ic_fiber"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.525"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relLayout" />
 
@@ -130,47 +142,47 @@
         android:layout_marginRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateTimeResult" >
+        app:layout_constraintTop_toBottomOf="@+id/dateTimeResult">
 
         <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/map_View"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
         <TextView
             android:id="@+id/in_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="250dp"
             android:text="Location" />
+
         <RelativeLayout
+            android:id="@+id/relLayout1"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:elevation="10dp"
             android:background="@drawable/white_border"
-            android:id="@+id/relLayout1">
+            android:elevation="10dp">
+
             <fragment
                 android:id="@+id/autocomplete_fragment"
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
 
-                android:name= "com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-                />
+                android:layout_height="wrap_content" />
 
 
         </RelativeLayout>
     </RelativeLayout>
 
 
-
-
     <Button
         android:id="@+id/createEventButton"
         android:layout_width="225dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/radius_green"
         android:backgroundTint="@color/colorPrimaryDark"
         android:onClick="onClick"
@@ -179,8 +191,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/seekBarEvent" />
-
-
 
 
 </android.support.constraint.ConstraintLayout>

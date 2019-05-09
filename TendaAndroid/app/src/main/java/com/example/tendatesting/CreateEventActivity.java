@@ -15,7 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -169,8 +170,8 @@ public class CreateEventActivity extends AppCompatActivity implements
 
 
         final Marker loc = map.addMarker(new MarkerOptions().position(SPU).title("Set Location").draggable(true));
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 15.0f));
-        final Circle cir = map.addCircle(new CircleOptions().center(loc.getPosition()).radius(100).strokeColor(Color.GREEN).fillColor(0x2290EE90));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 17.0f));
+        final Circle cir = map.addCircle(new CircleOptions().center(loc.getPosition()).radius(10).strokeColor(Color.GREEN).fillColor(0x2290EE90));
         map.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
             @Override
             public void onCircleClick(Circle circle) {
@@ -234,17 +235,20 @@ public class CreateEventActivity extends AppCompatActivity implements
             }
         });
 
-        final DiscreteSeekBar seekBarDis = findViewById(R.id.seekBarEvent);
-        seekBarDis.setProgress(10);
-        seekBarDis.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+        final SeekBar seekBarDis = findViewById(R.id.seekBarEvent);
+        seekBarDis.setProgress(35);
+        seekBarDis.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int progress, boolean fromUser) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
                 if (fromUser) {
                     if(progress==0){
                         cir.setRadius(1 * 10);
+
                     }else {
                         cir.setRadius(progress);
+                        TextView showRadius = findViewById(R.id.Radius);
+                        showRadius.setText(progress +" meters");
                     }
                     if (ActivityCompat.checkSelfPermission(CreateEventActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
@@ -275,12 +279,12 @@ public class CreateEventActivity extends AppCompatActivity implements
             }
 
             @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
 
             @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
 
