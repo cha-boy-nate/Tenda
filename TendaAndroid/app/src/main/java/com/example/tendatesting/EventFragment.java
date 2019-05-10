@@ -97,7 +97,10 @@ public class EventFragment extends Fragment implements EventAdapter.OnNoteListen
     @Override
     public void onNoteClick(int position) {
         eventArrayList.get(position);
-        Intent intent = new Intent(getActivity(), ManageEvent.class);
-        startActivity(intent);
+        if(position < 1){
+        Intent intent = new Intent(getActivity(), AttendeeActivity.class);
+        startActivity(intent);}
+        else{        Intent intent = new Intent(getActivity(),  ManageEvent.class);
+            startActivity(intent);}
     }
 }
