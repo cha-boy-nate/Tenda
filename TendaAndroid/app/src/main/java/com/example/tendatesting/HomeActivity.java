@@ -1,5 +1,6 @@
 package com.example.tendatesting;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -7,10 +8,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.android.volley.Request;
@@ -36,6 +39,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         //Basically signing into system
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -98,38 +102,74 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         Bundle bundle = new Bundle();
         bundle.putString("userID", userIDVal);
-        switch(menuItem.getItemId()){
-            case  R.id.nav_timeline:
+
+        switch(menuItem.getItemId()) {
+            case R.id.nav_timeline:
                 EventFragment timeline_frag = new EventFragment();
                 timeline_frag.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, timeline_frag).commit();
                 break;
-            case  R.id.nav_my_event:
+            case R.id.nav_my_event:
                 MyEvents my_event_frag = new MyEvents();
                 my_event_frag.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, my_event_frag).commit();
                 break;
-            case  R.id.nav_event_join:
+            case R.id.nav_event_join:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new EventJoinFragment()).commit();
                 break;
-            case  R.id.nav_account:
+            case R.id.nav_account:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new AccountFragment()).commit();
                 break;
-            case  R.id.nav_report:
+            case R.id.nav_report:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new ReportFragment()).commit();
                 break;
-            case  R.id.nav_about:
+            case R.id.nav_about:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new AboutFragment()).commit();
                 break;
-            case R.id.nav_exit:
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                break;
+//            case R.id.nav_exit:
+//                //Setup alert dialog when user log out
+//                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+//                alertDialog.setTitle("Confirm Logout");
+//                alertDialog.setMessage("Are you sure you want to log out?");
+//                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Intent intent = new Intent(this, LoginActivity.class);
+//                        startActivity(intent);
+//                    }
+//                });
+//                alertDialog.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // User pressed Cancel button. Write Logic Here
+//                        Toast.makeText(getApplicationContext(), "You clicked on Cancel",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//                alertDialog.show();
+//                break;
+        }
+        if (menuItem.getItemId() == R.id.nav_exit){
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setTitle("Logout");
+            alertDialog.setMessage("Are you sure you wish to logout?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
+                        }
+                    });
+            alertDialog.show();
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
