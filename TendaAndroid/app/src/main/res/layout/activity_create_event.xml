@@ -149,12 +149,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/in_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="250dp"
-            android:text="Location" />
+
 
         <RelativeLayout
             android:id="@+id/relLayout1"

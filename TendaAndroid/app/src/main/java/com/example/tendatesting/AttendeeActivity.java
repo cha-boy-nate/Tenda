@@ -118,22 +118,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
             return;
         }
         map.setMyLocationEnabled(true);
-        TextView radTextView = findViewById(R.id.in_location);
-        final FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
 
-        client.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location myLocation) {
-
-                TextView radTextView = findViewById(R.id.distanceFromEvent);
-                double val = inRadius(loc.getPosition().latitude, loc.getPosition().longitude, myLocation.getLatitude(), myLocation.getLongitude(), cir.getRadius());
-                if(val<cir.getRadius()) {
-                    radTextView.setText("You Are Within The Event Radius");
-                }else{
-                    radTextView.setText(((int)val)+" Meters From The Event");
-                }
-            }
-        });
 
 
 

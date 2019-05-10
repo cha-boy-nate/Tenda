@@ -189,7 +189,7 @@ public class CreateEventActivity extends AppCompatActivity implements
             return;
         }
         map.setMyLocationEnabled(true);
-        final FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
+
 
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
 
@@ -219,19 +219,7 @@ public class CreateEventActivity extends AppCompatActivity implements
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                client.getLastLocation().addOnSuccessListener(CreateEventActivity.this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location myLocation) {
 
-                        TextView radTextView = findViewById(R.id.in_location);
-                        double val = inRadius(loc.getPosition().latitude, loc.getPosition().longitude, myLocation.getLatitude(), myLocation.getLongitude(), cir.getRadius());
-                        if(val<cir.getRadius()) {
-                            radTextView.setText(Double.toString(val)+"<"+Double.toString(cir.getRadius())+": Within Radius");
-                        }else{
-                            radTextView.setText(Double.toString(val)+">"+Double.toString(cir.getRadius())+": Not Within Radius");
-                        }
-                    }
-                });
             }
         });
 
@@ -260,21 +248,7 @@ public class CreateEventActivity extends AppCompatActivity implements
                         // for ActivityCompat#requestPermissions for more details.
                         return;
                     }
-                    client.getLastLocation().addOnSuccessListener(CreateEventActivity.this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location myLocation) {
 
-                            if (myLocation != null) {
-                                TextView radTextView = findViewById(R.id.in_location);
-                                double val = inRadius(loc.getPosition().latitude, loc.getPosition().longitude, myLocation.getLatitude(), myLocation.getLongitude(), cir.getRadius());
-                                if(val<cir.getRadius()) {
-                                    radTextView.setText(Double.toString(val)+"<"+Double.toString(cir.getRadius())+": Within Radius");
-                                }else{
-                                    radTextView.setText(Double.toString(val)+">"+Double.toString(cir.getRadius())+": Not Within Radius");
-                                }
-                            }
-                        }
-                    });
                 }
             }
 
@@ -317,22 +291,7 @@ public class CreateEventActivity extends AppCompatActivity implements
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                client.getLastLocation().addOnSuccessListener(CreateEventActivity.this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location myLocation) {
 
-                        if (myLocation != null) {
-                            TextView radTextView = findViewById(R.id.in_location);
-                            double val = inRadius(loc.getPosition().latitude, loc.getPosition().longitude, myLocation.getLatitude(), myLocation.getLongitude(), cir.getRadius());
-
-                            if(val<cir.getRadius()) {
-                                radTextView.setText(Double.toString(val)+"<"+Double.toString(cir.getRadius())+": Within Radius");
-                            }else{
-                                radTextView.setText(Double.toString(val)+">"+Double.toString(cir.getRadius())+": Not Within Radius");
-                            }
-                        }
-                    }
-                });
 
             }
 
