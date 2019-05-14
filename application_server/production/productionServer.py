@@ -71,21 +71,28 @@ def getAssociatedEvents(user_id):
     val = cur.fetchall()
     returnVal = {}
     final = []
-    counter = 0
     for i in val:
         value = str(i[0])
         test = returnVal["event_id"] = value
         final.append(test)
+    
     return final
 
 def getManagerAssociatedEvents(user_id):
     query = "Select distinct event_id from Event where manager_id="+user_id+";"
     cur.execute(query)
-    return cur.fetchall()
+    result = cur.fetchall()
+    returnVal = {}
+    final = []
+    for i in result:
+        value = str(i[0])
+        test = returnVal["event_id"] = value
+        final.append(test)
+
+    return final
 
 def commitEvent(manager_id, eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription):
 	sql = "insert into Event(manager_id, eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription) values ("+manager_id+",'"+eventName+"','"+eventDate+"','"+eventTime+"','"+eventDuration+"','"+eventRadius+"','"+eventDescription+"');"
-	print(sql)
 	cur.execute(sql)
 	db.commit()
 
@@ -196,9 +203,14 @@ def timeline(idVal):
 
 @application.route("/myEvents/<idVal>/", methods=["GET"])
 def myEvents(idVal):
-    x = getManagerAssociatedEvents(idVal)
-    print("associated events: " + str(x))
-    result = ''
-    for i in x:
-        result += str(getEventDetails(i[0]))
-    return jsonify(result={"status":result})
+    events = getManagerAssociatedEvents(idVal)
+    finalDictionary = []
+    result = {}
+    counter = 0
+    test = []
+    for event in events:
+        test.append(int(event))
+    for event in test:
+        result["event"] = str(getEventDetails(event))
+        finalDictionary.append(result.copy())
+    return jsonify(result=finalDictionary)
