@@ -10,19 +10,21 @@ cur = db.cursor()
 application = Flask(__name__)
 
 #Route used for testing.
-@application.route("/")
+@application.route("/", methods=['GET', 'POST'])
 def index():
 	return jsonify(result={"status":200})
 
-#Route returns event details matching id given.
-@application.route("/event/<idVal>/", methods=['GET'])
-def event(idVal):
-	#Get event details for single event.
-	event = getEventDetails(idVal, cur)
-	if event == None:
-		return jsonify(result={"status":"event not found"})
-	else:
-		return jsonify(result=event)
+#This basically tells flask to run if the envirnment is in development mode.
+if __name__ == '__main__':
+	application.run(debug=True)
+
+#################################################
+# Routing is divided into Get and Post requests #
+# First: POST requests                          #
+# Second: GET requests                          #
+#################################################
+
+'''THIS IS THE START OF THE POST REQUESTS'''
 
 #Route for user's email and password submission. Calls verify password.
 @application.route("/login", methods=['POST'])
@@ -84,6 +86,19 @@ def createAccount():
 	db.commit()
 	return jsonify(result={"status":200})
 
+'''THIS IS THE END OF THE POST REQUEST ROUTES'''
+'''THIS IS THE START OF THE GET REQUEST ROUTES'''
+
+#Route returns event details matching id given.
+@application.route("/event/<idVal>/", methods=['GET'])
+def event(idVal):
+	#Get event details for single event.
+	event = getEventDetails(idVal, cur)
+	if event == None:
+		return jsonify(result={"status":"event not found"})
+	else:
+		return jsonify(result=event)
+
 #Route for getting account information by userID. (only first/last name and email)
 @application.route("/accountInformation/<idVal>/", methods=["GET"])
 def accountInformation(idVal):
@@ -126,5 +141,4 @@ def myEvents(idVal):
 		eventDictionary.append(singleEvent.copy())
 	return jsonify(result=eventDictionary)
 
-if __name__ == '__main__':
-	application.run(debug=True)
+'''THIS IS THE END OF THE GET REQUEST ROUTES'''
