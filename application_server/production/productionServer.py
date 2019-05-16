@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from urllib.parse import unquote
+from urllib import unquote
 import re
 import json
 import setup
@@ -7,7 +7,7 @@ from database_manipulators import *
 
 #database_username, database_password = setup.getCredentials()
 
-db = setup.loginToDatabase("root", "password")
+db = setup.loginToDatabase("flask", "password")
 cur = db.cursor()
 
 application = Flask(__name__)
