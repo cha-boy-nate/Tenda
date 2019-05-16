@@ -5,18 +5,17 @@ import json
 import setup
 from database_manipulators import *
 
-db = setup.getOS()
+#database_username, database_password = setup.getCredentials()
+
+db = setup.loginToDatabase("root", "password")
 cur = db.cursor()
+
 application = Flask(__name__)
 
 #Route used for testing.
 @application.route("/", methods=['GET', 'POST'])
 def index():
 	return jsonify(result={"status":200})
-
-#This basically tells flask to run if the envirnment is in development mode.
-if __name__ == '__main__':
-	application.run(debug=True)
 
 #################################################
 # Routing is divided into Get and Post requests #
@@ -87,6 +86,7 @@ def createAccount():
 	return jsonify(result={"status":200})
 
 '''THIS IS THE END OF THE POST REQUEST ROUTES'''
+#################################################
 '''THIS IS THE START OF THE GET REQUEST ROUTES'''
 
 #Route returns event details matching id given.
@@ -142,3 +142,8 @@ def myEvents(idVal):
 	return jsonify(result=eventDictionary)
 
 '''THIS IS THE END OF THE GET REQUEST ROUTES'''
+
+#THIS NEEDS TO STAY AT THE BOTTOM OF THE FILE
+#This basically tells flask to run if the envirnment is in development mode.
+if __name__ == '__main__':
+	application.run(debug=True)
