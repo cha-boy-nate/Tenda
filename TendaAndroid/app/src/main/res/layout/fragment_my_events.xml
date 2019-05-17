@@ -1,46 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relativeLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Background">
-
+    android:background="@color/Background"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/response"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="184dp"
-        android:layout_marginLeft="184dp"
-        android:layout_marginTop="378dp"
-        android:layout_marginEnd="184dp"
-        android:layout_marginRight="184dp"
-        android:layout_marginBottom="256dp"
-        android:text="default"
-        app:layout_constraintBottom_toTopOf="@+id/createEventButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="default" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:gravity="center|bottom"
+        android:orientation="vertical">
 
     <Button
         android:id="@+id/createEventButton"
-        android:layout_width="157dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="205dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/radius_green"
-        android:text="Create Event"
         android:textColor="#ffffff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="Create Event"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center_horizontal|center" />
+    </LinearLayout>
 
 
-
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

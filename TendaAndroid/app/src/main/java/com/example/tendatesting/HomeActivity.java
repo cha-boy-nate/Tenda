@@ -130,29 +130,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new AboutFragment()).commit();
                 break;
-//            case R.id.nav_exit:
-//                //Setup alert dialog when user log out
-//                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-//                alertDialog.setTitle("Confirm Logout");
-//                alertDialog.setMessage("Are you sure you want to log out?");
-//                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Intent intent = new Intent(this, LoginActivity.class);
-//                        startActivity(intent);
-//                    }
-//                });
-//                alertDialog.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        // User pressed Cancel button. Write Logic Here
-//                        Toast.makeText(getApplicationContext(), "You clicked on Cancel",
-//                                Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                alertDialog.show();
-//                break;
         }
         if (menuItem.getItemId() == R.id.nav_exit){
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this,R.style.AlertDialog);
             alertDialog.setTitle("Logout");
             alertDialog.setMessage("Are you sure you wish to logout?")
                     .setCancelable(false)

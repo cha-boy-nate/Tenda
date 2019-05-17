@@ -71,7 +71,7 @@ public class CreateEventActivity extends AppCompatActivity implements
                 month = c.get(Calendar.MONTH);
                 day = c.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(CreateEventActivity.this,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(CreateEventActivity.this,R.style.PickerTheme,
                         CreateEventActivity.this, year, month, day);
                 datePickerDialog.show();
             }
@@ -116,7 +116,7 @@ public class CreateEventActivity extends AppCompatActivity implements
         hour = c.get(Calendar.HOUR_OF_DAY);
         minute = c.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(CreateEventActivity.this,
+        TimePickerDialog timePickerDialog = new TimePickerDialog(CreateEventActivity.this, R.style.PickerTheme,
                 CreateEventActivity.this, hour, minute, DateFormat.is24HourFormat(this));
         timePickerDialog.show();
 
@@ -129,7 +129,7 @@ public class CreateEventActivity extends AppCompatActivity implements
         minuteFinal = minute;
 
         dateTimeResult.setText("Date: " + monthFinal + "," + dayFinal + "," + yearFinal + "\n" +
-                "Time: " + hourFinal + ":" + minuteFinal);
+                "Time: " + (String.format("%02d:%02d", hourFinal, minuteFinal)));
     }
 
     @Override
@@ -338,19 +338,6 @@ public class CreateEventActivity extends AppCompatActivity implements
 
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
     @Override
