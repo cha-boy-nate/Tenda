@@ -30,7 +30,8 @@ def index():
 def login():
 	#Set variable response to data sent over request.
 	decoded = unquote(request.get_data())
-	#Split to response into the two parts (email and password)
+	#print(str(request.get_data()))
+        #Split to response into the two parts (email and password)
 	decoded = decoded.split("&")
 	#Set the variable email password to the value given by the user (value is after = sign)
 	password = decoded[0].split("=")
@@ -85,6 +86,20 @@ def createAccount():
 	db.commit()
 	return jsonify(result={"status":200})
 
+@application.route("/createAttendenceRecord", methods=["POST"])
+def createAttendenceRecord():
+    #Get the data from the request.
+    response = str(request.get_data())
+    decoded = unquote(response)
+    decoded = decoded.split("&")
+    event_id = decoded[0].split('=')[1]
+    user_id = decoded[1].split('=')[1]
+    response = decoded[2].split('=')[1]
+    time = decoded[3].split('=')[1]
+    date = decoded[4].split('=')[1]
+    print(str(event_id) + " " + str(user_id) + " " + str(response) + " " + str(time) + " " + str(date))
+    return jsonify(result=200)
+
 '''THIS IS THE END OF THE POST REQUEST ROUTES'''
 #################################################
 '''THIS IS THE START OF THE GET REQUEST ROUTES'''
@@ -112,6 +127,7 @@ def getUserIDNum(email):
 #Returns a json of events that the user has said they are attending.
 @application.route("/timeline/<idVal>/", methods=["GET"])
 def timeline(idVal):
+        #print("Got a request for timeline")
 	#Get list of event_ids that the specified user plans to attend.
 	events = getAssociatedEvents(idVal, cur)
 	#Variables used to format the response.
@@ -140,6 +156,28 @@ def myEvents(idVal):
 		#Add the single event to the return value.
 		eventDictionary.append(singleEvent.copy())
 	return jsonify(result=eventDictionary)
+
+@application.route("/attendenceData/<idVal>/", methods=["GET"])
+def attendenceData(idVal):
+    print("ID value given was: " + idVal)
+    returnDictionary = []
+    singlePerson = {}
+    test = {}
+    counter = 0
+    finalSum = {}
+    summary = {}
+    summary['in_Attendence'] = '10'
+    summary['planned_Attendence'] = '8'
+    finalSum["summary_statisitics"] = summary
+    returnDictionary.append(finalSum.copy())
+    while(counter < 5):
+        counter = counter + 1
+        singlePerson['user_id'] = str(counter)
+        singlePerson['duration'] = '1 hour'
+        test['user'] = singlePerson
+        returnDictionary.append(test.copy())
+    print(returnDictionary)
+    return jsonify(result=returnDictionary)
 
 '''THIS IS THE END OF THE GET REQUEST ROUTES'''
 
