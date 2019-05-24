@@ -89,129 +89,19 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="230dp"
         android:layout_margin="8dp"
         app:cardCornerRadius="6dp"
         app:cardElevation="6dp"
         >
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp">
 
 
-
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TableRow
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewAttend"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-                <TextView
-                    android:id="@+id/page_name1"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Akshy Palanisamy"
-                    android:textSize="15sp" />
-                <ImageView
-                    android:id="@+id/image1"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_cancel"/>
-
-                <TextView
-                    android:id="@+id/dur1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:padding="5dp"
-                    android:text="1hr:10min"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-            <TextView
-                android:id="@+id/page_name2"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="Nathan Jenkins"
-                android:textSize="15sp" />
-            <ImageView
-                android:id="@+id/image2"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_check_circle"/>
-
-            <TextView
-                android:id="@+id/dur2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:padding="5dp"
-                android:text="1hr:20min"
-                android:textSize="15sp" />
-            </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-                <TextView
-                    android:id="@+id/page_name3"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Jiahao Cai"
-                    android:textSize="15sp" />
-                <ImageView
-                    android:id="@+id/image3"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_noreply"/>
-
-                <TextView
-                    android:id="@+id/dur3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:padding="5dp"
-                    android:text="1hr:05min"
-                    android:textSize="15sp" />
-            </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-                <TextView
-                    android:id="@+id/page_name4"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Hung Nguyen"
-                    android:textSize="15sp" />
-                <ImageView
-                    android:id="@+id/image4"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_maybe"/>
-
-                <TextView
-                    android:id="@+id/dur4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:padding="5dp"
-                    android:text="1hr:08min"
-                    android:textSize="15sp" />
-            </TableRow>
-
-
-        </TableLayout>
-        </ScrollView>
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
 
 
     </android.support.v7.widget.CardView>

@@ -1,5 +1,6 @@
 package com.example.tendatesting;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -7,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -138,11 +140,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new AboutFragment()).commit();
                 break;
-            case R.id.nav_exit:
-                Intent intent = new Intent(this, LoginActivity.class); //If the logout button is clicked then the user is taken back to the login screen
-                startActivity(intent);
-                break;
 
+        }
+        if (menuItem.getItemId() == R.id.nav_exit){
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this,R.style.AlertDialog);
+            alertDialog.setTitle("Logout");
+            alertDialog.setMessage("Are you sure you wish to logout?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            alertDialog.show();
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

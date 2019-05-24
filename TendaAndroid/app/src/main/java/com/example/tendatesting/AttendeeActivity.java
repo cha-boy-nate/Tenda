@@ -15,14 +15,23 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.sql.Time;
 import java.sql.Timestamp;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,12 +45,23 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCallback, AttendeeAdapter.OnNoteListener{
+    String fragementIdentifier = "AttendeeLog";
+    private JSONObject eventString;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private ArrayList<Attendee> attendanceArrayList;
+    private JSONArray attendeeArray;
 
 
     private MapView mMapView; //variable used for map view
@@ -105,7 +125,76 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
         mMapView.getMapAsync(this); //The API callback to show the map
 
 
+        /*******************************************************/
+        // THIS IS THE START OF THE REQUEST TO GET EVENT DATA  //
+        /*******************************************************/
+        //String eventID="1";
+        //Log.d(fragementIdentifier, eventID);
 
+        Bundle extras = getIntent().getExtras();
+        String eventID = extras.getString("event_id");
+        Log.d(fragementIdentifier, eventID);
+
+        //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://34.217.162.221:8000/event/" + eventID + "/";
+        //Create request
+        final StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            //When the request is recieved:
+            @Override
+            public void onResponse(String response) {
+                try {
+                    //Convert response to a json
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    String result = jsonObject.getString("result");
+                    attendeeArray = new JSONArray(result);
+                    Log.d("Result",result);
+                    createListData(attendeeArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(fragementIdentifier, "Error with request response.");
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+        /*******************************************************/
+        // THIS IS THE END OF THE REQUEST TO GET EVENT DATA    //
+        /*******************************************************/
+
+        recyclerView = findViewById(R.id.recyclerViewAttend);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setHasFixedSize(true);
+        attendanceArrayList = new ArrayList<>();
+        adapter = new AttendeeAdapter(attendanceArrayList,this);
+        recyclerView.setAdapter(new AttendeeAdapter(attendanceArrayList, this));
+
+
+
+    }
+    private void createListData(JSONArray attendeeArray) {
+        int length = attendeeArray.length();
+        for(int i = 0; i < length; i++) {
+            try {
+                JSONObject full = (JSONObject) attendeeArray.get(i);
+                JSONObject test = new JSONObject(full.getString("user"));
+                String duration = test.getString("duration");
+                String user_id = test.getString("user_id");
+
+
+                Attendee attendee = new Attendee(user_id, "Yes", duration);
+                attendanceArrayList.add(attendee);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 
     /*
@@ -240,4 +329,8 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
 
     }
 
+    @Override
+    public void onNoteClick(int position) {
+
+    }
 }

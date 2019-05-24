@@ -24,6 +24,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
         this.mOnNoteListener = onNoteListener;
 
     }
+
     @NonNull
     @Override
     public EventHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
