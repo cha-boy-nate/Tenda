@@ -1,88 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Background"
-    tools:context=".CreateEventActivity"
-    android:orientation="vertical">
+    tools:context=".CreateEventActivity">
 
     <!--Text box for Event Title-->
-    <android.support.design.widget.TextInputLayout
+
+    <!--Text box for Event Description-->
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/eventTitleLayout"
-        android:layout_width="match_parent"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/radius_white">
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/descriptionLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/eventTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="40dp"
+            android:background="@drawable/radius_white"
             android:hint="Event Title"
             android:inputType="text"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp" />
-    </android.support.design.widget.TextInputLayout>
+            android:paddingLeft="20dp"
+            android:textColor="@color/TextOnWhiteBackground"
+            android:textColorLink="@color/TextOnWhiteBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
-
-    <!--Text box for Event Description-->
-    <android.support.design.widget.TextInputLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/descriptionLayout"
-        android:layout_width="match_parent"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/radius_white">
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/dateAndTimePicker"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventTitleLayout">
 
         <EditText
             android:id="@+id/eventDescription"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="40dp"
+            android:background="@drawable/radius_white"
             android:hint="Event Description"
             android:inputType="text"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp" />
-    </android.support.design.widget.TextInputLayout>
+            android:paddingLeft="20dp"
+            android:textColor="@color/TextOnWhiteBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
-    <!--Button for picking Event's Date and Time-->
     <Button
         android:id="@+id/dateAndTimePicker"
-        android:layout_width="205dp"
+        android:layout_width="225dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/radius_green"
         android:text="Pick Date and Time"
         android:textColor="#ffffff"
-        android:layout_gravity="center" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionLayout" />
 
-    <!--Text view for showing event's date and time after pick-->
+    <!--<Button-->
+    <!--android:id="@+id/eventLocation"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Pick Location"-->
+    <!--android:backgroundTint="@color/colorPrimary"/>-->
+
+    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+        android:id="@+id/seekBarEvent"
+        android:layout_width="371dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:max="10"
+        android:thumb="@drawable/ic_fiber"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relLayout" />
+
     <TextView
         android:id="@+id/dateTimeResult"
-        android:layout_width="match_parent"
+        android:layout_width="350dp"
         android:layout_height="50dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/radius_white"
         android:text=""
         android:textAlignment="center"
         android:textColor="@color/TextOnWhiteBackground"
         android:textSize="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateAndTimePicker" />
 
-    <!--Google Map Api view and search bar-->
+
+    <!--Create Event Button-->
+
+
     <RelativeLayout
         android:id="@+id/relLayout"
-        android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_width="350dp"
+        android:layout_height="320dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTimeResult" >
 
         <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/map_View"
@@ -107,40 +155,32 @@
                 android:id="@+id/autocomplete_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:name= "com.google.android.libraries.places.widget.AutocompleteSupportFragment"
                 />
+
+
         </RelativeLayout>
-
     </RelativeLayout>
-    <!--SeekBar for setting Event's radius for verifying presence-->
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-        android:id="@+id/seekBarEvent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:max="10"
-        android:thumb="@drawable/ic_fiber" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:gravity="center|bottom"
-        android:orientation="vertical">
-    <!--Button for creating event-->
+
+
+
     <Button
         android:id="@+id/createEventButton"
-        android:layout_width="205dp"
+        android:layout_width="225dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:background="@drawable/radius_green"
         android:backgroundTint="@color/colorPrimaryDark"
         android:onClick="onClick"
         android:text="Create Event"
-        android:layout_gravity="center_horizontal|center"
         android:textColor="#ffffff"
-        android:layout_marginBottom="10dp"/>
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarEvent" />
 
-</LinearLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>

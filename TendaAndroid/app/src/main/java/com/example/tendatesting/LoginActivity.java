@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("ERROR", "Error with request response.");
+                Log.d("ERROR", "Error with requ est response.");
             }
         }) {
             protected Map<String, String> getParams() {
