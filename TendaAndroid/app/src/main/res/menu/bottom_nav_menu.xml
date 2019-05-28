@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/not_going"
+        android:icon="@drawable/ic_cancel"
+        android:title="Not Going" />
+
+    <item
+        android:id="@+id/going"
+        android:icon="@drawable/ic_check_circle"
+        android:title="Going" />
+
+    <item
+        android:id="@+id/not_sure"
+        android:icon="@drawable/ic_maybe"
+        android:title="Not Sure" />
+
+</menu>

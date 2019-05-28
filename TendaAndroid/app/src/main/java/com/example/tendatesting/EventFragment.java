@@ -22,24 +22,29 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class EventFragment extends Fragment implements EventAdapter.OnNoteListener {
+
 
     //RecyclerView Initialization
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<Event> eventArrayList;
+    private JSONArray eventArray;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         getActivity().setTitle("Event Timeline");
         final View v = inflater.inflate(R.layout.fragment_event, container, false);
-        String userID = getArguments().getString("userID");
+        //String userID = getArguments().getString("userID");
+        String userID="1";
         Log.d("TimelineLog", userID);
         //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -51,12 +56,12 @@ public class EventFragment extends Fragment implements EventAdapter.OnNoteListen
             public void onResponse(String response) {
                 try {
                     //Convert response to a json
-                    JSONObject jsonObj = new JSONObject(response.toString());
-                    String result = jsonObj.getString("result");
-                    Log.d("TimelineLog", result);
-                    TextView requestResult = v.findViewById(R.id.eventDescription);
-                    requestResult.setText(result);
+                    JSONObject jsonObject = new JSONObject(response);
+                    String result = jsonObject.getString("result");
+                    eventArray = new JSONArray(result);
+                    createListData(eventArray);
                 } catch (JSONException e) {
+                    Log.d("TimelineLog", "json conversion didn't work");
                     e.printStackTrace();
                 }
             }
@@ -75,29 +80,46 @@ public class EventFragment extends Fragment implements EventAdapter.OnNoteListen
         eventArrayList = new ArrayList<>();
         adapter = new EventAdapter(eventArrayList,this);
         recyclerView.setAdapter(adapter);
-        createListData();
+
         return v;
     }
-    private void createListData() {
-        Event event = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
-        eventArrayList.add(event);
-        Event event1 = new Event("Comic Conference", "Multi-genre entertainment and comic convention", "2:30", "4/04/2019");
-        eventArrayList.add(event1);
-        Event event2 = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
-        eventArrayList.add(event2);
-        Event event3 = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
-        eventArrayList.add(event3);
-        Event event4 = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
-        eventArrayList.add(event4);
-        Event event5 = new Event("Team Chan", "Weekly Meeting", "10:30", "30/04/2019");
-        eventArrayList.add(event5);
+    private void createListData(JSONArray eventArray) {
+        int length = eventArray.length();
+        for(int i = 0; i < length; i++) {
+            try {
+                JSONObject full = (JSONObject) eventArray.get(i);
+                JSONObject test = new JSONObject(full.getString("event"));
+                String name = test.getString("name");
+                String event_id = test.getString("event_id");
+                String description = test.getString("description");
+                String duration = test.getString("duration");
+                String radius = test.getString("radius");
+                String time = test.getString("time");
+                String date = test.getString("date");
+
+                Event event = new Event(name, description, time, date);
+                eventArrayList.add(event);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onNoteClick(int position) {
-        eventArrayList.get(position);
-        Intent intent = new Intent(getActivity(), ManageEvent.class);
-        startActivity(intent);
+        JSONObject full = null;
+        try {
+            full = (JSONObject) eventArray.get(position);
+            JSONObject test = new JSONObject(full.getString("event"));
+            String event_id = test.getString("event_id");
+            Intent intent = new Intent(getActivity(), AttendeeActivity.class);
+            intent.putExtra("event_id", event_id);
+            startActivity(intent);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 }

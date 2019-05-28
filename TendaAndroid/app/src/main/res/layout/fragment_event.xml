@@ -14,12 +14,5 @@
         android:layout_height="wrap_content"
         android:scrollbars="vertical" />
 
-    <TextView
-        android:id="@+id/eventDescription"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:text="This is will be a short description of the event uploaded by the creator of the event." />
-
 
 </LinearLayout>

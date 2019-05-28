@@ -15,7 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -37,20 +38,24 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 public class CreateEventActivity extends AppCompatActivity implements
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, OnMapReadyCallback {
+
 
     Button dateAndTimePicker;
     TextView dateTimeResult;
     EditText eventTitle, eventDescription;
 
-    private MapView mMapView;
+    private MapView mMapView; //Map view api variable
 
-    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    AutocompleteSupportFragment placeAutoComplete;
+    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"; //Bundle key if bundle is empty
+    AutocompleteSupportFragment placeAutoComplete; //Places api variable
 
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
@@ -76,22 +81,21 @@ public class CreateEventActivity extends AppCompatActivity implements
                 datePickerDialog.show();
             }
         });
+
+        //If the bundle is empty then it si set to the mapview bundle key
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
 
+        //Google maps api view set to display to the correct view
+        //Then calling the api onMapReady
         mMapView = (MapView) findViewById(R.id.map_View);
         mMapView.onCreate(mapViewBundle);
         mMapView.getMapAsync(this);
 
     }
 
-    public double inRadius(double markerLattitude, double markerLongitude, double locLatitude, double locLongtitude, double radius) {
-        double val = Math.sqrt(Math.pow((markerLattitude - locLatitude), 2) + Math.pow((markerLongitude - locLongtitude), 2));
-        val = val*78710;
-        return val;
-    }
 
     public void onClick(View view) {
         eventTitle = findViewById(R.id.eventTitle);
@@ -128,8 +132,18 @@ public class CreateEventActivity extends AppCompatActivity implements
         hourFinal = hourOfDay;
         minuteFinal = minute;
 
-        dateTimeResult.setText("Date: " + monthFinal + "," + dayFinal + "," + yearFinal + "\n" +
-                "Time: " + hourFinal + ":" + minuteFinal);
+        String twentyFourTime = String.format("%02d:%02d", hourFinal, minuteFinal);
+        SimpleDateFormat twentyFourTimeFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat tweleveHourFormat = new SimpleDateFormat("hh:mm a");
+        Date twentyFourHourDate = null;
+        try {
+            twentyFourHourDate = twentyFourTimeFormat.parse(twentyFourTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        dateTimeResult.setText("Date: " + monthFinal + "/" + dayFinal + "/" + yearFinal + "\n" +
+                "Time: " + tweleveHourFormat.format(twentyFourHourDate));
     }
 
     @Override
@@ -163,20 +177,22 @@ public class CreateEventActivity extends AppCompatActivity implements
         mMapView.onStop();
     }
 
+    /*
+    Name: onMapReady
+    Description: This function handles the maps api, it sets the marker, radius and takes the user's location
+    Input: Google map
+    Output: None
+    */
     @Override
     public void onMapReady(final GoogleMap map) {
-        LatLng SPU = new LatLng(47.6496, -122.3615);
 
+        LatLng SPU = new LatLng(47.6496, -122.3615); //setting the lat and long for SPU
 
-        final Marker loc = map.addMarker(new MarkerOptions().position(SPU).title("Set Location").draggable(true));
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 15.0f));
-        final Circle cir = map.addCircle(new CircleOptions().center(loc.getPosition()).radius(100).strokeColor(Color.GREEN).fillColor(0x2290EE90));
-        map.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
-            @Override
-            public void onCircleClick(Circle circle) {
-            }
-        });
+        final Marker loc = map.addMarker(new MarkerOptions().position(SPU).title("Set Location").draggable(true)); //Setting the map marker to SPU
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 17.0f)); //Moving the camera to SPU
+        final Circle cir = map.addCircle(new CircleOptions().center(loc.getPosition()).radius(10).strokeColor(Color.GREEN).fillColor(0x2290EE90)); //Creating the circle that will represent the radius
 
+        //Getting the user's permission for google to read their location
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -187,9 +203,14 @@ public class CreateEventActivity extends AppCompatActivity implements
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        map.setMyLocationEnabled(true);
-        final FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
+        map.setMyLocationEnabled(true); //Showing the user's location on the map
 
+        /*
+        Name: onMarkerDragListener
+        Description: This function listens if the marker has been moved, then moves the circle and camera accordingly
+        Input: Google map marker listener
+        Output: None
+        */
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
 
             @Override
@@ -202,12 +223,20 @@ public class CreateEventActivity extends AppCompatActivity implements
 
             }
 
+            /*
+            Name: onMarkerDragEndListener
+            Description: This function listens if the marker has finished being dragged, then moves the circle and camera accordingly
+            Input: Marker
+            Output: None
+            */
             @Override
             public void onMarkerDragEnd(Marker marker) {
 
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), map.getCameraPosition().zoom));
-                cir.setCenter(marker.getPosition());
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), map.getCameraPosition().zoom)); //moving the camera to where the marker is set
+                cir.setCenter(marker.getPosition()); //Redrawing the circle to where the marker has been moved to
 
+
+                //getting the user's permission if it already hasn't been acepted
                 if (ActivityCompat.checkSelfPermission(CreateEventActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
@@ -218,33 +247,40 @@ public class CreateEventActivity extends AppCompatActivity implements
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                client.getLastLocation().addOnSuccessListener(CreateEventActivity.this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location myLocation) {
 
-                        TextView radTextView = findViewById(R.id.in_location);
-                        double val = inRadius(loc.getPosition().latitude, loc.getPosition().longitude, myLocation.getLatitude(), myLocation.getLongitude(), cir.getRadius());
-                        if(val<cir.getRadius()) {
-                            radTextView.setText(Double.toString(val)+"<"+Double.toString(cir.getRadius())+": Within Radius");
-                        }else{
-                            radTextView.setText(Double.toString(val)+">"+Double.toString(cir.getRadius())+": Not Within Radius");
-                        }
-                    }
-                });
             }
         });
 
-        final DiscreteSeekBar seekBarDis = findViewById(R.id.seekBarEvent);
-        seekBarDis.setProgress(10);
-        seekBarDis.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
-            @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int progress, boolean fromUser) {
 
+        final SeekBar seekBarDis = findViewById(R.id.seekBarEvent); //Variable to get the view for the seekbar
+        seekBarDis.setProgress(35); //Setting the seekbar progress to 35
+
+        /*
+        Name: onSeekBarChangeListener
+        Description: This function listens to whether the seekbar has been changed and shows the radius and draws the circle accordingly
+        Input: seekbar change listener
+        Output: None
+        */
+        seekBarDis.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            /*
+            Name: onProgressChanged listener
+            Description: This function listens to whether the seekbar has been changed and shows the radius and draws the circle accordingly
+            Input: seekbar, the progress of the seekbar and whether is user has moved it or not
+            Output: None
+            */
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                //Checking if the user is moving the seekbar
                 if (fromUser) {
-                    if(progress==0){
+                    if(progress==0){ //if the seekbar is set to 0 then the radius is set to 10
                         cir.setRadius(1 * 10);
+
                     }else {
-                        cir.setRadius(progress);
+                        cir.setRadius(progress); //The circle radius is set to the amount of progress on the seekbar
+                        TextView showRadius = findViewById(R.id.Radius); //getting the view to display the radius
+                        showRadius.setText(progress +" meters"); //Displaying the radius in the view
                     }
                     if (ActivityCompat.checkSelfPermission(CreateEventActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
@@ -256,53 +292,62 @@ public class CreateEventActivity extends AppCompatActivity implements
                         // for ActivityCompat#requestPermissions for more details.
                         return;
                     }
-                    client.getLastLocation().addOnSuccessListener(CreateEventActivity.this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location myLocation) {
 
-                            if (myLocation != null) {
-                                TextView radTextView = findViewById(R.id.in_location);
-                                double val = inRadius(loc.getPosition().latitude, loc.getPosition().longitude, myLocation.getLatitude(), myLocation.getLongitude(), cir.getRadius());
-                                if(val<cir.getRadius()) {
-                                    radTextView.setText(Double.toString(val)+"<"+Double.toString(cir.getRadius())+": Within Radius");
-                                }else{
-                                    radTextView.setText(Double.toString(val)+">"+Double.toString(cir.getRadius())+": Not Within Radius");
-                                }
-                            }
-                        }
-                    });
                 }
             }
 
             @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
 
             @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
 
         });
+
+        //Checking if placed has been initialized if not then I have hard coded the key to initialize the API
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
         }
 
-
+        //Getting the fragment from the layout to manipulate the API
         placeAutoComplete = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
+        //Getting the list of the Name of the places and their location and placing then into an array list
         placeAutoComplete.setPlaceFields(Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG));
 
-
+        /*
+        Name: onPlacesSelected Listener
+        Description: This function listens to whether a place has been searched for and moves the marker and circle to that location
+        Input: Place selection listener
+        Output: None
+        */
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+
+            /*
+            Name: onPlacesSelected
+            Description: This function listens to whether a place has been searched for and moves the marker and circle to that location
+            Input: Place
+            Output: None
+            */
             @Override
             public void onPlaceSelected(Place place) {
-                Log.i("MAPSSSS", "Place: " + place.getLatLng() + ", " + place.getId());
+
+                Log.i("PLACE SELECTED", "Place: " + place.getLatLng() + ", " + place.getId());
+
+                //setting the location the place searched
                 loc.setPosition(place.getLatLng());
+
+                //Moving the marker to the place searched
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), map.getCameraPosition().zoom));
+
+                //Setting the circle to the place searched
                 cir.setCenter(loc.getPosition());
 
+                //Getting the user's permission if it hasn't already been granted
                 if (ActivityCompat.checkSelfPermission(CreateEventActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
@@ -313,25 +358,11 @@ public class CreateEventActivity extends AppCompatActivity implements
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                client.getLastLocation().addOnSuccessListener(CreateEventActivity.this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location myLocation) {
 
-                        if (myLocation != null) {
-                            TextView radTextView = findViewById(R.id.in_location);
-                            double val = inRadius(loc.getPosition().latitude, loc.getPosition().longitude, myLocation.getLatitude(), myLocation.getLongitude(), cir.getRadius());
-
-                            if(val<cir.getRadius()) {
-                                radTextView.setText(Double.toString(val)+"<"+Double.toString(cir.getRadius())+": Within Radius");
-                            }else{
-                                radTextView.setText(Double.toString(val)+">"+Double.toString(cir.getRadius())+": Not Within Radius");
-                            }
-                        }
-                    }
-                });
 
             }
 
+            //Logging any errors
             @Override
             public void onError(Status status) {
                 Log.i("MAPS", "An error occurred: " + status);

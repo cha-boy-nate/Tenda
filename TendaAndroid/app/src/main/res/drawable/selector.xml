@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_check_circle"><item android:state_checked="true" android:color="@color/quantum_brown"/></item>
+    <item android:contentDescription="not_going" android:color="@color/quantum_orangeA700"/>
+    <item android:contentDescription="maybe" android:color="@color/quantum_bluegrey800"/>
+    <item android:color="@color/quantum_grey800"  />
+</selector>
