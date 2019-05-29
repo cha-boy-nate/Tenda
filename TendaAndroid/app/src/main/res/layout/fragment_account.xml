@@ -16,7 +16,7 @@
         app:srcCompat="@drawable/user_icon" />
 
     <TextView
-        android:id="@+id/emailLabel"
+        android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/radius_white"
@@ -64,15 +64,7 @@
             android:background="@drawable/radius_green"
             android:textColor="#ffffff"
             android:text="Edit Account"
-            android:layout_gravity="center_horizontal|center" />
-
-        <TextView
-            android:id="@+id/userID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:text="TextView"
+            android:layout_marginBottom="20dp"
             android:layout_gravity="center_horizontal|center" />
 
     </LinearLayout>

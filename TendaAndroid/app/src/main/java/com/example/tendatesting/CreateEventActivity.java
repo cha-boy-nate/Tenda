@@ -3,6 +3,8 @@ package com.example.tendatesting;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -109,6 +112,18 @@ public class CreateEventActivity extends AppCompatActivity implements
         mMapView.onCreate(mapViewBundle);
         mMapView.getMapAsync(this);
 
+        Button createEventButton = (Button) findViewById(R.id.createEventButton);
+        createEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context context = getApplicationContext();
+                CharSequence text = "Event successfully created";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+        });
+
     }
 
 
@@ -145,8 +160,8 @@ public class CreateEventActivity extends AppCompatActivity implements
             protected Map<String, String> getParams() {
                 //Format data that will make up the body of the post request (email and password)
                 Map<String, String> MyData = new HashMap<String, String>();
-                Bundle extras = getIntent().getExtras();
-                String userID = extras.getString("userID");
+  //              Bundle extras = getIntent().getExtras();
+    //            String userID = extras.getString("userID");
                 MyData.put("userID", "1");
                 MyData.put("eventTitle", eventTitleString);
                 MyData.put("eventDescription", eventDescriptionString);
@@ -161,6 +176,7 @@ public class CreateEventActivity extends AppCompatActivity implements
         };
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+
     }
 
 
@@ -197,8 +213,8 @@ public class CreateEventActivity extends AppCompatActivity implements
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        eventTime = tweleveHourFormat.format(twentyFourHourDate);
-        eventDate = monthFinal + "/" + dayFinal + "/" + yearFinal;
+        eventTime = twentyFourTimeFormat.format(twentyFourHourDate);
+        eventDate = yearFinal+"-"+monthFinal + "-" + dayFinal;
         dateTimeResult.setText("Date: " + eventDate + "\n" +
                 "Time: " + eventTime);
     }
