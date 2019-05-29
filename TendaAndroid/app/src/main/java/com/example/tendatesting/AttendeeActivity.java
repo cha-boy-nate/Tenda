@@ -55,13 +55,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCallback, AttendeeAdapter.OnNoteListener{
+public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCallback{
     String fragementIdentifier = "AttendeeLog";
-    private JSONObject eventString;
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private ArrayList<Attendee> attendanceArrayList;
-    private JSONArray attendeeArray;
+
 
 
     private MapView mMapView; //variable used for map view
@@ -145,11 +141,28 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
             public void onResponse(String response) {
                 try {
                     //Convert response to a json
-                    JSONObject jsonObject = new JSONObject(response.toString());
-                    String result = jsonObject.getString("result");
-                    attendeeArray = new JSONArray(result);
-                    Log.d("Result",result);
-                    createListData(attendeeArray);
+                    JSONObject jsonObj = new JSONObject(response.toString());
+                    String result = jsonObj.getString("result");
+                    jsonObj = new JSONObject(result);
+
+                    Log.d(fragementIdentifier, result);
+
+                    String name = jsonObj.getString("name");
+                    String description = jsonObj.getString("description");
+                    String time = jsonObj.getString("time");
+                    String date = jsonObj.getString("date");
+
+
+                    TextView eventTitle = findViewById(R.id.page_textTitle);
+                    TextView eventDescription = findViewById(R.id.page_textDescription);
+                    TextView eventTime = findViewById(R.id.page_textTime);
+                    TextView eventDate = findViewById(R.id.page_textDate);
+
+                    eventTitle.setText(name);
+                    eventDescription.setText(description);
+                    eventTime.setText(time);
+                    eventDate.setText(date);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -160,42 +173,26 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                 Log.d(fragementIdentifier, "Error with request response.");
             }
         });
+
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
         /*******************************************************/
         // THIS IS THE END OF THE REQUEST TO GET EVENT DATA    //
         /*******************************************************/
 
-        recyclerView = findViewById(R.id.recyclerViewAttend);
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setHasFixedSize(true);
-        attendanceArrayList = new ArrayList<>();
-        adapter = new AttendeeAdapter(attendanceArrayList,this);
-        recyclerView.setAdapter(new AttendeeAdapter(attendanceArrayList, this));
-
+//        recyclerView = findViewById(R.id.recyclerViewAttend);
+//        LinearLayoutManager manager = new LinearLayoutManager(this);
+//        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+//        recyclerView.setLayoutManager(manager);
+//        recyclerView.setHasFixedSize(true);
+//        attendanceArrayList = new ArrayList<>();
+//
+//        recyclerView.setAdapter(new AttendeeAdapter(attendanceArrayList, this));
+//
 
 
     }
-    private void createListData(JSONArray attendeeArray) {
-        int length = attendeeArray.length();
-        for(int i = 0; i < length; i++) {
-            try {
-                JSONObject full = (JSONObject) attendeeArray.get(i);
-                JSONObject test = new JSONObject(full.getString("user"));
-                String duration = test.getString("duration");
-                String user_id = test.getString("user_id");
 
-
-                Attendee attendee = new Attendee(user_id, "Yes", duration);
-                attendanceArrayList.add(attendee);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        adapter.notifyDataSetChanged();
-    }
 
     /*
     Name: inRadius
@@ -329,8 +326,5 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
 
     }
 
-    @Override
-    public void onNoteClick(int position) {
 
-    }
 }

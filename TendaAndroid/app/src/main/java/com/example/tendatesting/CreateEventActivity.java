@@ -20,6 +20,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -38,15 +44,24 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateEventActivity extends AppCompatActivity implements
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, OnMapReadyCallback {
-
+    String eventDate;
+    String eventTime;
+    String latitude;
+    String longitude;
+    String radius;
 
     Button dateAndTimePicker;
     TextView dateTimeResult;
@@ -98,13 +113,54 @@ public class CreateEventActivity extends AppCompatActivity implements
 
 
     public void onClick(View view) {
+//Get event title and description values into string
         eventTitle = findViewById(R.id.eventTitle);
         eventDescription = findViewById(R.id.eventDescription);
-        String eventTitleString = eventTitle.getText().toString();
-        String eventDescriptionString = eventDescription.toString();
-        String test = dateTimeResult.getText().toString();
-        String all = eventTitleString + " --- " + eventDescriptionString + " --- " + test;
-        Log.d("CreateEventLog", all);
+        final String eventTitleString = eventTitle.getText().toString();
+        final String eventDescriptionString = eventDescription.getText().toString();
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://34.217.162.221:8000/createEvent";
+
+        //Create request
+        final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            //When the request is recieved:
+            @Override
+            public void onResponse(String response) {
+                try {
+                    //Convert response to a json and check if the response what 200 (which means password is valid)
+                    JSONObject jsonObj = new JSONObject(response.toString());
+                    String result = jsonObj.getString("result");
+                    Log.d("CreateEventLog", result);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("ERROR", "Error with request response.");
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                //Format data that will make up the body of the post request (email and password)
+                Map<String, String> MyData = new HashMap<String, String>();
+                Bundle extras = getIntent().getExtras();
+                String userID = extras.getString("userID");
+                MyData.put("userID", "1");
+                MyData.put("eventTitle", eventTitleString);
+                MyData.put("eventDescription", eventDescriptionString);
+                MyData.put("eventDate", eventDate);
+                MyData.put("eventTime", eventTime);
+                MyData.put("Latitude", latitude);
+                MyData.put("Longitude", longitude);
+                MyData.put("Radius", radius);
+
+                return MyData;
+            }
+        };
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
 
@@ -141,9 +197,10 @@ public class CreateEventActivity extends AppCompatActivity implements
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        dateTimeResult.setText("Date: " + monthFinal + "/" + dayFinal + "/" + yearFinal + "\n" +
-                "Time: " + tweleveHourFormat.format(twentyFourHourDate));
+        eventTime = tweleveHourFormat.format(twentyFourHourDate);
+        eventDate = monthFinal + "/" + dayFinal + "/" + yearFinal;
+        dateTimeResult.setText("Date: " + eventDate + "\n" +
+                "Time: " + eventTime);
     }
 
     @Override
@@ -368,9 +425,15 @@ public class CreateEventActivity extends AppCompatActivity implements
                 Log.i("MAPS", "An error occurred: " + status);
 
             }
+
+
         });
 
 
+        LatLng coord = loc.getPosition();
+        latitude = Double.toString(coord.latitude);
+        longitude = Double.toString(coord.longitude);
+        radius = String.valueOf(seekBarDis.getProgress());
 
 
 

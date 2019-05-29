@@ -1,11 +1,11 @@
 package com.example.tendatesting;
 
 public class Attendee {
-    private String attendeeName, attendeeReply, attendeeDuration;
+    private String attendeeName, attendeeLastName, attendeeDuration;
 
-    public Attendee(String attendeeName, String attendeeReply, String attendeeDuration) {
+    public Attendee(String attendeeName, String attendeeLastName, String attendeeDuration) {
         this.attendeeName = attendeeName;
-        this.attendeeReply = attendeeReply;
+        this.attendeeLastName = attendeeLastName;
         this.attendeeDuration = attendeeDuration;
     }
 
@@ -17,12 +17,12 @@ public class Attendee {
 
         this.attendeeName = attendeeName;
     }
-    public String getAttendeeReply() {
+    public String getAttendeeLastName() {
 
-        return attendeeReply;
+        return attendeeLastName;
     }
-    public void setAttendeeReply(String attendeeReply) {
-        this.attendeeReply = attendeeReply;
+    public void setAttendeeLastName(String attendeeLastName) {
+        this.attendeeLastName = attendeeLastName;
     }
     public String getAttendeeDuration() {
 

@@ -57,10 +57,10 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
 
         public void setAttendeeDetails(Attendee attendee) {
             textName = itemView.findViewById(R.id.page_name1);
-            textReply = itemView.findViewById(R.id.image1);
+            textReply = itemView.findViewById(R.id.page_name2);
             textDuration = itemView.findViewById(R.id.dur1);
             textName.setText(attendee.getAttendeeName());
-            textReply.setText(attendee.getAttendeeReply());
+            textReply.setText(attendee.getAttendeeLastName());
             textDuration.setText(attendee.getAttendeeDuration());
 
         }

@@ -11,13 +11,13 @@ public class AttendeeHolder extends RecyclerView.ViewHolder {
     public AttendeeHolder(View itemView) {
         super(itemView);
         textName = itemView.findViewById(R.id.page_name1);
-        textReply = itemView.findViewById(R.id.image1);
+        //textReply = itemView.findViewById(R.id.image1);
         textDuration = itemView.findViewById(R.id.dur1);
     }
 
     public void setAttendeeDetails(Attendee attendee) {
         textName.setText(attendee.getAttendeeName());
-        textReply.setText(attendee.getAttendeeReply());
+        //textReply.setText(attendee.getAttendeeReply());
         textDuration.setText(attendee.getAttendeeDuration());
 
     }
