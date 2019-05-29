@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/page_name1"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Akshy"
+                    android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/page_name2"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Palanisamy"
+                    android:textSize="15sp" />
+                <ImageView
+                    android:id="@+id/image1"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_cancel" />
+
+                <TextView
+                    android:id="@+id/dur1"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:padding="5dp"
+                    android:text="1hr:10min"
+                    android:textSize="15sp" />
+
+</LinearLayout>

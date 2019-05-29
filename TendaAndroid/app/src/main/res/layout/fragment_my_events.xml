@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout4"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Background"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical" />
+
+
+
+        <Button
+            android:id="@+id/createEventButton"
+            android:layout_width="205dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/radius_green"
+            android:textColor="#ffffff"
+            android:text="Create Event"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:layout_centerInParent="true" />
+
+
+</RelativeLayout>

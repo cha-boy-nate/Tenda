@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/loginLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Background"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <RelativeLayout
+        android:id="@+id/imageRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+
+        <ImageView
+            android:id="@+id/imageGreenView"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            app:srcCompat="@color/colorPrimaryDark" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:adjustViewBounds="true"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/tenda_logo_with_name_and_background" />
+
+    </RelativeLayout>
+
+    <!--Text box for email-->
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/emailLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorText" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <!--Text box for password-->
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/passwordLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textColor="@color/colorText" />
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:gravity="center|bottom"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="205dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/radius_green"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:onClick="login"
+            android:text="LOGIN"
+            android:layout_gravity="center_horizontal|center"
+            android:textColor="#ffffff"
+            />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="ClickToSignUpPage"
+            android:text="Don't have an account? Click here to sign up"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center_horizontal|center"/>
+    </LinearLayout>
+
+
+</LinearLayout>

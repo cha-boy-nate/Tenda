@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout6"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/Background">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="215dp"
+        android:layout_height="174dp"
+        android:layout_marginTop="20dp"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/tenda_logo_with_name_and_background"
+        />
+
+    <TextView
+        android:id="@+id/emailLabel5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        android:padding="15dp"
+        android:text="Created for Capstone Project at Seattle Pacific University CSC 4152"
+        android:textSize="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+    <TextView
+        android:id="@+id/emailLabel3"
+        android:layout_width="375dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        android:padding="15dp"
+        android:text="Tenda is a location based verification system that allows users to create an event and see who attends."
+        android:textSize="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+    <TextView
+        android:id="@+id/emailLabel4"
+        android:layout_width="375dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        android:padding="15dp"
+        android:text="Version 1.0.0"
+        android:textSize="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+    <TextView
+        android:id="@+id/emailLabel2"
+        android:layout_width="375dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/radius_white"
+        android:padding="15dp"
+        android:text="Creators: Nathan Jenkins, Akshy Palanisamy, Hung Nguyen, Jiahao Cai"
+        android:textSize="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+
+</LinearLayout>
