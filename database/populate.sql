@@ -1,0 +1,26 @@
+use Tenda;
+
+Insert Into User(firstName, lastName, email, password) values('Nate', 'Jenkins', 'nathanj@spu.edu', 'password');
+Insert Into User(firstName, lastName, email, password) values('Steve', 'Jenson', 'test-email@hotmail.com', 'test');
+Insert Into User(firstName, lastName, email, password) values('Bob', 'Boberstien', 'email@aol.com', '1234');
+Insert Into User(firstName, lastName, email, password) values('Pharis', 'Fuller', 'test@msn.com', 'password1');
+Insert Into Event(manager_id, eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription) values ("1", "Team Chan Meeting", "2019-03-19", "00:00:00", "00:00:00", "10.00", "Weekly meeting agenda");
+Insert Into Event(manager_id, eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription) values ("2", "Sports Event", "2019-03-19", "00:00:00", "00:00:00", "100", "FIFA World Cup");
+Insert Into Event(manager_id, eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription) values ("2", "Lecture", "2019-03-19", "00:00:00", "00:00:00", "100.0", "P vs NP");
+Insert Into Event(manager_id, eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription) values ("1", "Concert", "2019-03-19", "00:00:00", "00:00:00", "10.9", "Tupac ft Biggie Smalls");
+Insert Into Events_to_Attendees(event_id, user_id, response) values ("1", "1", "yes");
+Insert Into Events_to_Attendees(event_id, user_id, response) values ("1", "2", "yes");
+Insert Into Events_to_Attendees(event_id, user_id, response) values ("1", "3", "no");
+Insert Into Events_to_Attendees(event_id, user_id, response) values ("1", "4", "no");
+Insert Into Events_to_Attendees(event_id, user_id, response) values ("2", "2", "yes");
+Insert Into Events_to_Attendees(event_id, user_id, response) values ("3", "3", "no");
+Insert Into Events_to_Attendees(event_id, user_id, response) values ("3", "4", "no");
+Insert Into Events_to_Attendees(event_id, user_id, response) values ("4", "2", "yes");
+insert into Event_Statistics(event_id, user_id, verified) values('1', '1', 'no');
+insert into Event_Statistics(event_id, user_id, verified) values('1', '1', 'yes');
+insert into Event_Statistics(event_id, user_id, verified) values('1', '1', 'yes');
+insert into Event_Statistics(event_id, user_id, verified) values('1', '1', 'no');
+insert into Event_Statistics(event_id, user_id, verified) values('1', '3', 'no');
+insert into Event_Statistics(event_id, user_id, verified) values('1', '3', 'yes');
+insert into Event_Statistics(event_id, user_id, verified) values('1', '3', 'yes');
+insert into Event_Statistics(event_id, user_id, verified) values('1', '3', 'no');
