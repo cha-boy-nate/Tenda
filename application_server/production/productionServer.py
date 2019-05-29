@@ -32,15 +32,22 @@ def login():
 	decoded = unquote(request.get_data())
 	#print(str(request.get_data()))
         #Split to response into the two parts (email and password)
-	decoded = decoded.split("&")
+	
+        print(decoded)
+        decoded = decoded.split("&")
 	#Set the variable email password to the value given by the user (value is after = sign)
-	password = decoded[0].split("=")
+	
+        password = decoded[0].split("=")
 	password = "(\'" + password[1] + "\',)" #formatting sql needs
 	email = decoded[1].split("=")
-	email = email[1]
+        print(decoded[1])
+        #print(password)
+        #for i in email:
+        #    print(str(i))
 	#check to see if the password matches email's password in database.
-	checker = verifyPassword(email, password, cur)
-	if checker != 0:
+	#checker = verifyPassword(email, password, cur)
+	checker = 0
+        if checker != 0:
 		return jsonify(result={"status":200, 'data':str(checker)})
 	else:
 		return jsonify(result={"status": 405})
@@ -54,21 +61,56 @@ def createResponse():
 	decoded = decoded.split("&")
 	#Get all values from request.
 	event_id = decoded[0].split("=")
-	user_id = decoded[1].split("=")
-	response = decoded[2].split("=")
+	user_id = decoded[2].split("=")
+	response = decoded[1].split("=")
 	event_id = event_id[1]
 	user_id = user_id[1]
 	response = response[1]
 	#Commit values to database.
 	commitInvitationResponse(event_id, user_id, response, cur, db)
-	return jsonify(result={"status":200})
+        return jsonify(result={"status":200})
 
 #Route to create a new event.
 @application.route("/createEvent", methods=["POST"])
 def createEvent():
 	#Decodes request into variable. 
 	decoded = unquote(request.get_data())
-	commitEvent("1", "test name", "2019-04-24", "00:00:00", "00:00:00", "10.00", "this is a test eventDescription", cur, db)
+        print(decoded)
+        decoded = decoded.split("&")
+        
+        radius = decoded[0].split("=")
+        eventTitle = decoded[1].split("=")
+        eventDescription = decoded[2].split("=")
+        eventTime = decoded[3].split("=")
+        latitude = decoded[4].split("=")
+        userID = decoded[5].split("=")
+        longitude = decoded[6].split("=")
+        eventDate = decoded[7].split("=")
+
+        radius = radius[1]
+        eventTitle = eventTitle[1]
+        eventDescription = eventDescription[1]
+        eventTime = eventTime[1]
+        latitude = latitude[1]
+        userID = userID[1]
+        longitude = longitude[1]
+        eventDate = eventDate[1]      
+
+        eventTitle = eventTitle.replace("+", " ")
+        eventDescription = eventDescription.replace("+", " ")
+        
+        eventTime = eventTime + ":00"
+
+        print("radius: " + radius)
+        print("title: " + eventTitle)
+        print("description: " + eventDescription)
+        print("time: " + eventTime)
+        print("date: " + eventDate)
+        print("user id: " + userID)
+        print("latitude: " + latitude)
+        print("longitude: " + longitude)
+        
+	commitEvent(userID, eventTitle, eventDate, eventTime, "00:00:00", radius, eventDescription, cur, db)
 	return jsonify(result={"status":200})
 
 #Route to create a new account.
@@ -91,13 +133,13 @@ def createAttendenceRecord():
     #Get the data from the request.
     response = str(request.get_data())
     decoded = unquote(response)
+    print(decoded)
     decoded = decoded.split("&")
     event_id = decoded[0].split('=')[1]
     user_id = decoded[1].split('=')[1]
     response = decoded[2].split('=')[1]
-    time = decoded[3].split('=')[1]
-    date = decoded[4].split('=')[1]
-    print(str(event_id) + " " + str(user_id) + " " + str(response) + " " + str(time) + " " + str(date))
+    print(str(event_id) + " : " + str(user_id) + " : "  + str(response))
+    #print(str(event_id) + " " + str(user_id) + " " + str(response) + " " + str(time) + " " + str(date))
     return jsonify(result=200)
 
 '''THIS IS THE END OF THE POST REQUEST ROUTES'''
@@ -127,7 +169,7 @@ def getUserIDNum(email):
 #Returns a json of events that the user has said they are attending.
 @application.route("/timeline/<idVal>/", methods=["GET"])
 def timeline(idVal):
-        #print("Got a request for timeline")
+        print("Got a request for timeline")
 	#Get list of event_ids that the specified user plans to attend.
 	events = getAssociatedEvents(idVal, cur)
 	#Variables used to format the response.
@@ -159,26 +201,17 @@ def myEvents(idVal):
 
 @application.route("/attendenceData/<idVal>/", methods=["GET"])
 def attendenceData(idVal):
-    print("ID value given was: " + idVal)
-    returnDictionary = []
-    singlePerson = {}
-    test = {}
-    counter = 0
-    finalSum = {}
-    summary = {}
-    summary['in_Attendence'] = '10'
-    summary['planned_Attendence'] = '8'
-    finalSum["summary_statisitics"] = summary
-    returnDictionary.append(finalSum.copy())
-    while(counter < 5):
-        counter = counter + 1
-        singlePerson['user_id'] = str(counter)
-        singlePerson['duration'] = '1 hour'
-        test['user'] = singlePerson
-        returnDictionary.append(test.copy())
-    print(returnDictionary)
-    return jsonify(result=returnDictionary)
-
+    users = getUsersForEvent(cur, idVal)
+    print(users)
+    value = []
+    for user in users:
+        print("new user")
+        userData = getUserAttendenceData(cur, idVal, user)
+        #print(userData)
+        if userData != 0:
+            #print(userData)
+            value.append(userData)
+    return jsonify(result=value)
 '''THIS IS THE END OF THE GET REQUEST ROUTES'''
 
 #THIS NEEDS TO STAY AT THE BOTTOM OF THE FILE

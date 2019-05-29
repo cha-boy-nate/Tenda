@@ -68,7 +68,7 @@ Inputs: user_id and database cursor
 Outputs: json with firstname, lastname, email address
 '''
 def getUserData(user_id, cur):
-	query = "Select firstName, lastName, email from User where user_id="+user_id+";"
+	query = "Select firstName, lastName, email from User where user_id="+str(user_id)+";"
 	cur.execute(query)
 	val = cur.fetchone()
 	returnVal = {}
@@ -133,3 +133,37 @@ def getEventDetails(event_id, cur):
 	returnVal["description"] = str(event[5])
 	returnVal["event_id"] = str(event[6])
 	return returnVal
+
+def getUsersForEvent(cur, event_id):
+    query = "Select distinct(user_id) from Events_to_Attendees where event_id="+event_id+";"
+    cur.execute(query)
+    users = cur.fetchall()
+    returnVal = []
+    for user in users:
+        returnVal.append(user[0])
+    return returnVal
+
+def getUserAttendenceData(cur, event_id, user_id):
+    query = "Select min(currentTime) from Event_Statistics where user_id="+str(user_id)+";"
+    cur.execute(query)
+    startTime = cur.fetchall()
+    startTime = startTime[0]
+    startTime = startTime[0]
+    query = "Select max(currentTime) from Event_Statistics where user_id="+str(user_id)+" and event_id="+str(event_id)+" and verified='yes';";
+    cur.execute(query)
+    endTime = cur.fetchall()
+    endTime = endTime[0]
+    endTime = endTime[0]
+    if startTime != None:
+	    difference = endTime - startTime
+	    attendenceData = {}
+	    attendenceData["start_time"] = str(startTime)
+	    attendenceData["end_time"] = str(endTime)
+	    attendenceData["difference"] = str(difference)
+            userName = getUserData(user_id, cur)
+            attendenceData["user"] = userName
+	    return attendenceData
+    else: 
+	    return 0
+
+
