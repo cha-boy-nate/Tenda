@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -85,6 +86,12 @@ public class CreateEventActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
+        Toolbar barTitle = findViewById(R.id.messageToolbarCV);
+        barTitle.setTitle("Create Event");
+        setSupportActionBar(barTitle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         dateAndTimePicker = findViewById(R.id.dateAndTimePicker);
         dateTimeResult = findViewById(R.id.dateTimeResult);
 
@@ -130,6 +137,11 @@ public class CreateEventActivity extends AppCompatActivity implements
             }
         });
 
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 
