@@ -4,12 +4,15 @@ import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
@@ -47,11 +50,15 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import mobi.upod.timedurationpicker.TimeDurationPickerDialog;
+
 public class CreateEventActivity extends AppCompatActivity implements
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, OnMapReadyCallback {
 
 
     Button dateAndTimePicker;
+    Button durationPicker;
+    TextView durationResult;
     TextView dateTimeResult;
     EditText eventTitle, eventDescription;
 
@@ -62,6 +69,10 @@ public class CreateEventActivity extends AppCompatActivity implements
 
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
+    String m_Text = "";
+    String finalHour = "";
+    String finalMinute = "";
+    String finalDurationResult = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +81,9 @@ public class CreateEventActivity extends AppCompatActivity implements
 
         dateAndTimePicker = findViewById(R.id.dateAndTimePicker);
         dateTimeResult = findViewById(R.id.dateTimeResult);
+        durationPicker = findViewById(R.id.eventDurationButton);
+        durationResult = findViewById(R.id.durationResult);
+
 
         dateAndTimePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +98,46 @@ public class CreateEventActivity extends AppCompatActivity implements
                 datePickerDialog.show();
             }
         });
+
+        /*--Name: Duration Picker
+        Description: This function will open an input dialog for user to enter event duration
+        Input: hours, minutes
+        Output: Duration: hours + minutes
+         */
+        durationPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(CreateEventActivity.this);
+                builder.setTitle("Duration");
+                // Set up the input
+                final EditText input = new EditText(CreateEventActivity.this);
+                // Specify the type of input expected; this, set input as number
+                input.setInputType(InputType.TYPE_CLASS_DATETIME);
+                input.setHint("HHMM");
+                builder.setView(input);
+                //Display input in time format if after users click OK
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        m_Text = input.getText().toString();
+                        finalHour = m_Text.substring(0,2);
+                        finalMinute = m_Text.substring(2,4);
+                        finalDurationResult = "Duration: " + finalHour +":" + finalMinute + ":00";
+                        durationResult.setText(finalDurationResult);
+                    }
+                });
+                //Cancel and close input dialog
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }
+        });
+
+
 
         //If the bundle is empty then it si set to the mapview bundle key
         Bundle mapViewBundle = null;
@@ -384,19 +438,6 @@ public class CreateEventActivity extends AppCompatActivity implements
 
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
     @Override

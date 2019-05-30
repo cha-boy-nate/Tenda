@@ -80,6 +80,30 @@
             android:textColor="@color/TextOnWhiteBackground"
             android:textSize="20dp" />
 
+        <!--Button for pick event's duration-->
+        <Button
+            android:id="@+id/eventDurationButton"
+            android:layout_width="205dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/radius_green"
+            android:text="Pick Duration"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:id="@+id/durationResult"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/radius_white"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/TextOnWhiteBackground"
+            android:textSize="20dp" />
+
         <!--Google Map Api view and search bar-->
         <RelativeLayout
             android:id="@+id/relLayout"
