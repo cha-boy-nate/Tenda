@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -121,6 +123,10 @@ public class CreateEventActivity extends AppCompatActivity implements
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
+                Intent intent = new Intent( CreateEventActivity.this, HomeActivity.class);
+                intent.putExtra("frag", "myEvent");
+                startActivity(intent);
+
             }
         });
 
@@ -176,7 +182,8 @@ public class CreateEventActivity extends AppCompatActivity implements
         };
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-
+//        MyEvents my_event_frag = new MyEvents();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, my_event_frag).commit();
     }
 
 

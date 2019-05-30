@@ -42,7 +42,9 @@ ManageEvent extends AppCompatActivity {
                 new AttendanceFragment()).commit();
         Toolbar barTitle = findViewById(R.id.messageToolbar);
         barTitle.setTitle("Event Management");
-
+        setSupportActionBar(barTitle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
 
@@ -89,7 +91,14 @@ ManageEvent extends AppCompatActivity {
             return false;
         }
     };
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 
 
 }
+
+
