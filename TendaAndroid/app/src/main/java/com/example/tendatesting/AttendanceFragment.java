@@ -130,11 +130,14 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
 
                     timer = new Timer();
                     TimerTask task = new getAttendeeList();
-                    timer.schedule(task,startdate,3000L);
+                    Timestamp curTime = new Timestamp(System.currentTimeMillis());
+                    if((curTime.getTime()<=endTime.getTime())&&(curTime.getTime()>=startTime.getTime())){
+                        timer.schedule(task,startdate,50000L);
+                    }
 
                     //Getting the current time and then checking if the time has passed the end time
                     //if so then the task is cancelled
-                    Timestamp curTime = new Timestamp(System.currentTimeMillis());
+
                     if(curTime.getTime()>=endTime.getTime()){
                         timer.cancel();
                         timer.purge();

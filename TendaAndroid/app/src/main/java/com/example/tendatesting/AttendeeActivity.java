@@ -311,6 +311,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                     loc.getPosition().toString();
                     //Moving the camera to where the marker is
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 17.0f));
+
                     //Setting the radius for the event by drawing a circle
                     final Circle cir = map.addCircle(new CircleOptions().center(loc.getPosition()).radius(radius).strokeColor(Color.GREEN).fillColor(0x2290EE90));
 
@@ -335,6 +336,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
 
 
 
+
                     ;
 
                     String startTimeTest = date + " " + time;
@@ -347,6 +349,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                     Timestamp curTime = new Timestamp(System.currentTimeMillis());
                     if(curTime.getTime()>=endTime.getTime()){
                         radTextView.setText("The event has ended");
+                        map.setMyLocationEnabled(false);
                     }else{
                         radTextView.setText("The event has not started");
                     }
@@ -378,6 +381,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                                 return;
                             }
 
+
  //                           map.setMyLocationEnabled(true);
                             ///////////////////////////GET LOCATION AND SEND YES IF WITHIN RADIUS//////////////////
 
@@ -387,6 +391,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                                         @Override
                                         public void onSuccess(Location location) {
                                             // Got last known location. In some rare situations this can be null.
+
                                             if (location != null) {
                                                 inRadius(eventLocation.latitude,eventLocation.longitude,location.getLatitude(),location.getLongitude(),radius);
                                                 radTextView.setText(inRadius);
@@ -418,6 +423,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                             Timestamp curTime = new Timestamp(System.currentTimeMillis());
                             if(curTime.getTime()>=endTime.getTime()){
                                 radTextView.setText("The event has ended");
+                                map.setMyLocationEnabled(false);
                                 timer.cancel();
                                 timer.purge();
                                // map.setMyLocationEnabled(false);
@@ -430,7 +436,9 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                     Date startdate = new Date(startTime.getTime());
                     Log.d("start date", startdate.toString());
                     if((curTime.getTime()<=endTime.getTime())&&(curTime.getTime()>=startTime.getTime())){
+                        map.setMyLocationEnabled(true);
                         timer.schedule(task,startdate,50000L);
+
                     }
 
 
@@ -493,7 +501,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                 //Convert response to a json and check if the response what 200 (which means password is valid)
                 JSONObject jsonObj = new JSONObject(response.toString());
                 String result = jsonObj.getString("result");
-                Log.d("JoinDog", result);
+                Log.d("JoinLog", result);
                 Log.d("check presence", presence);
             } catch (JSONException e) {
                 e.printStackTrace();

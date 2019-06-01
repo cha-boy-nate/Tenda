@@ -161,7 +161,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        map.setMyLocationEnabled(true);
+        //map.setMyLocationEnabled(true);
 
 
 
