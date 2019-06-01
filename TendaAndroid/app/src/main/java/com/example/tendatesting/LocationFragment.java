@@ -4,12 +4,15 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +51,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -55,119 +60,151 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class LocationFragment extends Fragment implements OnMapReadyCallback {
+public class LocationFragment extends Fragment {
 
-    private MapView mMapView;
+    MapView mMapView;
     private GoogleMap googleMap;
-    private ArrayList<Event> eventArrayList;
-    double latitude, longitude;
-    int radius;
-    private JSONArray eventArray;
+    String fragementIdentifier = "Location Fragment";
 
-    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        final View v = inflater.inflate(R.layout.fragment_map, container, false);
-        MapsInitializer.initialize(this.getActivity());
-        Bundle mapViewBundle = null;
-        if (savedInstanceState != null) {
-             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
-
-        ////////////////////////////
-        String userID="1";
-        Log.d("MyEvents", userID);
-        //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        String url ="http://34.217.162.221:8000/myEvents/"+userID+"/";
-        //Create request
-        final StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            //When the request is recieved:
-            @Override
-            public void onResponse(String response) {
-                try {
-                    //Convert response to a json
-                    JSONObject jsonObject = new JSONObject(response.toString());
-                    String result = jsonObject.getString("result");
-                    eventArray = new JSONArray(result);
-                    createListData(eventArray);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("ERROR", "Error with request response.");
-            }
-        });
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-
-
-        ////////////////////////////
-
-
-        mMapView = (MapView) v.findViewById(R.id.map_ViewAttend);
+        mMapView = (MapView) rootView.findViewById(R.id.map_ViewAttend);
         mMapView.onCreate(savedInstanceState);
-        mMapView.onResume();
-        mMapView.getMapAsync(this);
 
+        mMapView.onResume(); // needed to get the map to display immediately
 
-        return v;
-    }
-    private void createListData(JSONArray eventArray) {
-        int length = eventArray.length();
-        for(int i = 0; i < length; i++) {
-            try {
-                JSONObject full = (JSONObject) eventArray.get(i);
-                JSONObject test = new JSONObject(full.getString("event"));
-                latitude = Double.parseDouble(test.getString("latitude"));
-                longitude = Double.parseDouble(test.getString("longitude"));
-                radius = (int)(Double.parseDouble(test.getString("radius")));
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-    }
-
-    @Override
-    public void onMapReady(final GoogleMap map) {
-        LatLng eventLocation = new LatLng(latitude,longitude);
-
-
-        final Marker loc = map.addMarker(new MarkerOptions().position(eventLocation).title("Set Location").draggable(true));
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 17.0f));
-        final Circle cir = map.addCircle(new CircleOptions().center(loc.getPosition()).radius(radius).strokeColor(Color.GREEN).fillColor(0x2290EE90));
-        map.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+        mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onCircleClick(Circle circle) {
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+
+                // For showing a move to my location button
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                //googleMap.setMyLocationEnabled(true);
+
+                Bundle extras = getActivity().getIntent().getExtras();
+                String eventID = extras.getString("event_id");
+                Log.d(fragementIdentifier, eventID);
+
+                //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
+                RequestQueue queueDet = Volley.newRequestQueue(getContext());
+                String urlDet = "http://34.217.162.221:8000/event/" + eventID + "/";
+                //Create request
+                final StringRequest stringRequestDet = new StringRequest(Request.Method.GET, urlDet, new Response.Listener<String>() {
+                    //When the request is recieved:
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //Convert response to a json
+                            JSONObject jsonObj = new JSONObject(response.toString());
+                            String result = jsonObj.getString("result");
+                            jsonObj = new JSONObject(result);
+
+                            Log.d(fragementIdentifier, result);
+
+                            Double  latitude = Double.parseDouble(jsonObj.getString("latitude"));
+                            Double  longitude = Double.parseDouble(jsonObj.getString("longitude"));
+                            int radius = (int) Double.parseDouble(jsonObj.getString("radius"));
+
+                            if(latitude == longitude){
+                                latitude = 47.6496;
+                                longitude = 122.3615;
+
+                            }
+
+
+                            LatLng eventLocation = new LatLng(latitude, longitude);
+                            Log.d("AttendeeLog", "Lat: " + latitude + " Long: " + longitude);
+
+                            Geocoder geocoder;
+                            List<Address> addresses;
+                            geocoder = new Geocoder(getContext(), Locale.getDefault());
+
+                            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+                            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//                            String city = addresses.get(0).getLocality();
+//                            String state = addresses.get(0).getAdminArea();
+//                            String country = addresses.get(0).getCountryName();
+//                            String postalCode = addresses.get(0).getPostalCode();
+//                            String knownName = addresses.get(0).getFeatureName();
+
+
+                            //Adding the location marker for the event
+                            Marker loc = googleMap.addMarker(new MarkerOptions().position(eventLocation).title(address).draggable(false).snippet("Radius: "+radius+" meters"));
+
+                            loc.showInfoWindow();
+
+                            // For zooming automatically to the location of the marker
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 17.0f));
+                            googleMap.addCircle(new CircleOptions().center(loc.getPosition()).radius(radius).strokeColor(Color.GREEN).fillColor(0x2290EE90));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(fragementIdentifier, "Error with request response.");
+                    }
+                });
+
+                // Add the request to the RequestQueue.
+                queueDet.add(stringRequestDet);
+
+
             }
         });
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        //map.setMyLocationEnabled(true);
-
-
-
-
-
+        return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
 }

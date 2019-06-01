@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.DialogInterface;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.graphics.Color;
@@ -16,12 +18,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -38,6 +45,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Circle;
@@ -54,13 +62,17 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+
 
 public class CreateEventActivity extends AppCompatActivity implements
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, OnMapReadyCallback {
@@ -94,6 +106,8 @@ public class CreateEventActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+
+
 
 
         Toolbar barTitle = findViewById(R.id.messageToolbarCV);
@@ -195,6 +209,7 @@ public class CreateEventActivity extends AppCompatActivity implements
         mMapView = (MapView) findViewById(R.id.map_View);
         mMapView.onCreate(mapViewBundle);
         mMapView.getMapAsync(this);
+
 
         Button createEventButton = (Button) findViewById(R.id.createEventButton);
         createEventButton.setOnClickListener(new View.OnClickListener() {
@@ -344,6 +359,7 @@ public class CreateEventActivity extends AppCompatActivity implements
         mMapView.onStop();
     }
 
+
     /*
     Name: onMapReady
     Description: This function handles the maps api, it sets the marker, radius and takes the user's location
@@ -353,9 +369,24 @@ public class CreateEventActivity extends AppCompatActivity implements
     @Override
     public void onMapReady(final GoogleMap map) {
 
-        LatLng SPU = new LatLng(47.6496, -122.3615); //setting the lat and long for SPU
 
-        loc = map.addMarker(new MarkerOptions().position(SPU).title("Set Location").draggable(true)); //Setting the map marker to SPU
+        Geocoder geocoder;
+        List<Address> addresses = null;
+        geocoder = new Geocoder(CreateEventActivity.this, Locale.getDefault());
+
+
+
+        LatLng SPU = new LatLng(47.6496, -122.3615); //setting the lat and long for SPU
+        try {
+            addresses = geocoder.getFromLocation(SPU.latitude, SPU.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+
+        loc = map.addMarker(new MarkerOptions().position(SPU).title(address).draggable(true)); //Setting the map marker to SPU
+        loc.showInfoWindow();
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 17.0f)); //Moving the camera to SPU
         final Circle cir = map.addCircle(new CircleOptions().center(loc.getPosition()).radius(10).strokeColor(Color.GREEN).fillColor(0x2290EE90)); //Creating the circle that will represent the radius
 
@@ -402,12 +433,30 @@ public class CreateEventActivity extends AppCompatActivity implements
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), map.getCameraPosition().zoom)); //moving the camera to where the marker is set
                 cir.setCenter(marker.getPosition()); //Redrawing the circle to where the marker has been moved to
 
-                loc.setPosition(marker.getPosition());
+                //loc.setPosition(marker.getPosition());
                 LatLng test = loc.getPosition();
                 Log.d("test", String.valueOf(test.latitude));
                 Log.d("test", String.valueOf(test.longitude));
+
+                Geocoder geocoder;
+                List<Address> addresses = null;
+                geocoder = new Geocoder(CreateEventActivity.this, Locale.getDefault());
+
+                try {
+                    addresses = geocoder.getFromLocation(test.latitude, test.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+
+                loc.setPosition(test);
+            loc.setTitle(address);
                 latitude = Double.toString(test.latitude);
                 longitude = Double.toString(test.longitude);
+                loc.showInfoWindow();
+
+
 
 
                 //getting the user's permission if it already hasn't been acepted
@@ -523,7 +572,21 @@ public class CreateEventActivity extends AppCompatActivity implements
                 Log.d("test", String.valueOf(test.latitude));
                 Log.d("test", String.valueOf(test.longitude));
 
+                Geocoder geocoder;
+                List<Address> addresses = null;
+                geocoder = new Geocoder(CreateEventActivity.this, Locale.getDefault());
 
+                try {
+                    addresses = geocoder.getFromLocation(test.latitude, test.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+
+                loc.setPosition(test);
+                loc.setTitle(address);
+                loc.showInfoWindow();
 
                 latitude = Double.toString(test.latitude);
                 longitude = Double.toString(test.longitude);

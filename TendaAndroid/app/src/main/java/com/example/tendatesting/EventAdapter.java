@@ -63,7 +63,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
 
             title.setText(event.getEventTitle());
             description.setText(event.getEventDescription());
-            time.setText(event.getEventTime() + " To " + event.getEventDuration());
+            time.setText(event.getEventTime() + " - " + event.getEventDuration());
             date.setText(event.getEventDate());
             //duration.setText(event.getEventDuration());
 

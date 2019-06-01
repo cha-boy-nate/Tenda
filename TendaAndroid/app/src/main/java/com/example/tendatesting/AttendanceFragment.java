@@ -185,7 +185,7 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
 
                     eventTitle.setText(name);
                     eventDescription.setText(description);
-                    eventTime.setText(eventTimeAMPM + " To " + eventETimeAMPM);
+                    eventTime.setText(eventTimeAMPM + " - " + eventETimeAMPM);
                     eventDate.setText(dateFormatted);
                    // eventDuration.setText(duration);
 

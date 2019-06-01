@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.sql.Time;
 import java.sql.Timestamp;
 
@@ -59,6 +62,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -278,7 +283,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
 
 
                     double latitude;
-                    final double longitude;
+                    double longitude;
                     latitude = Double.parseDouble(jsonObj.getString("latitude"));
                     longitude = Double.parseDouble(jsonObj.getString("longitude"));
 
@@ -298,16 +303,32 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
 
                     eventTitle.setText(name);
                     eventDescription.setText(description);
-                    eventTime.setText(eventTimeAMPM + " To " + eventETimeAMPM);
+                    eventTime.setText(eventTimeAMPM + " - " + eventETimeAMPM);
                     eventDate.setText(dateFormatted);
 
                     //eventDuration.setText(duration);
 
+                    if(latitude == longitude){
+                        latitude = 47.6496;
+                        longitude = 122.3615;
+
+                    }
 
                     final LatLng eventLocation = new LatLng(latitude, longitude);
                     Log.d("AttendeeLog", "Lat: " + latitude + " Long: " + longitude);
+
+
+                    Geocoder geocoder;
+                    List<Address> addresses;
+                    geocoder = new Geocoder(AttendeeActivity.this, Locale.getDefault());
+
+                    addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+
                     //Adding the location marker for the event
-                    final Marker loc = map.addMarker(new MarkerOptions().position(eventLocation).title("Set Location").draggable(true));
+                    final Marker loc = map.addMarker(new MarkerOptions().position(eventLocation).title(address).draggable(false).snippet("Radius: "+radius+" meters"));
+                    loc.showInfoWindow();
                     loc.getPosition().toString();
                     //Moving the camera to where the marker is
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 17.0f));
@@ -449,7 +470,10 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }catch (IOException e) {
+                    e.printStackTrace();
                 }
+
             }
         }, new Response.ErrorListener() {
             @Override
