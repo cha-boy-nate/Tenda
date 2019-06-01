@@ -22,6 +22,12 @@ def verifyPassword(email, testpassword, cur):
 	else:
 		return 0
 
+def commitAttendenceRecord(user_id, event_id, response, cur, db):
+    query = "insert into Event_Statistics(event_id, user_id, verified) values('"+event_id+"', '"+user_id+"', '"+response+"');"
+    cur.execute(query)
+    db.commit()
+
+
 '''
 Name: commitInvitationResponse
 Description: Function for user to commit a response for event.
@@ -39,8 +45,8 @@ Description: Function for user to commit an event to the database.
 Inputs: manager_id, event name, date, time, duration, radius, description, database cursor, db creditials.
 Outputs: None.
 '''
-def commitEvent(manager_id, eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription, cur, db):
-	sql = "insert into Event(manager_id, eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription) values ("+manager_id+",'"+eventName+"','"+eventDate+"','"+eventTime+"','"+eventDuration+"','"+eventRadius+"','"+eventDescription+"');"
+def commitEvent(manager_id, eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription, latitude, longitude, cur, db):
+	sql = "insert into Event(manager_id, eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription, latitude, longitude) values ("+manager_id+",'"+eventName+"','"+eventDate+"','"+eventTime+"','"+eventDuration+"','"+eventRadius+"','"+eventDescription+"',"+latitude+","+longitude+");"
 	cur.execute(sql)
 	db.commit()
 
@@ -75,7 +81,6 @@ def getUserData(user_id, cur):
 	returnVal["firstName"] = val[0]
 	returnVal["lastName"] = val[1]
 	returnVal["email"] = val[2]
-	print(returnVal)
 	return returnVal
 
 '''
@@ -121,7 +126,7 @@ Inputs: event_id and database cursor.
 Outputs: json of data for the event.
 '''
 def getEventDetails(event_id, cur):
-	query = "Select eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription, event_id from Event where event_id="+str(event_id)+";"
+	query = "Select eventName, eventDate, eventTime, eventDuration, eventRadius, eventDescription, event_id, latitude, longitude from Event where event_id="+str(event_id)+";"
 	cur.execute(query)
 	event = cur.fetchone()
 	returnVal = {}
@@ -132,7 +137,11 @@ def getEventDetails(event_id, cur):
 	returnVal["radius"] = str(event[4])
 	returnVal["description"] = str(event[5])
 	returnVal["event_id"] = str(event[6])
-	return returnVal
+        returnVal["latitude"] = str(event[7])
+        returnVal["longitude"] = str(event[8])
+        startTime = returnVal["time"]
+        duration = returnVal["duration"]
+        return returnVal
 
 def getUsersForEvent(cur, event_id):
     query = "Select distinct(user_id) from Events_to_Attendees where event_id="+event_id+";"
@@ -144,19 +153,19 @@ def getUsersForEvent(cur, event_id):
     return returnVal
 
 def getUserAttendenceData(cur, event_id, user_id):
-    query = "Select min(currentTime) from Event_Statistics where user_id="+str(user_id)+";"
+    query = "Select min(currentTime) from Event_Statistics where user_id="+str(user_id)+" and event_id="+str(event_id)+";"
     cur.execute(query)
-    startTime = cur.fetchall()
-    startTime = startTime[0]
+    startTime = cur.fetchone()
     startTime = startTime[0]
     query = "Select max(currentTime) from Event_Statistics where user_id="+str(user_id)+" and event_id="+str(event_id)+" and verified='yes';";
+    
     cur.execute(query)
-    endTime = cur.fetchall()
+    endTime = cur.fetchone()
     endTime = endTime[0]
-    endTime = endTime[0]
-    if startTime != None:
+
+    if startTime != None and endTime != None:
 	    difference = endTime - startTime
-	    attendenceData = {}
+            attendenceData = {}
 	    attendenceData["start_time"] = str(startTime)
 	    attendenceData["end_time"] = str(endTime)
 	    attendenceData["difference"] = str(difference)

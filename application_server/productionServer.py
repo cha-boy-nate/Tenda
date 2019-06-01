@@ -68,7 +68,9 @@ def createResponse():
 	response = response[1]
 	#Commit values to database.
 	commitInvitationResponse(event_id, user_id, response, cur, db)
-        return jsonify(result={"status":200})
+        return jsonify(result={"status"})
+
+
 
 #Route to create a new event.
 @application.route("/createEvent", methods=["POST"])
@@ -83,9 +85,13 @@ def createEvent():
         eventDescription = decoded[2].split("=")
         eventTime = decoded[3].split("=")
         latitude = decoded[4].split("=")
-        userID = decoded[5].split("=")
-        longitude = decoded[6].split("=")
-        eventDate = decoded[7].split("=")
+        userID = decoded[6].split("=")
+        longitude = decoded[7].split("=")
+        eventDate = decoded[8].split("=")
+        
+        duration = decoded[5].split("=")
+        duration = duration[1]
+        print("Duration: " + str(duration))
 
         radius = radius[1]
         eventTitle = eventTitle[1]
@@ -110,7 +116,7 @@ def createEvent():
         print("latitude: " + latitude)
         print("longitude: " + longitude)
         
-	commitEvent(userID, eventTitle, eventDate, eventTime, "00:00:00", radius, eventDescription, cur, db)
+	commitEvent(userID, eventTitle, eventDate, eventTime, duration, radius, eventDescription, latitude, longitude, cur, db)
 	return jsonify(result={"status":200})
 
 #Route to create a new account.
@@ -118,11 +124,16 @@ def createEvent():
 def createAccount():
 	#Get the data from the request.
 	response = str(request.get_data())
-	response = response.replace("%40", "@")
-	response = response.replace("key=", "")
-	response = response[:-1]
-	#Split the response data into variables.
-	email, firstName, lastName, password = response.split("+", 4)
+        decoded = unquote(response)
+        decoded = decoded.split("&")
+        password = decoded[0].split("=")[1]
+        email = decoded[3].split("=")[1]
+        first_name = decoded[2].split("=")[1]
+        last_name = decoded[1].split("=")[1]
+        print("password: " + password)
+        print("first name: " + first_name)
+        print("last name: " + last_name)
+        print("email: " + email)
 	sql = "insert into User(firstName, lastName, email, password) values('"+firstName+"','"+lastName+"','"+email+"','"+password+"');"
 	cur.execute(sql)
 	db.commit()
@@ -138,13 +149,19 @@ def createAttendenceRecord():
     event_id = decoded[0].split('=')[1]
     user_id = decoded[1].split('=')[1]
     response = decoded[2].split('=')[1]
-    print(str(event_id) + " : " + str(user_id) + " : "  + str(response))
-    #print(str(event_id) + " " + str(user_id) + " " + str(response) + " " + str(time) + " " + str(date))
+    commitAttendenceRecord(user_id, event_id, response, cur, db)
     return jsonify(result=200)
+
 
 '''THIS IS THE END OF THE POST REQUEST ROUTES'''
 #################################################
 '''THIS IS THE START OF THE GET REQUEST ROUTES'''
+
+@application.route("/", methods=['GET'])
+def indexTest():
+    print("Got Request")
+    return 'test'
+
 
 #Route returns event details matching id given.
 @application.route("/event/<idVal>/", methods=['GET'])
@@ -202,14 +219,10 @@ def myEvents(idVal):
 @application.route("/attendenceData/<idVal>/", methods=["GET"])
 def attendenceData(idVal):
     users = getUsersForEvent(cur, idVal)
-    print(users)
     value = []
     for user in users:
-        print("new user")
         userData = getUserAttendenceData(cur, idVal, user)
-        #print(userData)
         if userData != 0:
-            #print(userData)
             value.append(userData)
     return jsonify(result=value)
 '''THIS IS THE END OF THE GET REQUEST ROUTES'''
