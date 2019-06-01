@@ -40,6 +40,13 @@
             android:padding="5dp"
             android:text="This week we will discuss good coding practices."
             android:textSize="18sp" />
+        <TextView
+            android:id="@+id/page_textDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="05/08/2019"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/page_textTime"
@@ -48,14 +55,15 @@
             android:padding="5dp"
             android:text="10:30"
             android:textSize="18sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/page_textDuration"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="5dp"-->
+            <!--android:text="10:30"-->
+            <!--android:textSize="18sp" />-->
 
-        <TextView
-            android:id="@+id/page_textDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="05/08/2019"
-            android:textSize="18sp" />
+
     </LinearLayout>
     </android.support.v7.widget.CardView>
 
@@ -97,11 +105,66 @@
 
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/firstName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="First Name"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/LastName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="Last Name"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/inRad"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="In Radius"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/Duration"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="Duration"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerViewAttend"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical" />
+        </LinearLayout>
 
 
     </android.support.v7.widget.CardView>

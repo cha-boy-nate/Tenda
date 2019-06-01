@@ -51,6 +51,8 @@ ManageEvent extends AppCompatActivity {
 
 
 
+
+
     }
 
     /*
@@ -93,12 +95,11 @@ ManageEvent extends AppCompatActivity {
     };
     @Override
     public boolean onSupportNavigateUp() {
+
         onBackPressed();
+
         return true;
     }
 
 
-
 }
-
-

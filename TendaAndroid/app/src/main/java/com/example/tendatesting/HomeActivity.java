@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -39,10 +38,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-
-
-
         //Basically signing into system
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -92,7 +87,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle); //The drawer listener will listen for any toggle changes
         toggle.syncState(); //The toggle syncs its current state depending on whether the drawer is open or closed
 
-
         String eventFrag = getIntent().getStringExtra("frag");
         if(eventFrag != null){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -105,8 +99,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, timeline_frag).commit();
             navigationView.setCheckedItem(R.id.nav_timeline);
         }
-
-
         requestPermission();
 
     }
@@ -162,7 +154,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent( HomeActivity.this, LoginActivity.class);
+                            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
                             startActivity(intent);
                         }
                     })

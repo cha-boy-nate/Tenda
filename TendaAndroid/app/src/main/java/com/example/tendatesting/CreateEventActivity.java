@@ -6,12 +6,13 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
@@ -69,7 +70,11 @@ public class CreateEventActivity extends AppCompatActivity implements
     String longitude;
     String radius;
 
+    Marker loc;
+
     Button dateAndTimePicker;
+    Button durationPicker;
+    TextView durationResult;
     TextView dateTimeResult;
     EditText eventTitle, eventDescription;
 
@@ -80,11 +85,16 @@ public class CreateEventActivity extends AppCompatActivity implements
 
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
+    String m_Text = "";
+    String finalHour = "";
+    String finalMinute = "";
+    String finalDurationResult = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+
 
         Toolbar barTitle = findViewById(R.id.messageToolbarCV);
         barTitle.setTitle("Create Event");
@@ -94,6 +104,8 @@ public class CreateEventActivity extends AppCompatActivity implements
 
         dateAndTimePicker = findViewById(R.id.dateAndTimePicker);
         dateTimeResult = findViewById(R.id.dateTimeResult);
+        durationPicker = findViewById(R.id.eventDurationButton);
+        durationResult = findViewById(R.id.durationResult);
 
         dateAndTimePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +118,69 @@ public class CreateEventActivity extends AppCompatActivity implements
                 DatePickerDialog datePickerDialog = new DatePickerDialog(CreateEventActivity.this,
                         CreateEventActivity.this, year, month, day);
                 datePickerDialog.show();
+            }
+        });
+
+        /*--Name: Duration Picker
+        Description: This function will open an input dialog for user to enter event duration
+        Input: hours, minutes
+        Output: Duration: hours + minutes
+         */
+        durationPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(CreateEventActivity.this);
+//                builder.setTitle("Duration");
+//                // Set up the input
+//                final EditText input = new EditText(CreateEventActivity.this);
+//                // Specify the type of input expected; this, set input as number
+//                input.setInputType(InputType.TYPE_CLASS_DATETIME);
+//                input.setHint("HHMM");
+//                builder.setView(input);
+//                //Display input in time format if after users click OK
+//                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        m_Text = input.getText().toString();
+//                        finalHour = m_Text.substring(0,2);
+//                        finalMinute = m_Text.substring(2,4);
+//                        finalDurationResult = finalHour +":" + finalMinute + ":00";
+//                        durationResult.setText(finalDurationResult);
+//                    }
+//                });
+//                //Cancel and close input dialog
+//                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//                builder.show();
+                final TimePickerDialog timePickerDialog = new TimePickerDialog(CreateEventActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                        if(hourFinal>hourOfDay){
+                            hourOfDay = hourFinal;
+                        }
+                        if(minuteFinal>minute){
+                            minute = minuteFinal;
+                        }
+                        String twentyFourTime = String.format("%02d:%02d", hourOfDay, minute);
+                        SimpleDateFormat twentyFourTimeFormat = new SimpleDateFormat("HH:mm");
+                        SimpleDateFormat twelveHourFormat = new SimpleDateFormat("hh:mm a");
+                        Date twentyFourHourDate = null;
+                        try {
+                            twentyFourHourDate = twentyFourTimeFormat.parse(twentyFourTime);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        finalDurationResult = twentyFourTimeFormat.format(twentyFourHourDate);
+                        String showTime = twelveHourFormat.format(twentyFourHourDate);
+                        durationResult.setText("End Time: " + showTime);
+                    }
+                },hour, minute,false);
+                timePickerDialog.show();
             }
         });
 
@@ -126,6 +201,7 @@ public class CreateEventActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 Context context = getApplicationContext();
+                sendRequest(view);
                 CharSequence text = "Event successfully created";
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(context, text, duration);
@@ -133,11 +209,11 @@ public class CreateEventActivity extends AppCompatActivity implements
                 Intent intent = new Intent( CreateEventActivity.this, HomeActivity.class);
                 intent.putExtra("frag", "myEvent");
                 startActivity(intent);
-
             }
         });
 
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -145,8 +221,10 @@ public class CreateEventActivity extends AppCompatActivity implements
     }
 
 
-    public void onClick(View view) {
+
+    public void sendRequest(View view) {
 //Get event title and description values into string
+        Log.d("CreateEventLog", "button clicked");
         eventTitle = findViewById(R.id.eventTitle);
         eventDescription = findViewById(R.id.eventDescription);
         final String eventTitleString = eventTitle.getText().toString();
@@ -188,18 +266,15 @@ public class CreateEventActivity extends AppCompatActivity implements
                 MyData.put("Latitude", latitude);
                 MyData.put("Longitude", longitude);
                 MyData.put("Radius", radius);
+                MyData.put("Duration", finalDurationResult);
 
                 return MyData;
             }
         };
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-//        MyEvents my_event_frag = new MyEvents();
-//        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, my_event_frag).commit();
+
     }
-
-
-
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -225,7 +300,7 @@ public class CreateEventActivity extends AppCompatActivity implements
 
         String twentyFourTime = String.format("%02d:%02d", hourFinal, minuteFinal);
         SimpleDateFormat twentyFourTimeFormat = new SimpleDateFormat("HH:mm");
-        SimpleDateFormat tweleveHourFormat = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat twelveHourFormat = new SimpleDateFormat("hh:mm a");
         Date twentyFourHourDate = null;
         try {
             twentyFourHourDate = twentyFourTimeFormat.parse(twentyFourTime);
@@ -233,9 +308,9 @@ public class CreateEventActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
         eventTime = twentyFourTimeFormat.format(twentyFourHourDate);
+        String showTime = twelveHourFormat.format(twentyFourHourDate);
         eventDate = yearFinal+"-"+monthFinal + "-" + dayFinal;
-        dateTimeResult.setText("Date: " + eventDate + "\n" +
-                "Time: " + eventTime);
+        dateTimeResult.setText("Date: " + eventDate + "\n" + "Start Time: " + showTime);
     }
 
     @Override
@@ -280,7 +355,7 @@ public class CreateEventActivity extends AppCompatActivity implements
 
         LatLng SPU = new LatLng(47.6496, -122.3615); //setting the lat and long for SPU
 
-        final Marker loc = map.addMarker(new MarkerOptions().position(SPU).title("Set Location").draggable(true)); //Setting the map marker to SPU
+        loc = map.addMarker(new MarkerOptions().position(SPU).title("Set Location").draggable(true)); //Setting the map marker to SPU
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 17.0f)); //Moving the camera to SPU
         final Circle cir = map.addCircle(new CircleOptions().center(loc.getPosition()).radius(10).strokeColor(Color.GREEN).fillColor(0x2290EE90)); //Creating the circle that will represent the radius
 
@@ -327,6 +402,13 @@ public class CreateEventActivity extends AppCompatActivity implements
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), map.getCameraPosition().zoom)); //moving the camera to where the marker is set
                 cir.setCenter(marker.getPosition()); //Redrawing the circle to where the marker has been moved to
 
+                loc.setPosition(marker.getPosition());
+                LatLng test = loc.getPosition();
+                Log.d("test", String.valueOf(test.latitude));
+                Log.d("test", String.valueOf(test.longitude));
+                latitude = Double.toString(test.latitude);
+                longitude = Double.toString(test.longitude);
+
 
                 //getting the user's permission if it already hasn't been acepted
                 if (ActivityCompat.checkSelfPermission(CreateEventActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -363,6 +445,9 @@ public class CreateEventActivity extends AppCompatActivity implements
             */
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                radius = Integer.toString(progress);
+
+                Log.d("The radius is:", radius);
 
                 //Checking if the user is moving the seekbar
                 if (fromUser) {
@@ -395,6 +480,7 @@ public class CreateEventActivity extends AppCompatActivity implements
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+
 
             }
 
@@ -433,6 +519,15 @@ public class CreateEventActivity extends AppCompatActivity implements
                 //setting the location the place searched
                 loc.setPosition(place.getLatLng());
 
+                LatLng test = loc.getPosition();
+                Log.d("test", String.valueOf(test.latitude));
+                Log.d("test", String.valueOf(test.longitude));
+
+
+
+                latitude = Double.toString(test.latitude);
+                longitude = Double.toString(test.longitude);
+
                 //Moving the marker to the place searched
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), map.getCameraPosition().zoom));
 
@@ -469,15 +564,6 @@ public class CreateEventActivity extends AppCompatActivity implements
         latitude = Double.toString(coord.latitude);
         longitude = Double.toString(coord.longitude);
         radius = String.valueOf(seekBarDis.getProgress());
-
-
-
-
-
-
-
-
-
 
 
     }

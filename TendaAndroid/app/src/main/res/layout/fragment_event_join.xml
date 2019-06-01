@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/emailLayout"
+        android:id="@+id/last_name_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
@@ -38,7 +38,7 @@
         android:layout_gravity="center" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/first_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

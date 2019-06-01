@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     public void login(View view) throws IOException {
         //Get email and password from user text box entries.
         final EditText email = (EditText)findViewById(R.id.email);
-        EditText password = (EditText)findViewById(R.id.password);
+        EditText password = (EditText)findViewById(R.id.email);
         final String emailString = email.getText().toString();
         final String passwordString = password.getText().toString();
 

@@ -17,7 +17,7 @@
         android:background="@drawable/radius_white">
 
         <EditText
-            android:id="@+id/name"
+            android:id="@+id/first_name"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:layout_marginLeft="20dp"

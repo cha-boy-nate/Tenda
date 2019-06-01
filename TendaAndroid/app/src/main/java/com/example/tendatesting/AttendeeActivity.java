@@ -1,11 +1,13 @@
 package com.example.tendatesting;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.health.TimerStat;
 import android.support.annotation.ColorInt;
@@ -50,14 +52,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCallback{
     String fragementIdentifier = "AttendeeLog";
+    Timer timer;
+    String isPresent;
+    String inRadius;
+    private FusedLocationProviderClient fusedLocationClient;
+
 
 
 
@@ -100,10 +113,20 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
             return false;
         }
     };
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(timer != null){
+            timer.cancel();
+            timer.purge();
+            //cancel timer task and assign null
+        }
     }
 
     @Override
@@ -116,6 +139,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
         setSupportActionBar(barTitle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         //getting the view for the bottom nav view
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -133,12 +157,57 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
         mMapView.getMapAsync(this); //The API callback to show the map
 
 
+//        recyclerView = findViewById(R.id.recyclerViewAttend);
+//        LinearLayoutManager manager = new LinearLayoutManager(this);
+//        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+//        recyclerView.setLayoutManager(manager);
+//        recyclerView.setHasFixedSize(true);
+//        attendanceArrayList = new ArrayList<>();
+//
+//        recyclerView.setAdapter(new AttendeeAdapter(attendanceArrayList, this));
+//
+
+
+    }
+
+
+    /*
+    Name: inRadius
+    Description: This function calculates the distance from the user to the marker in degress then converts it to meters
+    Input: The latitude, longitude of the user and the latitude and longitue of the marker
+    Output: THe distance between the user and the marker in meters
+    */
+    public void inRadius(double markerLattitude, double markerLongitude, double locLatitude, double locLongtitude, double radius) {
+        //distance calculation that returns the distance in degrees
+        double val = Math.sqrt(Math.pow((markerLattitude - locLatitude), 2) + Math.pow((markerLongitude - locLongtitude), 2));
+        val = val*78710; //converting the degrees to meters
+        if(radius > val){
+            isPresent = "yes";
+            inRadius = "You are marked as present";
+        }else{
+            isPresent = "no";
+            inRadius = "You are " + (int)(val-radius) +" meters from the radius";}
+    }
+
+
+
+    /*
+    Name: onMapReady
+    Description: This function handles the maps api, it sets the marker, radius and takes the user's location
+    Input: Google map
+    Output: None
+    */
+    @Override
+
+
+
+
+    public void onMapReady(final GoogleMap map) {
+        //Setting the lat and long for SPU
+
         /*******************************************************/
         // THIS IS THE START OF THE REQUEST TO GET EVENT DATA  //
         /*******************************************************/
-        //String eventID="1";
-        //Log.d(fragementIdentifier, eventID);
-
         Bundle extras = getIntent().getExtras();
         String eventID = extras.getString("event_id");
         Log.d(fragementIdentifier, eventID);
@@ -163,17 +232,212 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                     String description = jsonObj.getString("description");
                     String time = jsonObj.getString("time");
                     String date = jsonObj.getString("date");
+                    String duration = jsonObj.getString("duration");
+                    final int radius = (int) Double.parseDouble(jsonObj.getString("radius"));
 
+//                    SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
+//                    Date firstParsedDate = dateFormat.parse(time);
+//                    Log.d("total time date", Long.toString(firstParsedDate.getTime()));
+//                    Timestamp tsD = new Timestamp(firstParsedDate.getTime());
+//                    Log.d("in timestamp date", tsD.toString());
+//                    Date secondParsedDate = dateFormat.parse(duration);
+//                    Log.d("total time duration", Long.toString(secondParsedDate.getTime()));
+//                    Timestamp tsDu = new Timestamp(secondParsedDate.getTime());
+//                    Log.d("in timestamp duration", tsDu.toString());
+//                    long diff = secondParsedDate.getTime() + firstParsedDate.getTime();
+//                    Log.d("total time", Long.toString(diff));
+//                    Timestamp ts = new Timestamp(diff);
+//                    Log.d("in timestamp", ts.toString());
+
+                    ///Event start time format/////
+                    SimpleDateFormat twentyFourTimeFormat = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat twelveHourFormat = new SimpleDateFormat("hh:mm a");
+                    Date twentyFourHourDate = null;
+                    try {
+                        twentyFourHourDate = twentyFourTimeFormat.parse(time);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    String eventTimeAMPM = twelveHourFormat.format(twentyFourHourDate);
+                    ///Event end time format///
+                    //////FORMAT END TIME////
+                    SimpleDateFormat twentyFourTimeFormatE = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat twelveHourFormatE = new SimpleDateFormat("hh:mm a");
+                    Date twentyFourHourDateE = null;
+                    try {
+                        twentyFourHourDateE = twentyFourTimeFormatE.parse(duration);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    String eventETimeAMPM = twelveHourFormatE.format(twentyFourHourDateE);
+                    ///////FORMAT END TIME/////
+                    //FORMAT DATE///
+                    LocalDate eventDateF = LocalDate.parse(date);
+                    String dateFormatted = eventDateF.format(DateTimeFormatter.ofPattern( "MMM d yyyy"));
+                    //FORMAT DATE//
+
+
+                    double latitude;
+                    final double longitude;
+                    latitude = Double.parseDouble(jsonObj.getString("latitude"));
+                    longitude = Double.parseDouble(jsonObj.getString("longitude"));
+
+                    //
+
+
+
+
+
+                    Log.d(fragementIdentifier, "Longitude: " + longitude + " - Latitude: " + latitude);
 
                     TextView eventTitle = findViewById(R.id.page_textTitle);
                     TextView eventDescription = findViewById(R.id.page_textDescription);
                     TextView eventTime = findViewById(R.id.page_textTime);
                     TextView eventDate = findViewById(R.id.page_textDate);
+                    //TextView eventDuration = findViewById(R.id.page_textDuration);
 
                     eventTitle.setText(name);
                     eventDescription.setText(description);
-                    eventTime.setText(time);
-                    eventDate.setText(date);
+                    eventTime.setText(eventTimeAMPM + " To " + eventETimeAMPM);
+                    eventDate.setText(dateFormatted);
+
+                    //eventDuration.setText(duration);
+
+
+                    final LatLng eventLocation = new LatLng(latitude, longitude);
+                    Log.d("AttendeeLog", "Lat: " + latitude + " Long: " + longitude);
+                    //Adding the location marker for the event
+                    final Marker loc = map.addMarker(new MarkerOptions().position(eventLocation).title("Set Location").draggable(true));
+                    loc.getPosition().toString();
+                    //Moving the camera to where the marker is
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 17.0f));
+                    //Setting the radius for the event by drawing a circle
+                    final Circle cir = map.addCircle(new CircleOptions().center(loc.getPosition()).radius(radius).strokeColor(Color.GREEN).fillColor(0x2290EE90));
+
+                    //getting the view to show how far the user is from the radius once the event starts
+                    final TextView radTextView = findViewById(R.id.distanceFromEvent);
+                    radTextView.setText("The Event has not started");
+
+
+                    if (ActivityCompat.checkSelfPermission(AttendeeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+
+
+
+
+
+
+                    ;
+
+                    String startTimeTest = date + " " + time;
+                    String endTimeTest = date + " " + duration;
+                    Log.d("startTimeLog", startTimeTest);
+
+                    //Setting the start time of the event and the end time of the event
+                    Timestamp startTime = java.sql.Timestamp.valueOf(startTimeTest);
+                    final Timestamp endTime = java.sql.Timestamp.valueOf(endTimeTest);
+                    Timestamp curTime = new Timestamp(System.currentTimeMillis());
+                    if(curTime.getTime()>=endTime.getTime()){
+                        radTextView.setText("The event has ended");
+                    }else{
+                        radTextView.setText("The event has not started");
+                    }
+
+
+
+
+
+
+
+                    //creating a timer for a scheduled task
+                    timer = new Timer("LocationTimer");
+
+
+                    //creating the task that will run once the time has started
+                    TimerTask task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            Log.d("startTimeLog", "test");
+                            //getting the user's permission before getting the location
+                            if (ActivityCompat.checkSelfPermission(AttendeeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+                                //    ActivityCompat#requestPermissions
+                                // here to request the missing permissions, and then overriding
+                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                //                                          int[] grantResults)
+                                // to handle the case where the user grants the permission. See the documentation
+                                // for ActivityCompat#requestPermissions for more details.
+                                return;
+                            }
+
+ //                           map.setMyLocationEnabled(true);
+                            ///////////////////////////GET LOCATION AND SEND YES IF WITHIN RADIUS//////////////////
+
+                            fusedLocationClient = LocationServices.getFusedLocationProviderClient(AttendeeActivity.this);
+                            fusedLocationClient.getLastLocation()
+                                    .addOnSuccessListener(AttendeeActivity.this, new OnSuccessListener<Location>() {
+                                        @Override
+                                        public void onSuccess(Location location) {
+                                            // Got last known location. In some rare situations this can be null.
+                                            if (location != null) {
+                                                inRadius(eventLocation.latitude,eventLocation.longitude,location.getLatitude(),location.getLongitude(),radius);
+                                                radTextView.setText(inRadius);
+                                                if(isPresent.equals("yes")){
+                                                    sendRequest(isPresent);
+                                                    Log.d("Request Sent",isPresent);
+                                                }
+                                                else{
+                                                    Log.d("Request Sent",isPresent);
+                                                }
+
+
+
+
+                                            }
+                                        }
+                                    });
+                            ////////////////////////////GET LOCATION AND SEND YES IF WITHIN RADIUS/////////
+
+
+
+                            //End getting location
+
+                            //getting the current timestamp to send to the database
+                            //Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+                            //Getting the current time and then checking if the time has passed the end time
+                            //if so then the task is cancelled
+                            Timestamp curTime = new Timestamp(System.currentTimeMillis());
+                            if(curTime.getTime()>=endTime.getTime()){
+                                radTextView.setText("The event has ended");
+                                timer.cancel();
+                                timer.purge();
+                               // map.setMyLocationEnabled(false);
+                            }
+
+                        }
+                    };
+
+                    //Getting the start date from the start time and scheduling the task.
+                    Date startdate = new Date(startTime.getTime());
+                    Log.d("start date", startdate.toString());
+                    if((curTime.getTime()<=endTime.getTime())&&(curTime.getTime()>=startTime.getTime())){
+                        timer.schedule(task,startdate,50000L);
+                    }
+
+
+
+
+
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -192,53 +456,8 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
         // THIS IS THE END OF THE REQUEST TO GET EVENT DATA    //
         /*******************************************************/
 
-//        recyclerView = findViewById(R.id.recyclerViewAttend);
-//        LinearLayoutManager manager = new LinearLayoutManager(this);
-//        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-//        recyclerView.setLayoutManager(manager);
-//        recyclerView.setHasFixedSize(true);
-//        attendanceArrayList = new ArrayList<>();
-//
-//        recyclerView.setAdapter(new AttendeeAdapter(attendanceArrayList, this));
-//
 
 
-    }
-
-
-    /*
-    Name: inRadius
-    Description: This function calculates the distance from the user to the marker in degress then converts it to meters
-    Input: The latitude, longitude of the user and the latitude and longitue of the marker
-    Output: THe distance between the user and the marker in meters
-    */
-    public double inRadius(double markerLattitude, double markerLongitude, double locLatitude, double locLongtitude, double radius) {
-        //distance calculation that returns the distance in degrees
-        double val = Math.sqrt(Math.pow((markerLattitude - locLatitude), 2) + Math.pow((markerLongitude - locLongtitude), 2));
-        val = val*78710; //converting the degrees to meters
-        return val;
-    }
-
-
-    /*
-    Name: onMapReady
-    Description: This function handles the maps api, it sets the marker, radius and takes the user's location
-    Input: Google map
-    Output: None
-    */
-    @Override
-    public void onMapReady(final GoogleMap map) {
-        //Setting the lat and long for SPU
-        LatLng SPU = new LatLng(47.6496, -122.3615);
-
-        //Adding the location marker for the event
-        final Marker loc = map.addMarker(new MarkerOptions().position(SPU).title("Set Location").draggable(true));
-        loc.getPosition().toString();
-        //Moving the camera to where the marker is
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc.getPosition(), 20.0f));
-
-        //Setting the radius for the event by drawing a circle
-        final Circle cir = map.addCircle(new CircleOptions().center(loc.getPosition()).radius(10).strokeColor(Color.GREEN).fillColor(0x2290EE90));
 
 
 
@@ -254,89 +473,56 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
             return;
         }
 
-        //getting the view to show how far the user is from the radius once the event starts
-        final TextView radTextView = findViewById(R.id.distanceFromEvent);
-        radTextView.setText("You're location will be taken once the event starts");
-
-        //Setting the start time of the event and the end time of the event
-        Timestamp startTime = java.sql.Timestamp.valueOf("2019-05-16 15:51:00.0");
-        final Timestamp endTime = java.sql.Timestamp.valueOf("2019-05-16 16:51:00.0");
-
-        //creating a timer for a scheduled task
-        Timer timer = new Timer("LocationTimer");
-
-        //creating the task that will run once the time has started
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-
-                //getting the user's permission before getting the location
-                if (ActivityCompat.checkSelfPermission(AttendeeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-
-                //map.setMyLocationEnabled(true);
-
-                //creating the cliend for getting the user's location using the Fused Location Provier Client
-                final FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(AttendeeActivity.this);
-
-                /*
-                name: Location listener
-                description: This function gets the last locaiton of the user and if it was success full then the function
-                calls the inradius function to check if the user is within the location
-                input: None
-                output: None
-                 */
-                client.getLastLocation().addOnSuccessListener(AttendeeActivity.this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location myLocation) {
-
-                        //bool value to send to the database that represents whether the user is within the radius or not
-                        Boolean presence = null;
-
-                        //calling the inRadius to get the distance between the marker and the user
-                        double val = inRadius(loc.getPosition().latitude, loc.getPosition().longitude, myLocation.getLatitude(), myLocation.getLongitude(), cir.getRadius());
-
-                        //checking if the user is within radius or not and setting the bool and
-                        //textview appropriately
-                        if (val < cir.getRadius()) {
-                            radTextView.setText("You Are Within The Event Radius");
-                            presence = true;
-                        } else {
-                            radTextView.setText(((int) val) + " Meters From The Event");
-                            presence = false;
-                        }
-                    }
-                });
-                //End getting location
-
-                //getting the current timestamp to send to the database
-                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-                //Getting the current time and then checking if the time has passed the end time
-                //if so then the task is cancelled
-                Timestamp curTime = new Timestamp(System.currentTimeMillis());
-                if(curTime.getTime()>=endTime.getTime()){
-                    cancel();
-                }
-
-            }
-        };
-
-        //Getting the start date from the start time and scheduling the task.
-        Date startdate = new Date(startTime.getTime());
-        timer.scheduleAtFixedRate(task,startdate,3000L);
-
 
 
     }
 
 
+
+
+        public void sendRequest(final String presence) {
+
+    RequestQueue queue = Volley.newRequestQueue(this);
+    String url ="http://34.217.162.221:8000/createAttendenceRecord";
+    //Create request
+    final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        //When the request is recieved:
+        @Override
+        public void onResponse(String response) {
+            try {
+                //Convert response to a json and check if the response what 200 (which means password is valid)
+                JSONObject jsonObj = new JSONObject(response.toString());
+                String result = jsonObj.getString("result");
+                Log.d("JoinDog", result);
+                Log.d("check presence", presence);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d("ERROR", "Error with request response.");
+        }
+    }) {
+        protected Map<String, String> getParams() {
+            //Format data that will make up the body of the post request (email and password)
+            Map<String, String> MyData = new HashMap<String, String>();
+            // String userID = getArguments().getString("userID");
+            MyData.put("user_id", "1");
+            MyData.put("event_id", "1");
+            MyData.put("present", presence);
+            return MyData;
+        }
+    };
+    // Add the request to the RequestQueue.
+    queue.add(stringRequest);
+
 }
+
+
+
+}
+
+
+

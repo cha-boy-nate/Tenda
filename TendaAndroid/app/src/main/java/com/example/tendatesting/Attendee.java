@@ -1,12 +1,13 @@
 package com.example.tendatesting;
 
 public class Attendee {
-    private String attendeeName, attendeeLastName, attendeeDuration;
+    private String attendeeName, attendeeLastName, attendeeDuration, attendeeEndTime;
 
-    public Attendee(String attendeeName, String attendeeLastName, String attendeeDuration) {
+    public Attendee(String attendeeName, String attendeeLastName, String attendeeDuration, String attendeeEndTime) {
         this.attendeeName = attendeeName;
         this.attendeeLastName = attendeeLastName;
         this.attendeeDuration = attendeeDuration;
+        this.attendeeEndTime = attendeeEndTime;
     }
 
     public String getAttendeeName() {
@@ -31,5 +32,13 @@ public class Attendee {
     public void setAttendeeDuration(String attendeeDuration) {
         this.attendeeDuration = attendeeDuration;
     }
+    public String getAttendeeEndTime() {
+
+        return attendeeEndTime;
+    }
+    public void setAttendeeEndTime(String attendeeEndTime) {
+        this.attendeeEndTime = attendeeEndTime;
+    }
+
 
 }

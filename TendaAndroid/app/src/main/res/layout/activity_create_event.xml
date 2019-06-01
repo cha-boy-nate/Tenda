@@ -24,163 +24,186 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-
-        <!--Text box for Event Title-->
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/eventTitleLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/radius_white">
-
-            <EditText
-                android:id="@+id/eventTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:hint="Event Title"
-                android:inputType="text" />
-        </android.support.design.widget.TextInputLayout>
-
-
-        <!--Text box for Event Description-->
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/descriptionLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/radius_white">
-
-            <EditText
-                android:id="@+id/eventDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:hint="Event Description"
-                android:inputType="text" />
-        </android.support.design.widget.TextInputLayout>
-
-        <!--Button for picking Event's Date and Time-->
-        <Button
-            android:id="@+id/dateAndTimePicker"
-            android:layout_width="205dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/radius_green"
-            android:text="Pick Date and Time"
-            android:textColor="#ffffff" />
-
-        <!--Text view for showing event's date and time after pick-->
-        <TextView
-            android:id="@+id/dateTimeResult"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/radius_white"
-            android:text=""
-            android:textAlignment="center"
-            android:textColor="@color/TextOnWhiteBackground"
-            android:textSize="20dp" />
-
-        <!--Google Map Api view and search bar-->
-        <RelativeLayout
-            android:id="@+id/relLayout"
-            android:layout_width="350dp"
-            android:layout_height="320dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp">
-
-            <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/map_View"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-
-            <RelativeLayout
-                android:id="@+id/relLayout1"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/white_border"
-                android:elevation="10dp">
-
-                <fragment
-                    android:id="@+id/autocomplete_fragment"
-                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content" />
-
-
-            </RelativeLayout>
-        </RelativeLayout>
-        <!--SeekBar for setting Event's radius for verifying presence-->
-
-        <TextView
-            android:id="@+id/Radius"
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/radius_white"
-            android:text="Event Radius"
-            android:textAlignment="center"
-            android:textColor="@color/TextOnWhiteBackground"
-            android:textSize="20dp" />
-
-        <android.support.v7.widget.AppCompatSeekBar
-            android:id="@+id/seekBarEvent"
-            android:layout_width="371dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:max="100"
-            android:min="10"
-            android:progressBackgroundTint="@color/quantum_grey700"
-            android:progressTint="@color/colorPrimaryDark"
-            android:thumb="@drawable/ic_fiber" />
-
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_weight="1"
-            android:gravity="center|bottom"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-            <!--Button for creating event-->
+
+
+            <!--Text box for Event Title-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/eventTitleLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/radius_white">
+
+                <EditText
+                    android:id="@+id/eventTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:hint="Event Title"
+                    android:inputType="text" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <!--Text box for Event Description-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/descriptionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/radius_white">
+
+                <EditText
+                    android:id="@+id/eventDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:hint="Event Description"
+                    android:inputType="text" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!--Button for picking Event's Date and Time-->
             <Button
-                android:id="@+id/createEventButton"
+                android:id="@+id/dateAndTimePicker"
                 android:layout_width="205dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center"
-                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/radius_green"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:onClick="onClick"
-                android:text="Create Event"
+                android:text="Pick Date and Start Time"
                 android:textColor="#ffffff" />
+
+            <!--Text view for showing event's date and time after pick-->
+            <TextView
+                android:id="@+id/dateTimeResult"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/radius_white"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/TextOnWhiteBackground"
+                android:textSize="20dp" />
+
+            <!--Button for pick event's duration-->
+            <Button
+                android:id="@+id/eventDurationButton"
+                android:layout_width="205dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/radius_green"
+                android:text="Pick End Time"
+                android:textColor="#ffffff"/>
+
+            <TextView
+                android:id="@+id/durationResult"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/radius_white"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/TextOnWhiteBackground"
+                android:textSize="20dp" />
+
+            <!--Google Map Api view and search bar-->
+            <RelativeLayout
+                android:id="@+id/relLayout"
+                android:layout_width="350dp"
+                android:layout_height="320dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp">
+
+                <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/map_View"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+                <RelativeLayout
+                    android:id="@+id/relLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/white_border"
+                    android:elevation="10dp">
+
+                    <fragment
+                        android:id="@+id/autocomplete_fragment"
+                        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content" />
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+            <!--SeekBar for setting Event's radius for verifying presence-->
+
+            <TextView
+                android:id="@+id/Radius"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/radius_white"
+                android:text="Event Radius"
+                android:textAlignment="center"
+                android:textColor="@color/TextOnWhiteBackground"
+                android:textSize="20dp" />
+
+            <android.support.v7.widget.AppCompatSeekBar
+                android:id="@+id/seekBarEvent"
+                android:layout_width="371dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:max="100"
+                android:min="10"
+                android:progressBackgroundTint="@color/quantum_grey700"
+                android:progressTint="@color/colorPrimaryDark"
+                android:thumb="@drawable/ic_fiber" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1"
+                android:gravity="center|bottom"
+                android:orientation="vertical">
+                <!--Button for creating event-->
+                <Button
+                    android:id="@+id/createEventButton"
+                    android:layout_width="205dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/radius_green"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:text="Create Event"
+                    android:textColor="#ffffff" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
     </ScrollView>
 </LinearLayout>
 

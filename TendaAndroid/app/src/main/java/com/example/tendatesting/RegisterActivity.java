@@ -40,6 +40,13 @@ public class RegisterActivity extends AppCompatActivity {
 
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
+                try {
+                    createAccount(view);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -52,23 +59,16 @@ public class RegisterActivity extends AppCompatActivity {
 
     //Function will be called when the button is clicked.
     public void createAccount(View view) throws IOException, JSONException {
-        EditText name = (EditText)findViewById(R.id.name);
-        EditText email = (EditText)findViewById(R.id.name);
+        EditText first_name = (EditText)findViewById(R.id.first_name);
+        EditText last_name = (EditText)findViewById(R.id.last_name);
+        EditText email = (EditText)findViewById(R.id.email);
         EditText password = (EditText)findViewById(R.id.password);
         final String emailString = email.getText().toString();
-        final String nameString = name.getText().toString();
+        final String firstNameString = first_name.getText().toString();
+        final String lastNameString = last_name.getText().toString();
         final String passwordString = password.getText().toString();
 
-        final String requestString = emailString + " " + nameString + " " + passwordString;
-
-        /*
-        final String jsonString = new JSONObject()
-                .put("name", nameString
-                .put("email", emailString)
-                .put("password", passwordString).toString();
-        */
-
-        Log.d("RegisterLog", requestString);
+        Log.d("RegisterLog", firstNameString + " : " + lastNameString + " : " + emailString + " : " + passwordString);
 
         final Intent homeIntent = new Intent(this, HomeActivity.class);
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -98,16 +98,14 @@ public class RegisterActivity extends AppCompatActivity {
         }) {
             protected Map<String, String> getParams() {
                 Map<String, String> MyData = new HashMap<String, String>();
-                MyData.put("key", requestString);
+                MyData.put("first_name", firstNameString);
+                MyData.put("last_name", lastNameString);
+                MyData.put("email", emailString);
+                MyData.put("password", passwordString);
                 return MyData;
             }
         };
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-    }
-
-    public void ClickToLoginPage(View view) {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
     }
 }

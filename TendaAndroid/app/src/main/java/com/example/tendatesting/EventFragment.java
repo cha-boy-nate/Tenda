@@ -26,7 +26,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 public class EventFragment extends Fragment implements EventAdapter.OnNoteListener {
@@ -96,8 +101,36 @@ public class EventFragment extends Fragment implements EventAdapter.OnNoteListen
                 String radius = test.getString("radius");
                 String time = test.getString("time");
                 String date = test.getString("date");
+                //////FORMAT DATE////
+                SimpleDateFormat twentyFourTimeFormat = new SimpleDateFormat("HH:mm");
+                SimpleDateFormat twelveHourFormat = new SimpleDateFormat("hh:mm a");
+                Date twentyFourHourDate = null;
+                try {
+                    twentyFourHourDate = twentyFourTimeFormat.parse(time);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String eventTimeAMPM = twelveHourFormat.format(twentyFourHourDate);
+                ///////FORMAT DATE/////
 
-                Event event = new Event(name, description, time, date);
+                //////FORMAT END TIME////
+                SimpleDateFormat twentyFourTimeFormatE = new SimpleDateFormat("HH:mm");
+                SimpleDateFormat twelveHourFormatE = new SimpleDateFormat("hh:mm a");
+                Date twentyFourHourDateE = null;
+                try {
+                    twentyFourHourDateE = twentyFourTimeFormatE.parse(duration);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String eventETimeAMPM = twelveHourFormatE.format(twentyFourHourDateE);
+                ///////FORMAT END TIME/////
+
+                //FORMAT DATE///
+                LocalDate eventDate = LocalDate.parse(date);
+                String dateFormatted = eventDate.format(DateTimeFormatter.ofPattern( "MMM d yyyy"));
+                //FORMAT DATE//
+
+                Event event = new Event(name, description, eventTimeAMPM, dateFormatted,eventETimeAMPM);
                 eventArrayList.add(event);
             } catch (JSONException e) {
                 e.printStackTrace();

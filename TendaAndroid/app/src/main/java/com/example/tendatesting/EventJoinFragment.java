@@ -1,6 +1,5 @@
 
 package com.example.tendatesting;
-        import android.content.Intent;
         import android.os.Bundle;
         import android.support.annotation.Nullable;
         import android.support.v4.app.Fragment;
@@ -93,7 +92,7 @@ public class EventJoinFragment extends Fragment {
                             String duration = jsonObj.getString("duration");
                             String time = jsonObj.getString("time");
                             event_id[0] = jsonObj.getString("event_id");
-                            TextView nameLabel = getView().findViewById(R.id.name);
+                            TextView nameLabel = getView().findViewById(R.id.first_name);
                             nameLabel.setText(name);
                             TextView descriptionLabel = getView().findViewById(R.id.description);
                             descriptionLabel.setText(description);

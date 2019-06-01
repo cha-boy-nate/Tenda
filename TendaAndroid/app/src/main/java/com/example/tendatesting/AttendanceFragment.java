@@ -29,7 +29,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNoteListener {
     private Button mButton;
@@ -39,6 +47,9 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
     private ArrayList<Attendee> attendanceArrayList;
     private JSONArray attendeeArray;
     String fragementIdentifier = "AttendeeLog";
+    Timer timer;
+    String startTimeTest, dateTest, timeTest;
+
 
     @Nullable
     @Override
@@ -105,17 +116,75 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
                     String description = jsonObj.getString("description");
                     String time = jsonObj.getString("time");
                     String date = jsonObj.getString("date");
+                    String duration = jsonObj.getString("duration");
 
+                    /////TIMER/////////
+                    String startTimeTest = date + " "  + time;
+                    String endTimeTest = date + " " + time;
+
+                    Log.d("startTimeLog", startTimeTest);
+                    Timestamp startTime = java.sql.Timestamp.valueOf(startTimeTest);
+                    Timestamp endTime = java.sql.Timestamp.valueOf(endTimeTest);
+
+                    Date startdate = new Date(startTime.getTime());
+
+                    timer = new Timer();
+                    TimerTask task = new getAttendeeList();
+                    timer.schedule(task,startdate,3000L);
+
+                    //Getting the current time and then checking if the time has passed the end time
+                    //if so then the task is cancelled
+                    Timestamp curTime = new Timestamp(System.currentTimeMillis());
+                    if(curTime.getTime()>=endTime.getTime()){
+                        timer.cancel();
+                        timer.purge();
+                    }
+                    ///////TIMER END//////
+
+                    //////FORMAT START TIME////
+                    SimpleDateFormat twentyFourTimeFormat = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat twelveHourFormat = new SimpleDateFormat("hh:mm a");
+                    Date twentyFourHourDate = null;
+                    try {
+                        twentyFourHourDate = twentyFourTimeFormat.parse(time);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    String eventTimeAMPM = twelveHourFormat.format(twentyFourHourDate);
+                    ///////FORMAT START TIME/////
+
+                    //////FORMAT END TIME////
+                    SimpleDateFormat twentyFourTimeFormatE = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat twelveHourFormatE = new SimpleDateFormat("hh:mm a");
+                    Date twentyFourHourDateE = null;
+                    try {
+                        twentyFourHourDateE = twentyFourTimeFormatE.parse(duration);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    String eventETimeAMPM = twelveHourFormatE.format(twentyFourHourDateE);
+                    ///////FORMAT END TIME/////
+
+                    //FORMAT DATE///
+                    LocalDate eventDateF = LocalDate.parse(date);
+                    String dateFormatted = eventDateF.format(DateTimeFormatter.ofPattern( "MMM d yyyy"));
+                    //FORMAT DATE//
+
+
+
+                    //startTimeTest = date + " " + time;
 
                     TextView eventTitle = v.findViewById(R.id.page_textTitle);
                     TextView eventDescription = v.findViewById(R.id.page_textDescription);
                     TextView eventTime = v.findViewById(R.id.page_textTime);
                     TextView eventDate = v.findViewById(R.id.page_textDate);
+                    //TextView eventDuration = v.findViewById(R.id.page_textDuration);
 
                     eventTitle.setText(name);
                     eventDescription.setText(description);
-                    eventTime.setText(time);
-                    eventDate.setText(date);
+                    eventTime.setText(eventTimeAMPM + " To " + eventETimeAMPM);
+                    eventDate.setText(dateFormatted);
+                   // eventDuration.setText(duration);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -160,14 +229,98 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
         queue.add(stringRequest);
 
 
+//        TextView eventTime = v.findViewById(R.id.page_textTime);
+//        TextView eventDate = v.findViewById(R.id.page_textDate);
+//
+//        dateTest = eventDate.getText().toString();
+//        timeTest = eventTime.getText().toString();
+
+        startTimeTest = dateTest+" "+timeTest;
+
+
+
+
+
         recyclerView = v.findViewById(R.id.recyclerViewAttend);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         attendanceArrayList = new ArrayList<>();
         adapter = new AttendeeAdapter(attendanceArrayList,this);
         recyclerView.setAdapter(adapter);
 
+
+
+
+
         return v;
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(timer != null){
+            timer.cancel();
+            timer.purge();
+            //cancel timer task and assign null
+        }
+    }
+
+    class getAttendeeList extends TimerTask {
+        Bundle extras = getActivity().getIntent().getExtras();
+        String eventID = extras.getString("event_id");
+
+        @Override
+        public void run() {
+            //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
+            RequestQueue queue = Volley.newRequestQueue(getActivity());
+            String url ="http://34.217.162.221:8000/attendenceData/"+eventID+"/";
+            //Create request
+
+            final StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                //When the request is recieved:
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        //Convert response to a json
+                        JSONObject jsonObject = new JSONObject(response.toString());
+                        String result = jsonObject.getString("result");
+                        attendeeArray = new JSONArray(result);
+                        Log.d("Result",result);
+                        createListData(attendeeArray);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d(fragementIdentifier, "Error with request response.");
+                }
+            });
+            // Add the request to the RequestQueue.
+            queue.add(stringRequest);
+            Log.d("Refreshing","IT IS WORKING");
+
+            getActivity().runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    recyclerView = getActivity().findViewById(R.id.recyclerViewAttend);
+                    // recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    attendanceArrayList = new ArrayList<>();
+                    adapter = new AttendeeAdapter(attendanceArrayList,null);
+                    recyclerView.setAdapter(adapter);
+
+                }
+            });
+
+
+        }
+
+
+
+    }
+
     private void createListData(JSONArray attendeeArray) {
         int length = attendeeArray.length();
         for(int i = 0; i < length; i++) {
@@ -177,10 +330,11 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
                 String firstName = test.getString("firstName");
                 String lastName = test.getString("lastName");
                 String duration = full.getString("difference");
+                String endTime = full.getString("end_time");
 
 
 
-                Attendee attendee = new Attendee(firstName,lastName, duration);
+                Attendee attendee = new Attendee(firstName,lastName, duration,endTime);
                 attendanceArrayList.add(attendee);
             } catch (JSONException e) {
                 e.printStackTrace();

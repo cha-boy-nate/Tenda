@@ -16,7 +16,7 @@
         app:srcCompat="@drawable/user_icon" />
 
     <TextView
-        android:id="@+id/email"
+        android:id="@+id/last_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/radius_white"

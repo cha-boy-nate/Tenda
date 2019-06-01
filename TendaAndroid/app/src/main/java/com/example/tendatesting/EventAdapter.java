@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder> {
@@ -57,11 +59,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
             TextView description = itemView.findViewById(R.id.textDescription);
             TextView time = itemView.findViewById(R.id.textTime);
             TextView date = itemView.findViewById(R.id.textDate);
+            //TextView duration = itemView.findViewById(R.id.textDuration);
 
             title.setText(event.getEventTitle());
             description.setText(event.getEventDescription());
-            time.setText(event.getEventTime());
+            time.setText(event.getEventTime() + " To " + event.getEventDuration());
             date.setText(event.getEventDate());
+            //duration.setText(event.getEventDuration());
 
 
         }
