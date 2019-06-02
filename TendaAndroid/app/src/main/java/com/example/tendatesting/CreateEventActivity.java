@@ -171,14 +171,16 @@ public class CreateEventActivity extends AppCompatActivity implements
 //                });
 //                builder.show();
                 final TimePickerDialog timePickerDialog = new TimePickerDialog(CreateEventActivity.this, new TimePickerDialog.OnTimeSetListener() {
+
+
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
+
                         if(hourFinal>hourOfDay){
                             hourOfDay = hourFinal;
-                        }
-                        if(minuteFinal>minute){
-                            minute = minuteFinal;
+
+
                         }
                         String twentyFourTime = String.format("%02d:%02d", hourOfDay, minute);
                         SimpleDateFormat twentyFourTimeFormat = new SimpleDateFormat("HH:mm");
@@ -193,8 +195,14 @@ public class CreateEventActivity extends AppCompatActivity implements
                         String showTime = twelveHourFormat.format(twentyFourHourDate);
                         durationResult.setText("End Time: " + showTime);
                     }
+
                 },hour, minute,false);
+
+
+
                 timePickerDialog.show();
+
+
             }
         });
 

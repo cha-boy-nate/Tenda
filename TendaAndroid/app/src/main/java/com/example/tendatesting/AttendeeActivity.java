@@ -458,7 +458,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                     Log.d("start date", startdate.toString());
                     if((curTime.getTime()<=endTime.getTime())&&(curTime.getTime()>=startTime.getTime())){
                         map.setMyLocationEnabled(true);
-                        timer.schedule(task,startdate,50000L);
+                        timer.schedule(task,startdate,3000L);
 
                     }
 
