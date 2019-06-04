@@ -14,7 +14,7 @@ Tenda is a location based verification system. Simply create an event, invite yo
  
  <li>
   <h2>Tools Used</h2>
-- [Android%20Stutio](https://developer.android.com/studio) - Used to build client side UI
+- [AndroidStutio](https://developer.android.com/studio) - Used to build client side UI
  </li>
  
  <li>
