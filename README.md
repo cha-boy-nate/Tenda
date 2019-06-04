@@ -6,20 +6,20 @@ Tenda is a location based verification system. Simply create an event, invite yo
  <li>Code to virtualize an application server.</li>
 </ul>
 <ol>
+ 
  <li> 
-  <h4>Background Information</h4>
+  <h2>Background Information</h2>
  </li> 
+ 
  <li>
-  <h4>Installation</h4>
+  <h2>Installation</h2>
  </li>
+ 
  <li>
-  <h4>Requirements</h4>
- <li>
- <li>
-  <h4>File Structure</h4>
-  
-  
-  
+  <h2>Requirements</h2>
+ </li>
   
  <li>
+  <h2>File Structure</h2>
+ </li>
 </ol>
