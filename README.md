@@ -14,6 +14,20 @@ Tenda is a location based verification system. Simply create an event, invite yo
  
  <li>
   <h2>Requirements</h2>
+ <ol>
+  <h4>For EC2 instance</h4>
+  <li>Key pair to connect to server via ssh</li>
+  <li>Ubuntu server after version 16.04</li>
+ </ol>
+
+ <ol>
+  <h4>For EC2 instance security group inbound rules</h4>
+  <li>Allow HTTP traffic over port 80</li>
+  <li>Allow SSL traffic over port 22</li>
+  <li></li>
+ </ol>
+ 
+ 
  </li>
  
   <li>
