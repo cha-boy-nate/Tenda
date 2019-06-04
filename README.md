@@ -65,6 +65,7 @@ Tenda is a location based verification system. Simply create an event, invite yo
   
  <li>
   <h2>File Structure</h2>
+ <pre>
  <p>
 Tenda/ <br />
   ├── TendaAndroid/ <br />
@@ -79,17 +80,7 @@ Tenda/ <br />
 ├── installation <br />
 └── README.md <br />
 </p>
- 
-<style type="text/css">.nobull {
- list-style-type: none;
-}
-</style>
-
-<ul class="nobull">
-<li>List item with no bullet</li>
-<li>Second item</li>
-</ul>
- 
+</pre>
  
  </li>
 </ol>
