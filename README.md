@@ -34,19 +34,21 @@ Tenda is a location based verification system. Simply create an event, invite yo
    <li><p>Install PyMySQL used for managing connections between the application server and database:<p><code>pip install pymysql</code></p></li>
    </ol>
    <li><p>Deactivate virtual environment with:<code>deactivate</code></p></li>
-   
+  
+   </ol> 
    
    <h4>Setup Database</h4>
+   <ol>
    <li>Install MySQL <code>sudo apt install mysql-server</code></li> 
    <li>Create tables <code>sudo mysql < database-setup-v1.sql</code></li> 
    <li>Populate tables <code>sudo mysql < populate.sql</code></li> 
-  
+   </ol>
    
   
   
   
  
-  </ol> 
+  
  </li>
  
 
