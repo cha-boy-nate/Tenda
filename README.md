@@ -14,11 +14,7 @@ Tenda is a location based verification system. Simply create an event, invite yo
  
  <li>
   <h2>Tools Used</h2>
-  <ul>
-   * [Android Stutio](https://developer.android.com/studio) - Used to build client side UI
-   My favorite search engine is [Duck Duck Go](https://duckduckgo.com "The best search engine for privacy").
-
-  <ul>
+- [Android Stutio](https://developer.android.com/studio) - Used to build client side UI
  </li>
  
  <li>
