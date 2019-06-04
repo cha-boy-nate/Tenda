@@ -87,10 +87,10 @@ Tenda/
   ├── database_manipulators.py
   ├── productionServer.py
   ├── setup.py
-  ├── wsgi.py
+  └── wsgi.py
 ├── database
   ├── database-setup-v1.sql
-  ├── populate.sql
+  └── populate.sql
 ├── installation
 └── README.md
 </code>
