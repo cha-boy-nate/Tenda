@@ -19,9 +19,18 @@ Tenda is a location based verification system. Simply create an event, invite yo
   <li>
    <h2>Installation</h2>
   <ol>
-  <li>
-   <p>Download the project:<code>git clone https://github.com/cha-boy-nate/Tenda</code></p>
-  </li>
+  <li><p>Download the project:<code>git clone https://github.com/cha-boy-nate/Tenda</code></p></li>
+   <li>
+   <p>Setup Database</p>
+   
+   <ol>
+    <li>Create tables</li> 
+    <li>Populate tables</li> 
+   </ol>
+   
+   </li>
+  <li><p><code></code></p></li>
+  
   
   
  
