@@ -24,12 +24,13 @@ Tenda is a location based verification system. Simply create an event, invite yo
    <p>Setup Database</p>
    
    <ol>
-    <li>Create tables</li> 
-    <li>Populate tables</li> 
+    <li>Create tables <code>sudo mysql < database-setup-v1.sql</code></li> 
+    <li>Populate tables <code>sudo mysql < populate.sql</code></li> 
    </ol>
    
    </li>
-  <li><p><code></code></p></li>
+  
+   <li><p><code></code></p></li>
   
   
   
