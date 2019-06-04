@@ -79,8 +79,8 @@ Tenda is a location based verification system. Simply create an event, invite yo
   <li> . . populate.sql</li>
  </ul>
  <code>
-<li>Tenda/<li>
-  <li>├── TendaAndroid/                          # Android studio project file </li>
+Tenda/ <br />
+  ├── TendaAndroid/                          # Android studio project file <br />
 ├── application_server/                    # Files needed to setup and run the application server
   ├── database_manipulators.py 
   ├── productionServer.py 
