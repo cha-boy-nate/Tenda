@@ -43,7 +43,11 @@ Tenda is a location based verification system. Simply create an event, invite yo
    <li><p>Download the project:<code>git clone https://github.com/cha-boy-nate/Tenda</code></p></li>
    <li><p>Install pip:<code>sudo apt-get install python3-pip</code></p></li>
    <li><p>Install apache:<code>sudo apt-get install apache2</code></p></li>
-   <li><p>Move configuration file to apache configuration location<code></code></p></li>
+   <li><p>Move configuration file to apache configuration location<code>/etc/apache2/sites-enabled/000-default.conf</code></p></li>
+   
+   
+   
+   
    
    <li><p>Install virtual environment for flask code:<code>pip3 install virtualenv</code></p></li>
    <li><p>Create virtual environment:<code>virtualenv venv</code></p></li>
