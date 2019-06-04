@@ -9,17 +9,26 @@ Tenda is a location based verification system. Simply create an event, invite yo
  
  <li> 
   <h2>Background Information</h2>
- <p>Tenda is deployed using an Ubuntu based Amazon EC2 server. Tenda uses a MySQL database on the backend. It's application server is written in Python using Flask, deployed on an apache web server. On the client-side, consumers interact with Tenda via an android application.</p> 
+  <p>Tenda is deployed using an Ubuntu based Amazon EC2 server. Tenda uses a MySQL database on the backend. It's application   server is written in Python using Flask, deployed on an apache web server. On the client-side, consumers interact with Tenda via an android application.</p> 
  </li> 
- 
- <li>
-  <h2>Installation</h2>
- <p>Download the project: </p><code>git clone https://github.com/cha-boy-nate/Tenda</code>
- </li>
  
  <li>
   <h2>Requirements</h2>
  </li>
+ 
+  <li>
+   <h2>Installation</h2>
+  <ol>
+  <li>
+   <p>Download the project:<code>git clone https://github.com/cha-boy-nate/Tenda</code></p>
+  </li>
+  
+  
+ 
+  </ol> 
+ </li>
+ 
+
   
  <li>
   <h2>File Structure</h2>
