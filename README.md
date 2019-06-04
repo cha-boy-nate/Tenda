@@ -3,13 +3,13 @@ Tenda is a location based verification system. Simply create an event, invite yo
 
 <ol>
  <li> 
-  <h4>Installation</h4>
+  <h4>Background Information</h4>
  </li> 
  <li>
-  <h4>Requirements</h4>
+  <h4>Installation</h4>
  </li>
  <li>
-  <h4>Background Information</h4>
+  <h4>Requirements</h4>
  <li>
    
    
