@@ -20,8 +20,8 @@ Tenda is a location based verification system. Simply create an event, invite yo
    <h2>Installation</h2>
   <ol>
    <h4>Setup application server</h4>
-  <li><p>Download the project:<code>git clone https://github.com/cha-boy-nate/Tenda</code></p></li>
    
+   <li><p>Download the project:<code>git clone https://github.com/cha-boy-nate/Tenda</code></p></li>
    <li><p>Install pip:<code>sudo apt-get install python3-pip</code></p></li>
    <li><p>Install apache:<code>sudo apt-get install apache2</code></p></li>
    <li><p>Move configuration file to apache configuration location<code></code></p></li>
@@ -37,8 +37,9 @@ Tenda is a location based verification system. Simply create an event, invite yo
   
    </ol> 
    
-   <h4>Setup Database</h4>
+   
    <ol>
+   <h4>Setup Database</h4>
    <li>Install MySQL <code>sudo apt install mysql-server</code></li> 
    <li>Create tables <code>sudo mysql < database-setup-v1.sql</code></li> 
    <li>Populate tables <code>sudo mysql < populate.sql</code></li> 
