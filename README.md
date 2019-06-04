@@ -15,14 +15,11 @@ Tenda is a location based verification system. Simply create an event, invite yo
  <li>
   <h4>Requirements</h4>
  <li>
-   
-   
-<h4></h4>
-<h4></h4>
+ <li>
+  <h4>File Structure</h4>
+  
+  
+  
+  
+ <li>
 </ol>
-
-
-Running application server:\
-  cd application_server/\
-  source tenda_env/bin/activate\
-  gunicorn --bind 0.0.0.0:80000 wsgi\
