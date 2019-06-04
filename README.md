@@ -21,13 +21,17 @@ Tenda is a location based verification system. Simply create an event, invite yo
   <ol>
   <li><p>Download the project:<code>git clone https://github.com/cha-boy-nate/Tenda</code></p></li>
    
-   <li><p>Install pip<code></code></p></li>
+   <li><p>Install pip<code>sudo apt-get install python3-pip</code></p></li>
    
    
-   <li><p>Install Virtual environment for flask code:<code></code></p></li>
-   <li><p>Activate virtual environment:<code></code></li>
+   <li><p>Install virtual environment for flask code:<code>pip3 install virtualenv</code></p></li>
+   <li><p>Create virtual environment:<code>virtualenv venv</code></p></li>
+   <li><p>Activate virtual environment:<code>source venv/bin/activate</code></li>
+   <ol>
    <li><p>Install Flask on virtual environment:<code>pip install flask</code></p></li>
    <li><p>Install PyMySQL used for managing connections between the application server and database:<p><code>pip install pymysql</code></p></li>
+   </ol>
+   <li><p>Deactivate virtual environment with:<code>deactivate</code></p></li>
    
    
    
