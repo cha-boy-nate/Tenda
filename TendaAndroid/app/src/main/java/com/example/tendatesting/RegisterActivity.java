@@ -72,7 +72,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         final Intent homeIntent = new Intent(this, HomeActivity.class);
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://34.217.162.221:8000/createAccount";
+        String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+        String url = serverURL + "/createAccount";
 
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {

@@ -27,6 +27,10 @@ public class EventJoinFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         getActivity().setTitle("Search / Join Event");
         final View v = inflater.inflate(R.layout.fragment_event_join, container, false);
+
+        String user_id = getActivity().getIntent().getExtras().getString("user_id");
+        Log.d("UserID_for_session", "from join: " + user_id);
+
         final String[] event_id = new String[1];
         Button eventButton = v.findViewById(R.id.search_button);
         Button joinButton = v.findViewById(R.id.join_button);
@@ -35,7 +39,8 @@ public class EventJoinFragment extends Fragment {
             @Override public void onClick(final View v) {
                 Log.d("JoinLog", "Join Process Started");
                 RequestQueue queue = Volley.newRequestQueue(getActivity());
-                String url ="http://34.217.162.221:8000/createResponse";
+                String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+                String url = serverURL + "/createResponse";
                 //Create request
                 final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                     //When the request is recieved:
@@ -59,8 +64,8 @@ public class EventJoinFragment extends Fragment {
                     protected Map<String, String> getParams() {
                         //Format data that will make up the body of the post request (email and password)
                         Map<String, String> MyData = new HashMap<String, String>();
-//                        String userID = getArguments().getString("userID");
-                        MyData.put("userID", "1");
+                        String user_id = getActivity().getIntent().getExtras().getString("user_id");
+                        MyData.put("userID", user_id);
                         MyData.put("eventID", event_id[0]);
                         MyData.put("response", "yes");
                         return MyData;
@@ -75,7 +80,8 @@ public class EventJoinFragment extends Fragment {
                 //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
                 RequestQueue queue = Volley.newRequestQueue(getActivity());
                 String eventID = search.getText().toString();
-                String url ="http://34.217.162.221:8000/event/"+eventID+"/";
+                String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+                String url = serverURL + "/event/"+eventID+"/";
                 //Create request
                 final StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     //When the request is recieved:

@@ -44,11 +44,14 @@ public class EventFragment extends Fragment implements EventAdapter.OnNoteListen
         getActivity().setTitle("Event Timeline");
         final View v = inflater.inflate(R.layout.fragment_event, container, false);
         //String userID = getArguments().getString("userID");
-        String userID="1";
+
+        String userID = getActivity().getIntent().getExtras().getString("user_id");
+        Log.d("UserID_for_session", "from event: " + userID);
         Log.d("TimelineLog", userID);
         //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        String url ="http://34.217.162.221:8000/timeline/"+userID+"/";
+        String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+        String url = serverURL + "/timeline/"+userID+"/";
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             //When the request is recieved:
@@ -115,6 +118,8 @@ public class EventFragment extends Fragment implements EventAdapter.OnNoteListen
             JSONObject test = new JSONObject(full.getString("event"));
             String event_id = test.getString("event_id");
             Intent intent = new Intent(getActivity(), AttendeeActivity.class);
+            String user_id = getActivity().getIntent().getExtras().getString("user_id");
+            intent.putExtra("user_id", user_id);
             intent.putExtra("event_id", event_id);
             startActivity(intent);
         } catch (JSONException e) {

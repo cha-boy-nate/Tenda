@@ -51,15 +51,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCallback{
     String fragementIdentifier = "AttendeeLog";
-
-
-
     private MapView mMapView; //variable used for map view
 
     /*
@@ -114,12 +113,10 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
         //Creating the listener for the nav view
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-
         mMapView = (MapView) findViewById(R.id.map_ViewAttendee); //getting the view for where the map will be displayed
         mMapView.onCreate(savedInstanceState); //creating the bundle for when the event starts
         mMapView.onResume(); //Showing the map when acticity starts
         mMapView.getMapAsync(this); //The API callback to show the map
-
 
         /*******************************************************/
         // THIS IS THE START OF THE REQUEST TO GET EVENT DATA  //
@@ -129,11 +126,13 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
 
         Bundle extras = getIntent().getExtras();
         String eventID = extras.getString("event_id");
-        Log.d(fragementIdentifier, eventID);
+        String user_id = extras.getString("user_id");
+        Log.d("UserID_for_session", "event_id: " + eventID + ", user_id: " + user_id);
 
-        //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://34.217.162.221:8000/event/" + eventID + "/";
+        //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
+        String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+        String url = serverURL + "/event/" + eventID + "/";
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             //When the request is recieved:
@@ -152,6 +151,10 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                     String time = jsonObj.getString("time");
                     String date = jsonObj.getString("date");
 
+                    Log.d(fragementIdentifier, name);
+                    Log.d(fragementIdentifier, description);
+                    Log.d(fragementIdentifier, time);
+                    Log.d(fragementIdentifier, date);
 
                     TextView eventTitle = findViewById(R.id.page_textTitle);
                     TextView eventDescription = findViewById(R.id.page_textDescription);
@@ -162,6 +165,8 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                     eventDescription.setText(description);
                     eventTime.setText(time);
                     eventDate.setText(date);
+
+                    Log.d(fragementIdentifier, "get request complete");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -179,20 +184,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
         /*******************************************************/
         // THIS IS THE END OF THE REQUEST TO GET EVENT DATA    //
         /*******************************************************/
-
-//        recyclerView = findViewById(R.id.recyclerViewAttend);
-//        LinearLayoutManager manager = new LinearLayoutManager(this);
-//        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-//        recyclerView.setLayoutManager(manager);
-//        recyclerView.setHasFixedSize(true);
-//        attendanceArrayList = new ArrayList<>();
-//
-//        recyclerView.setAdapter(new AttendeeAdapter(attendanceArrayList, this));
-//
-
-
     }
-
 
     /*
     Name: inRadius
@@ -206,7 +198,6 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
         val = val*78710; //converting the degrees to meters
         return val;
     }
-
 
     /*
     Name: onMapReady
@@ -234,11 +225,6 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
 
@@ -247,26 +233,58 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
         radTextView.setText("You're location will be taken once the event starts");
 
         //Setting the start time of the event and the end time of the event
-        Timestamp startTime = java.sql.Timestamp.valueOf("2019-05-16 15:51:00.0");
-        final Timestamp endTime = java.sql.Timestamp.valueOf("2019-05-16 16:51:00.0");
+        Timestamp startTime = java.sql.Timestamp.valueOf("2019-05-04 00:00:00.0");
+        final Timestamp endTime = java.sql.Timestamp.valueOf("2019-05-05 16:51:00.0");
 
         //creating a timer for a scheduled task
         Timer timer = new Timer("LocationTimer");
+        final RequestQueue queue = Volley.newRequestQueue(this);
 
         //creating the task that will run once the time has started
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
+                Log.d(fragementIdentifier, "Timer running");
+                String url = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com/createAttendenceRecord";
+                //Create request
+                final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                    //When the request is recieved:
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //Convert response to a json and check if the response what 200 (which means password is valid)
+                            JSONObject jsonObj = new JSONObject(response.toString());
+                            String result = jsonObj.getString("result");
+                            Log.d(fragementIdentifier, "post request complete");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(fragementIdentifier, "Error with request response.");
+                    }
+                }) {
+                    protected Map<String, String> getParams() {
+                        //Format data that will make up the body of the post request (email and password)
+                        Map<String, String> MyData = new HashMap<String, String>();
+                        Bundle extras = getIntent().getExtras();
+                        String event_id = extras.getString("event_id");
+                        String user_id = extras.getString("user_id");
+                        MyData.put("userID", user_id);
+                        MyData.put("eventID", event_id);
+                        MyData.put("response", "yes");
+                        return MyData;
+                    }
+                };
+                // Add the request to the RequestQueue.
+                queue.add(stringRequest);
 
                 //getting the user's permission before getting the location
                 if (ActivityCompat.checkSelfPermission(AttendeeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
 

@@ -83,11 +83,13 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
 
         Bundle extras = getActivity().getIntent().getExtras();
         String eventID = extras.getString("event_id");
-        Log.d(fragementIdentifier, eventID);
+        String user_id = extras.getString("user_id");
+        Log.d("UserID_for_session", "event_id: " + eventID + ", user_id: " + user_id);
 
         //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         RequestQueue queueDet = Volley.newRequestQueue(v.getContext());
-        String urlDet = "http://34.217.162.221:8000/event/" + eventID + "/";
+        String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+        String urlDet =  serverURL + "/event/" + eventID + "/";
         //Create request
         final StringRequest stringRequestDet = new StringRequest(Request.Method.GET, urlDet, new Response.Listener<String>() {
             //When the request is recieved:
@@ -133,7 +135,7 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
 
         //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         RequestQueue queue = Volley.newRequestQueue(v.getContext());
-        String url ="http://34.217.162.221:8000/attendenceData/"+eventID+"/";
+        String url = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com/attendenceData/"+eventID+"/";
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             //When the request is recieved:
@@ -143,8 +145,10 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
                     //Convert response to a json
                     JSONObject jsonObject = new JSONObject(response.toString());
                     String result = jsonObject.getString("result");
+                    Log.d(fragementIdentifier, "RESULT" + result);
+
                     attendeeArray = new JSONArray(result);
-                    Log.d("Result",result);
+                    Log.d(fragementIdentifier,result);
                     createListData(attendeeArray);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -158,7 +162,6 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
         });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-
 
         recyclerView = v.findViewById(R.id.recyclerViewAttend);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -177,10 +180,8 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
                 String firstName = test.getString("firstName");
                 String lastName = test.getString("lastName");
                 String duration = full.getString("difference");
-
-
-
                 Attendee attendee = new Attendee(firstName,lastName, duration);
+                Log.d(fragementIdentifier, "Adding user");
                 attendanceArrayList.add(attendee);
             } catch (JSONException e) {
                 e.printStackTrace();

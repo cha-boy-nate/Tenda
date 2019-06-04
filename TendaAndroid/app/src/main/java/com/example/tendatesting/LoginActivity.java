@@ -43,7 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         final Intent homeIntent = new Intent(this, HomeActivity.class);
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://34.217.162.221:8000/login";
+        String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+        String url = serverURL + "/login";
 
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -53,15 +54,15 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     //Convert response to a json and check if the response what 200 (which means password is valid)
                     JSONObject jsonObj = new JSONObject(response.toString());
-
-                    String result = jsonObj.getString("result");    //response.toString();
+                    JSONObject newjsonObj = new JSONObject(jsonObj.getString("result"));
+                    String user_id = newjsonObj.getString("user_id");
+                    String result = newjsonObj.getString("status");
+                    Log.d("PasswordLog", user_id);
+                    Log.d("PasswordLog", result);
                     boolean containsVal = result.toLowerCase().contains("200");
                     String contains = Boolean.toString(containsVal);
-                    Log.d("PasswordLog", contains);
-                    Log.d("PasswordLog", result);
                     if (containsVal == true) {
-                        homeIntent.putExtra("Status", result);
-                        homeIntent.putExtra("User", emailString);
+                        homeIntent.putExtra("user_id", user_id);
                         startActivity(homeIntent);
                     } else {
                         //implement message to user for re-entering their password
@@ -74,15 +75,14 @@ public class LoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("ERROR", "Error with requ est response.");
+                Log.d("PasswordLog", "Error with request response.");
             }
         }) {
             protected Map<String, String> getParams() {
                 //Format data that will make up the body of the post request (email and password)
                 Map<String, String> MyData = new HashMap<String, String>();
-                MyData.put(emailString, passwordString);
-                Log.d("PasswordLog", emailString);
-                Log.d("PasswordLog", passwordString);
+                MyData.put("password", passwordString);
+                MyData.put("email", emailString);
                 return MyData;
             }
         };

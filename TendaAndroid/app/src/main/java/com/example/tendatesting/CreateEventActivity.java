@@ -116,7 +116,9 @@ public class CreateEventActivity extends AppCompatActivity implements
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("CreateEventLog", "Button clicked");
                 Context context = getApplicationContext();
+                createEvent(view);
                 CharSequence text = "Event successfully created";
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(context, text, duration);
@@ -127,7 +129,7 @@ public class CreateEventActivity extends AppCompatActivity implements
     }
 
 
-    public void onClick(View view) {
+    public void createEvent(View view) {
 //Get event title and description values into string
         eventTitle = findViewById(R.id.eventTitle);
         eventDescription = findViewById(R.id.eventDescription);
@@ -135,7 +137,8 @@ public class CreateEventActivity extends AppCompatActivity implements
         final String eventDescriptionString = eventDescription.getText().toString();
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://34.217.162.221:8000/createEvent";
+        String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+        String url = serverURL + "/createEvent";
 
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -154,15 +157,15 @@ public class CreateEventActivity extends AppCompatActivity implements
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("ERROR", "Error with request response.");
+                Log.d("CreateEventLog", "Error with request response.");
             }
         }) {
             protected Map<String, String> getParams() {
                 //Format data that will make up the body of the post request (email and password)
                 Map<String, String> MyData = new HashMap<String, String>();
-  //              Bundle extras = getIntent().getExtras();
-    //            String userID = extras.getString("userID");
-                MyData.put("userID", "1");
+                Bundle extras = getIntent().getExtras();
+                String user_id = extras.getString("user_id");
+                MyData.put("userID", user_id);
                 MyData.put("eventTitle", eventTitleString);
                 MyData.put("eventDescription", eventDescriptionString);
                 MyData.put("eventDate", eventDate);
@@ -170,6 +173,7 @@ public class CreateEventActivity extends AppCompatActivity implements
                 MyData.put("Latitude", latitude);
                 MyData.put("Longitude", longitude);
                 MyData.put("Radius", radius);
+                MyData.put("Duration", "00:00:00");
 
                 return MyData;
             }

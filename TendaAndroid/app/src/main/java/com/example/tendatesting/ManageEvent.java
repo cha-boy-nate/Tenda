@@ -43,11 +43,10 @@ ManageEvent extends AppCompatActivity {
         Toolbar barTitle = findViewById(R.id.messageToolbar);
         barTitle.setTitle("Event Management");
 
-
-
-
-
-
+        Bundle extras = getIntent().getExtras();
+        String eventID = extras.getString("event_id");
+        String user_id = extras.getString("user_id");
+        Log.d("UserID_for_session", "event_id: " + eventID + ", user_id: " + user_id);
 
     }
 
@@ -70,20 +69,14 @@ ManageEvent extends AppCompatActivity {
 
             //This switch statement get the id of the item clicked and displays the appropriate fragment and changes the title of toolbar
             switch (item.getItemId()) {
-                case R.id.navigation_attendance:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_M_container,
-                            new AttendanceFragment()).commit();
+                case R.id.navigation_attendance: getSupportFragmentManager().beginTransaction().replace(R.id.fragment_M_container, new AttendanceFragment()).commit();
                     getSupportActionBar().setTitle("Event Management");
                     return true;
                 case R.id.navigation_map:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_M_container,
-                            new LocationFragment()).commit();
-                    getSupportActionBar().setTitle("Event Location");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_M_container, new LocationFragment()).commit(); getSupportActionBar().setTitle("Event Location");
                     return true;
                 case R.id.navigation_stats:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_M_container,
-                            new StatsFragment()).commit();
-                    getSupportActionBar().setTitle("Event Statistics");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_M_container, new StatsFragment()).commit(); getSupportActionBar().setTitle("Event Statistics");
                     return true;
             }
             return false;
