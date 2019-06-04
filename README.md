@@ -58,11 +58,6 @@ Tenda is a location based verification system. Simply create an event, invite yo
    <li>Create tables <code>sudo mysql < database-setup-v1.sql</code></li> 
    <li>Populate tables <code>sudo mysql < populate.sql</code></li> 
    </ol>
-   
-  
-  
-  
- 
   
  </li>
  
@@ -70,5 +65,19 @@ Tenda is a location based verification system. Simply create an event, invite yo
   
  <li>
   <h2>File Structure</h2>
+ <ul>
+  <li>Project File</li>
+  <li> . README.md</li>
+  <li> . TendaAndroid/</li>
+  <li> . application_server/</li>
+  <li> . . database_manipulators.py</li>
+  <li> . . productionServer.py</li>
+  <li> . . setup.py</li>
+  <li> . . wsgi.py</li>
+  <li> . database/</li>
+  <li> . . database-setup-v1.sql</li>
+  <li> . . populate.sql</li>
+ </ul>
+ 
  </li>
 </ol>
