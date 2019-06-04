@@ -24,6 +24,7 @@ Tenda is a location based verification system. Simply create an event, invite yo
    <p>Setup Database</p>
    
    <ol>
+    <li>Install MySQL <code>sudo apt install mysql-server</code></li> 
     <li>Create tables <code>sudo mysql < database-setup-v1.sql</code></li> 
     <li>Populate tables <code>sudo mysql < populate.sql</code></li> 
    </ol>
