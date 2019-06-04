@@ -15,6 +15,7 @@ Tenda is a location based verification system. Simply create an event, invite yo
  <li>
   <h2>Tools Used</h2>
 - [AndroidStutio](https://developer.android.com/studio) - Used to build client side UI
+- [Flask](https://pypi.org/project/Flask/1.0.2/) - Flask for application server
  </li>
  
  <li>
