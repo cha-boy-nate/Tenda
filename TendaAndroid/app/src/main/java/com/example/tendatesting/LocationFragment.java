@@ -1,6 +1,7 @@
 package com.example.tendatesting;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -109,8 +111,9 @@ public class LocationFragment extends Fragment {
                 Log.d(fragementIdentifier, eventID);
 
                 //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
-                RequestQueue queueDet = Volley.newRequestQueue(getContext());
-                String url = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com/attendenceData/"+eventID+"/";
+                RequestQueue queue = Volley.newRequestQueue(getActivity());
+                String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+                String url = serverURL + "/event/" + eventID + "/";
                 //Create request
                 final StringRequest stringRequestDet = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     //When the request is recieved:
@@ -162,7 +165,7 @@ public class LocationFragment extends Fragment {
                             googleMap.addCircle(new CircleOptions().center(loc.getPosition()).radius(radius).strokeColor(Color.GREEN).fillColor(0x2290EE90));
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -171,11 +174,16 @@ public class LocationFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(fragementIdentifier, "Error with request response.");
+                        Context context = getContext();
+                        CharSequence text = "Event Location Failed Refresh Tab";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
                     }
                 });
 
                 // Add the request to the RequestQueue.
-                queueDet.add(stringRequestDet);
+                queue.add(stringRequestDet);
 
 
             }

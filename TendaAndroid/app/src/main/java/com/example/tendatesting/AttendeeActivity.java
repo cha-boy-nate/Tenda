@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.sql.Time;
@@ -393,6 +394,16 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                         @Override
                         public void run() {
                             Log.d("startTimeLog", "test");
+                            Timestamp curTime = new Timestamp(System.currentTimeMillis());
+                            if(curTime.getTime()>=endTime.getTime()){
+                                Log.d("CUR TIME :",String.valueOf(curTime.toString()));
+                                Log.d("END TIME :",String.valueOf(endTime.toString()));
+                                radTextView.setText("The event has ended");
+                                timer.cancel();
+                                timer.purge();
+                                return;
+                                // map.setMyLocationEnabled(false);
+                            }
                             //getting the user's permission before getting the location
                             if (ActivityCompat.checkSelfPermission(AttendeeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                 // TODO: Consider calling
@@ -404,6 +415,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                                 // for ActivityCompat#requestPermissions for more details.
                                 return;
                             }
+
 
 
  //                           map.setMyLocationEnabled(true);
@@ -444,14 +456,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
 
                             //Getting the current time and then checking if the time has passed the end time
                             //if so then the task is cancelled
-                            Timestamp curTime = new Timestamp(System.currentTimeMillis());
-                            if(curTime.getTime()>=endTime.getTime()){
-                                radTextView.setText("The event has ended");
-                                map.setMyLocationEnabled(false);
-                                timer.cancel();
-                                timer.purge();
-                               // map.setMyLocationEnabled(false);
-                            }
+
 
                         }
                     };
@@ -459,9 +464,13 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                     //Getting the start date from the start time and scheduling the task.
                     Date startdate = new Date(startTime.getTime());
                     Log.d("start date", startdate.toString());
+
+
+                    timer.schedule(task,startdate,11000L);
+
                     if((curTime.getTime()<=endTime.getTime())&&(curTime.getTime()>=startTime.getTime())){
                         map.setMyLocationEnabled(true);
-                        timer.schedule(task,startdate,10000L);
+
 
                     }
 
@@ -473,6 +482,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+
                 }catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -482,6 +492,11 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(fragementIdentifier, "Error with request response.");
+                Context context = getApplicationContext();
+                CharSequence text = "Couldn't Get Event Details";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
             }
         });
 
@@ -531,12 +546,22 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                         Log.d(fragementIdentifier, "post request complete");
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        Context context = getApplicationContext();
+                        CharSequence text = "Couldn't Send Presence Data";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d(fragementIdentifier, "Error with request response.");
+                    Context context = getApplicationContext();
+                    CharSequence text = "Couldn't Send Presence Data";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
                 }
             }) {
                 protected Map<String, String> getParams() {

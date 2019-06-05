@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.AttendeeHolder> {
 
@@ -79,8 +80,9 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
             long time = date.getTime();
             Timestamp ts = new Timestamp(time);
             Log.d("endtime",attendee.getAttendeeEndTime() );
+            Log.d("curtime",ts.toString() );
             Timestamp endTime = java.sql.Timestamp.valueOf(attendee.getAttendeeEndTime());
-            if(ts.after(endTime)){
+            if(ts.getTime()>(endTime.getTime()- TimeUnit.DAYS.toMillis(1))){
                 isHere.setImageResource(R.drawable.ic_cancel);
             }else{
                 isHere.setImageResource(R.drawable.ic_check_circle);
@@ -105,7 +107,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
         }
         @Override
         public void onClick(View v) {
-            onNoteListener.onNoteClick(getAdapterPosition());
+            //onNoteListener.onNoteClick(getAdapterPosition());
         }
     }
 

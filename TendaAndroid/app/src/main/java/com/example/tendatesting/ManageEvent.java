@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 
@@ -31,6 +32,8 @@ ManageEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_event);
+        View load =  findViewById(R.id.loadingPanelA);
+        load.setVisibility(View.VISIBLE);
 
 
         //Getting the view for the bottom navigation from the layout
@@ -58,6 +61,14 @@ ManageEvent extends AppCompatActivity {
 
 
     }
+    @Override
+    public void onStart(){
+        super.onStart();
+        View load =  findViewById(R.id.loadingPanelA);
+        load.setVisibility(View.GONE);
+
+
+    }
 
     /*
     name: onNavigationItemSelectedListener
@@ -79,9 +90,13 @@ ManageEvent extends AppCompatActivity {
             //This switch statement get the id of the item clicked and displays the appropriate fragment and changes the title of toolbar
             switch (item.getItemId()) {
                 case R.id.navigation_attendance:
+                    View load =  findViewById(R.id.loadingPanelA);
+                    load.setVisibility(View.VISIBLE);
+                    load.bringToFront();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_M_container,
                             new AttendanceFragment()).commit();
                     getSupportActionBar().setTitle("Event Management");
+
                     return true;
                 case R.id.navigation_map:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_M_container,

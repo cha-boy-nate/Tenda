@@ -23,7 +23,7 @@
                 <ImageView
                     android:id="@+id/image1"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="0.75"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_cancel" />
 
@@ -42,5 +42,6 @@
                     android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_cancel" />
+
 
 </LinearLayout>

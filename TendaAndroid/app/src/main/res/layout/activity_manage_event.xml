@@ -15,6 +15,7 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent">
 
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/messageToolbar"
             android:layout_width="match_parent"
@@ -22,12 +23,25 @@
             android:background="@color/colorPrimaryDark"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            <ProgressBar
+                android:id="@+id/loadingPanelA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:indeterminateTint="@color/quantum_white_100"
+                android:indeterminate="true" />
+        </android.support.v7.widget.Toolbar>
+
+
+
 
         <FrameLayout
             android:id="@+id/fragment_M_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+
 
 
     </LinearLayout>

@@ -75,6 +75,11 @@ public class EventJoinFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("ERROR", "Error with request response.");
+                        Context context = getContext();
+                        CharSequence text = "Joined Event Failed";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
                     }
                 }) {
                     protected Map<String, String> getParams() {
@@ -190,6 +195,12 @@ public class EventJoinFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("ERROR", "Error with request response.");
+
+                        Context context = getContext();
+                        CharSequence text = "Couldn't Get Event";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
                     }
                 });
                 // Add the request to the RequestQueue.

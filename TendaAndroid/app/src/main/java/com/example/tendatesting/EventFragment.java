@@ -1,5 +1,6 @@
 package com.example.tendatesting;
 
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -77,6 +79,12 @@ public class EventFragment extends Fragment implements EventAdapter.OnNoteListen
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("ERROR", "Error with request response.");
+                Log.d("ERROR", "Error with request response.");
+                Context context = getContext();
+                CharSequence text = "Couldn't Load Events Refresh Tab";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
             }
         });
         // Add the request to the RequestQueue.

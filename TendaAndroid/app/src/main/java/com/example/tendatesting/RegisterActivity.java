@@ -34,13 +34,10 @@ public class RegisterActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Context context = getApplicationContext();
+
                 try {
                     createAccount(view);
-                    CharSequence text = "Account successfully created";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -81,6 +78,11 @@ public class RegisterActivity extends AppCompatActivity {
                     boolean success = result.toLowerCase().contains("200");
                     if(success == true){
                         ClickToLoginPage();
+                        Context context = getApplicationContext();
+                        CharSequence text = "Account Successfully Created";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -90,6 +92,11 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("ERROR", "Error with request response.");
+                Context context = getApplicationContext();
+                CharSequence text = "Account Creation Failed";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
             }
         }) {
             protected Map<String, String> getParams() {

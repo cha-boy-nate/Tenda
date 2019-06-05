@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNoteListener {
     private Button mButton;
@@ -49,6 +51,7 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
     String fragementIdentifier = "AttendeeLog";
     Timer timer;
     String startTimeTest, dateTest, timeTest;
+    TextView numOfUsers;
 
 
     @Nullable
@@ -56,6 +59,8 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
 
         final View v = inflater.inflate(R.layout.fragment_attendance, container, false);
+//        View load =  ((AppCompatActivity)getActivity()).findViewById(R.id.loadingPanel);
+//        load.setVisibility(View.GONE);
         mButton = (Button) v.findViewById(R.id.sendAlert);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +139,7 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
                     TimerTask task = new getAttendeeList();
                     Timestamp curTime = new Timestamp(System.currentTimeMillis());
                     if((curTime.getTime()<=endTime.getTime())&&(curTime.getTime()>=startTime.getTime())){
-                        timer.schedule(task,startdate,10000L);
+                        timer.schedule(task,startdate,30000L);
                         Log.d("Timer :","started");
                         Log.d("END TIME :",String.valueOf(curTime.toString()));
                         Log.d("END TIME :",String.valueOf(endTime.toString()));
@@ -203,17 +208,29 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(fragementIdentifier, "Error with request response.");
+                Context context = getContext();
+                CharSequence text = "Couldn't Get Event Details";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
             }
         });
 
         // Add the request to the RequestQueue.
         queueDet.add(stringRequestDet);
+
+        try {
+            TimeUnit.SECONDS.sleep(4);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         RequestQueue queue = Volley.newRequestQueue(v.getContext());
@@ -238,6 +255,11 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(fragementIdentifier, "Error with request response.");
+                Context context = getContext();
+                CharSequence text = "Couldn't Get Attendee Data";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
             }
         });
         // Add the request to the RequestQueue.
@@ -267,6 +289,14 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
 
 
         return v;
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
+        View load =  getActivity().findViewById(R.id.loadingPanelA);
+        load.setVisibility(View.GONE);
+
+
     }
 
     @Override
@@ -309,6 +339,11 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d(fragementIdentifier, "Error with request response.");
+                    Context context = getContext();
+                    CharSequence text = "Couldn't Get Attendee Data";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
                 }
             });
             // Add the request to the RequestQueue.
@@ -338,6 +373,10 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
 
     private void createListData(JSONArray attendeeArray) {
         int length = attendeeArray.length();
+        TextView numOfUsers = getActivity().findViewById(R.id.page_attendNum);
+        numOfUsers.setText("IN ATTENDANCE: "+String.valueOf(length));
+        Log.d("NUM OF USER: ",String.valueOf(length));
+
         for(int i = 0; i < length; i++) {
             try {
                 JSONObject full = (JSONObject) attendeeArray.get(i);

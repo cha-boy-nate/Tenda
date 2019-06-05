@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toolbar;
 
 import com.android.volley.Request;
@@ -76,7 +77,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         requestPermission();
 
     }
+    @Override
+    public void onStart(){
+        super.onStart();
+        View load =  findViewById(R.id.loadingPanel);
+        load.setVisibility(View.GONE);
 
+
+    }
     /*
     name: onNavigationItemSelected
     description: When a navigation item is selected then the appropriate fragment is opened
