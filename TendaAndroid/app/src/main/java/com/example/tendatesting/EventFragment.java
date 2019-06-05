@@ -133,7 +133,7 @@ public class EventFragment extends Fragment implements EventAdapter.OnNoteListen
                 String dateFormatted = eventDate.format(DateTimeFormatter.ofPattern( "MMM d yyyy"));
                 //FORMAT DATE//
 
-                Event event = new Event(name, description, eventTimeAMPM, dateFormatted,eventETimeAMPM);
+                Event event = new Event(name, description, eventTimeAMPM, dateFormatted,eventETimeAMPM,"");
                 eventArrayList.add(event);
             } catch (JSONException e) {
                 e.printStackTrace();

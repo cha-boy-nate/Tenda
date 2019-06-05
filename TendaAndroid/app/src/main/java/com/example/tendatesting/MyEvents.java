@@ -144,7 +144,7 @@ public class MyEvents extends Fragment implements EventAdapter.OnNoteListener {
                 String dateFormatted = eventDate.format(DateTimeFormatter.ofPattern( "MMM d yyyy"));
                 //FORMAT DATE//
 
-                Event event = new Event(name, description, eventTimeAMPM, dateFormatted, eventETimeAMPM);
+                Event event = new Event(name, description, eventTimeAMPM, dateFormatted, eventETimeAMPM, ("ID: "+event_id));
                 eventArrayList.add(event);
             } catch (JSONException e) {
                 e.printStackTrace();

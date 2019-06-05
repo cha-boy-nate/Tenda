@@ -59,12 +59,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
             TextView description = itemView.findViewById(R.id.textDescription);
             TextView time = itemView.findViewById(R.id.textTime);
             TextView date = itemView.findViewById(R.id.textDate);
+            TextView id = itemView.findViewById(R.id.textID);
             //TextView duration = itemView.findViewById(R.id.textDuration);
 
             title.setText(event.getEventTitle());
             description.setText(event.getEventDescription());
             time.setText(event.getEventTime() + " - " + event.getEventDuration());
             date.setText(event.getEventDate());
+            id.setText(event.getEventID());
             //duration.setText(event.getEventDuration());
 
 
