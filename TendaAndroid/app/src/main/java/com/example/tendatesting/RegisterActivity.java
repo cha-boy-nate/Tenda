@@ -35,13 +35,12 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Context context = getApplicationContext();
-                CharSequence text = "Account successfully created";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
                 try {
                     createAccount(view);
+                    CharSequence text = "Account successfully created";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -59,20 +58,17 @@ public class RegisterActivity extends AppCompatActivity {
 
     //Function will be called when the button is clicked.
     public void createAccount(View view) throws IOException, JSONException {
-        EditText first_name = (EditText)findViewById(R.id.first_name);
-        EditText last_name = (EditText)findViewById(R.id.last_name);
+        EditText name = (EditText)findViewById(R.id.name);
         EditText email = (EditText)findViewById(R.id.email);
         EditText password = (EditText)findViewById(R.id.password);
         final String emailString = email.getText().toString();
-        final String firstNameString = first_name.getText().toString();
-        final String lastNameString = last_name.getText().toString();
+        final String nameString = name.getText().toString();
         final String passwordString = password.getText().toString();
-
-        Log.d("RegisterLog", firstNameString + " : " + lastNameString + " : " + emailString + " : " + passwordString);
 
         final Intent homeIntent = new Intent(this, HomeActivity.class);
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://34.217.162.221:8000/createAccount";
+        String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+        String url = serverURL + "/createAccount";
 
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -98,9 +94,8 @@ public class RegisterActivity extends AppCompatActivity {
         }) {
             protected Map<String, String> getParams() {
                 Map<String, String> MyData = new HashMap<String, String>();
-                MyData.put("first_name", firstNameString);
-                MyData.put("last_name", lastNameString);
                 MyData.put("email", emailString);
+                MyData.put("name", nameString);
                 MyData.put("password", passwordString);
                 return MyData;
             }

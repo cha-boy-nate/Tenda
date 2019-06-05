@@ -36,5 +36,11 @@
                     android:padding="5dp"
                     android:text="1hr:10min"
                     android:textSize="15sp" />
+                <ImageView
+                    android:id="@+id/image2"
+                    android:layout_width="2dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_cancel" />
 
 </LinearLayout>

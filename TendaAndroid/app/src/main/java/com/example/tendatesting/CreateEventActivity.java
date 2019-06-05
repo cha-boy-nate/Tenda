@@ -89,6 +89,7 @@ public class CreateEventActivity extends AppCompatActivity implements
     TextView durationResult;
     TextView dateTimeResult;
     EditText eventTitle, eventDescription;
+    public String userIDVal = "0";
 
     private MapView mMapView; //Map view api variable
 
@@ -177,11 +178,14 @@ public class CreateEventActivity extends AppCompatActivity implements
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
 
-                        if(hourFinal>hourOfDay){
+                        if(hourFinal>hourOfDay&&minuteFinal>minute){
                             hourOfDay = hourFinal;
+                            minute = minuteFinal;
 
 
                         }
+
+
                         String twentyFourTime = String.format("%02d:%02d", hourOfDay, minute);
                         SimpleDateFormat twentyFourTimeFormat = new SimpleDateFormat("HH:mm");
                         SimpleDateFormat twelveHourFormat = new SimpleDateFormat("hh:mm a");
@@ -224,14 +228,12 @@ public class CreateEventActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 Context context = getApplicationContext();
-                sendRequest(view);
+                createEvent(view);
                 CharSequence text = "Event successfully created";
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
-                Intent intent = new Intent( CreateEventActivity.this, HomeActivity.class);
-                intent.putExtra("frag", "myEvent");
-                startActivity(intent);
+
             }
         });
 
@@ -245,16 +247,16 @@ public class CreateEventActivity extends AppCompatActivity implements
 
 
 
-    public void sendRequest(View view) {
+    public void createEvent(View view) {
 //Get event title and description values into string
-        Log.d("CreateEventLog", "button clicked");
         eventTitle = findViewById(R.id.eventTitle);
         eventDescription = findViewById(R.id.eventDescription);
         final String eventTitleString = eventTitle.getText().toString();
         final String eventDescriptionString = eventDescription.getText().toString();
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://34.217.162.221:8000/createEvent";
+        String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+        String url = serverURL + "/createEvent";
 
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -273,15 +275,16 @@ public class CreateEventActivity extends AppCompatActivity implements
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("ERROR", "Error with request response.");
+                Log.d("CreateEventLog", "Error with request response.");
             }
         }) {
             protected Map<String, String> getParams() {
                 //Format data that will make up the body of the post request (email and password)
                 Map<String, String> MyData = new HashMap<String, String>();
-  //              Bundle extras = getIntent().getExtras();
-    //            String userID = extras.getString("userID");
-                MyData.put("userID", "1");
+                Bundle extras = getIntent().getExtras();
+                String user_id = extras.getString("user_id");
+                userIDVal = user_id;
+                MyData.put("userID", user_id);
                 MyData.put("eventTitle", eventTitleString);
                 MyData.put("eventDescription", eventDescriptionString);
                 MyData.put("eventDate", eventDate);
@@ -290,6 +293,12 @@ public class CreateEventActivity extends AppCompatActivity implements
                 MyData.put("Longitude", longitude);
                 MyData.put("Radius", radius);
                 MyData.put("Duration", finalDurationResult);
+                Intent intent = new Intent( CreateEventActivity.this, HomeActivity.class);
+                Log.d("User ID:",userIDVal);
+
+                intent.putExtra("user_id", user_id);
+                intent.putExtra("frag", "myEvent");
+                startActivity(intent);
 
                 return MyData;
             }

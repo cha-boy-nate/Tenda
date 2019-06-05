@@ -40,37 +40,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_home);
         //Basically signing into system
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String value = extras.getString("User");
-            RequestQueue queue = Volley.newRequestQueue(this);
-            String urlUserID ="http://34.217.162.221:8000/getUserIDNum/"+value+"/";
-            //Create request
-            final StringRequest stringRequestUserID = new StringRequest(Request.Method.GET, urlUserID, new Response.Listener<String>() {
-                //When the request is recieved:
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        //Convert response to a json
-                        JSONObject jsonObj = new JSONObject(response.toString());
-                        String result = jsonObj.getJSONObject("result").getString("user_id");
-                        userIDVal = result;
-                        Log.d("HomeLog", userIDVal);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("ERROR", "Error with request response.");
-                }
-            });
-            // Add the request to the RequestQueue.
-            queue.add(stringRequestUserID );
-
-        } else {
-            Log.d("HomeLog", "getting value unsuccessful");
-        }
+        String value = extras.getString("user_id");
+        userIDVal = value;
+        Log.d("UserID_for_session", "from home: " + value);
 
         //Getting the view for the toolbar and then setting the support action bar to the tool bar to change the title according to the fragment
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
@@ -88,12 +60,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState(); //The toggle syncs its current state depending on whether the drawer is open or closed
 
         String eventFrag = getIntent().getStringExtra("frag");
-        if(eventFrag != null){
+        Log.d("eventFrag","value: "+eventFrag);
+        if(eventFrag != null && eventFrag.equals("myEvent")){
+            Log.d("eventFrag","value: "+"yes");
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new MyEvents()).commit();}
-        else if(savedInstanceState == null){
+        else if (savedInstanceState == null){
             Bundle bundle = new Bundle();
-            bundle.putString("userID", userIDVal);
+            bundle.putString("user_id", userIDVal);
             EventFragment timeline_frag = new EventFragment();
             timeline_frag.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, timeline_frag).commit();

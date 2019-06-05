@@ -136,14 +136,14 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/inRad"
+                    android:id="@+id/isPresent"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="5dp"
                     android:textColor="@color/colorPrimaryDark"
-                    android:text="In Radius"
+                    android:text="Present"
                     android:textSize="15sp" />
 
                 <TextView
@@ -155,6 +155,16 @@
                     android:padding="5dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:text="Duration"
+                    android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/inRad"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="Here"
                     android:textSize="15sp" />
 
             </LinearLayout>

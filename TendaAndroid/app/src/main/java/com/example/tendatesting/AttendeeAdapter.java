@@ -11,8 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.AttendeeHolder> {
 
@@ -52,7 +56,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
     public class AttendeeHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         OnNoteListener onNoteListener;
         private TextView textName, textReply, textDuration;
-        private ImageView isPresent;
+        private ImageView isPresent,isHere;
         public AttendeeHolder(@Nullable View itemView, OnNoteListener onNoteListener){
             super(itemView);
             this.onNoteListener = onNoteListener;
@@ -65,19 +69,37 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
             textReply = itemView.findViewById(R.id.page_name2);
             textDuration = itemView.findViewById(R.id.dur1);
             isPresent = itemView.findViewById(R.id.image1);
+            isHere = itemView.findViewById(R.id.image2);
 
             textName.setText(attendee.getAttendeeName());
             textReply.setText(attendee.getAttendeeLastName());
             textDuration.setText(attendee.getAttendeeDuration());
+//InRad
             Date date = new Date();
             long time = date.getTime();
             Timestamp ts = new Timestamp(time);
             Log.d("endtime",attendee.getAttendeeEndTime() );
             Timestamp endTime = java.sql.Timestamp.valueOf(attendee.getAttendeeEndTime());
             if(ts.after(endTime)){
-                isPresent.setImageResource(R.drawable.ic_cancel);
+                isHere.setImageResource(R.drawable.ic_cancel);
             }else{
+                isHere.setImageResource(R.drawable.ic_check_circle);
+            }
+            /////Is Present
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date dateP = null;
+            try {
+                dateP = dateFormat.parse(attendee.getAttendeeDuration());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            long seconds = dateP.getTime() / 1000L;
+            Log.d("Seconds",String.valueOf(seconds));
+            if(seconds > 0){
                 isPresent.setImageResource(R.drawable.ic_check_circle);
+            }else{
+                isPresent.setImageResource(R.drawable.ic_cancel);
             }
 
         }

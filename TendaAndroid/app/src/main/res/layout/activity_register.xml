@@ -10,9 +10,8 @@
     android:orientation="vertical">
 
     <!--Text box for name-->
-
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/first_name_Layout"
+        android:id="@+id/descriptionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
@@ -21,48 +20,23 @@
         android:layout_marginRight="20dp">
 
         <EditText
-            android:id="@+id/first_name"
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:hint="First Name"
+            android:hint="Name"
             android:inputType="textEmailAddress"
             android:textColor="@color/colorText" />
-
     </android.support.design.widget.TextInputLayout>
 
     <!--Text box for email-->
-
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/last_name_layout"
+        android:id="@+id/emailLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/radius_white"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
-
-        <EditText
-            android:id="@+id/last_name"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:hint="Last Name"
-            android:inputType="textEmailAddress"
-            android:textColor="@color/colorText" />
-    </android.support.design.widget.TextInputLayout>
-
-    <!--Text box for password-->
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/email_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/radius_white"
-        app:passwordToggleEnabled="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp">
 
@@ -73,14 +47,13 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:hint="Email"
-            android:inputType="text|textEmailAddress"
+            android:inputType="textEmailAddress"
             android:textColor="@color/colorText" />
     </android.support.design.widget.TextInputLayout>
 
-    <!--Text box for confirm password-->
-
+    <!--Text box for password-->
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/password_layout"
+        android:id="@+id/passwordLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -96,6 +69,28 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:hint="Password"
+            android:inputType="textPassword"
+            android:textColor="@color/colorText" />
+    </android.support.design.widget.TextInputLayout>
+
+    <!--Text box for confirm password-->
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/confirmPasswordLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/radius_white"
+        app:passwordToggleEnabled="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <EditText
+            android:id="@+id/confirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="Confirm Password"
             android:inputType="textPassword"
             android:textColor="@color/colorText" />
     </android.support.design.widget.TextInputLayout>
@@ -133,7 +128,7 @@
             android:textColor="#ffffff" />
 
         <TextView
-            android:id="@+id/link"
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="ClickToLoginPage"

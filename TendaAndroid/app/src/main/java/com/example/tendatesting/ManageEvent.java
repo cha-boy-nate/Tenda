@@ -47,6 +47,10 @@ ManageEvent extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
+        Bundle extras = getIntent().getExtras();
+        String eventID = extras.getString("event_id");
+        String user_id = extras.getString("user_id");
+        Log.d("UserID_for_session", "event_id: " + eventID + ", user_id: " + user_id);
 
 
 

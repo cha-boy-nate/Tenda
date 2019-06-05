@@ -46,11 +46,13 @@ public class MyEvents extends Fragment implements EventAdapter.OnNoteListener {
         final View v = inflater.inflate(R.layout.fragment_my_events, container, false);
         //String userID = getArguments().getString("userID");
 
-        String userID="1";
-        Log.d("MyEvents", userID);
+        String userID= getActivity().getIntent().getExtras().getString("user_id");
+        Log.d("UserID_for_session", "from my events: " + userID);
+        Log.d("MyEvents","user id:"+userID);
         //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        String url ="http://34.217.162.221:8000/myEvents/"+userID+"/";
+        String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+        String url =serverURL + "/myEvents/"+userID+"/";
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             //When the request is recieved:
@@ -80,7 +82,11 @@ public class MyEvents extends Fragment implements EventAdapter.OnNoteListener {
             @Override
             public void onClick(View v){
                 Intent myIntent = new Intent(getActivity(), CreateEventActivity.class);
+
+                String user_id= getActivity().getIntent().getExtras().getString("user_id");
+                myIntent.putExtra("user_id", user_id);
                 startActivity(myIntent);
+
 
             }
         });

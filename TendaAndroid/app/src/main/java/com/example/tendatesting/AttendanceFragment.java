@@ -94,11 +94,13 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
 
         Bundle extras = getActivity().getIntent().getExtras();
         String eventID = extras.getString("event_id");
-        Log.d(fragementIdentifier, eventID);
+        String user_id = extras.getString("user_id");
+        Log.d("UserID_for_session", "event_id: " + eventID + ", user_id: " + user_id);
 
         //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         RequestQueue queueDet = Volley.newRequestQueue(v.getContext());
-        String urlDet = "http://34.217.162.221:8000/event/" + eventID + "/";
+        String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+        String urlDet =  serverURL + "/event/" + eventID + "/";
         //Create request
         final StringRequest stringRequestDet = new StringRequest(Request.Method.GET, urlDet, new Response.Listener<String>() {
             //When the request is recieved:
@@ -120,7 +122,7 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
 
                     /////TIMER/////////
                     String startTimeTest = date + " "  + time;
-                    String endTimeTest = date + " " + time;
+                    String endTimeTest = date + " " + duration;
 
                     Log.d("startTimeLog", startTimeTest);
                     Timestamp startTime = java.sql.Timestamp.valueOf(startTimeTest);
@@ -132,13 +134,23 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
                     TimerTask task = new getAttendeeList();
                     Timestamp curTime = new Timestamp(System.currentTimeMillis());
                     if((curTime.getTime()<=endTime.getTime())&&(curTime.getTime()>=startTime.getTime())){
-                        timer.schedule(task,startdate,50000L);
+                        timer.schedule(task,startdate,10000L);
+                        Log.d("Timer :","started");
+                        Log.d("END TIME :",String.valueOf(curTime.toString()));
+                        Log.d("END TIME :",String.valueOf(endTime.toString()));
+                        Log.d("START TIME :",String.valueOf(endTime.toString()));
+
+
                     }
 
                     //Getting the current time and then checking if the time has passed the end time
                     //if so then the task is cancelled
 
                     if(curTime.getTime()>=endTime.getTime()){
+                        Log.d("Timer :","CANCELLED");
+                        Log.d("CUR TIME :",String.valueOf(curTime.toString()));
+                        Log.d("END TIME :",String.valueOf(endTime.toString()));
+                        Log.d("START TIME :",String.valueOf(endTime.toString()));
                         timer.cancel();
                         timer.purge();
                     }
@@ -205,7 +217,7 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
 
         //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         RequestQueue queue = Volley.newRequestQueue(v.getContext());
-        String url ="http://34.217.162.221:8000/attendenceData/"+eventID+"/";
+        String url = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com/attendenceData/"+eventID+"/";
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             //When the request is recieved:
@@ -338,6 +350,7 @@ public class AttendanceFragment extends Fragment implements AttendeeAdapter.OnNo
 
 
                 Attendee attendee = new Attendee(firstName,lastName, duration,endTime);
+                Log.d(fragementIdentifier, "Adding user");
                 attendanceArrayList.add(attendee);
             } catch (JSONException e) {
                 e.printStackTrace();

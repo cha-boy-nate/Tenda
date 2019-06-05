@@ -23,8 +23,12 @@ public class AccountFragment extends Fragment {
         final View v = inflater.inflate(R.layout.fragment_account, container, false);
         //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        String userID = "1";
-        String url ="http://34.217.162.221:8000/accountInformation/"+userID+"/";
+
+        String user_id = getActivity().getIntent().getExtras().getString("user_id");
+        Log.d("UserID_for_session", "from account: " + user_id);
+
+        String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+        String url = serverURL +"/accountInformation/"+user_id+"/";
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             //When the request is recieved:

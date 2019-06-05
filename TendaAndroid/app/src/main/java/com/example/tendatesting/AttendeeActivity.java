@@ -215,11 +215,14 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
         /*******************************************************/
         Bundle extras = getIntent().getExtras();
         String eventID = extras.getString("event_id");
-        Log.d(fragementIdentifier, eventID);
+        String user_id = extras.getString("user_id");
+        Log.d("UserID_for_session", "event_id: " + eventID + ", user_id: " + user_id);
 
         //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://34.217.162.221:8000/event/" + eventID + "/";
+        //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
+        String serverURL = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com";
+        String url = serverURL + "/event/" + eventID + "/";
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             //When the request is recieved:
@@ -308,7 +311,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
 
                     //eventDuration.setText(duration);
 
-                    if(latitude == longitude){
+                    if(latitude == 0.0 ){
                         latitude = 47.6496;
                         longitude = 122.3615;
 
@@ -458,7 +461,7 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
                     Log.d("start date", startdate.toString());
                     if((curTime.getTime()<=endTime.getTime())&&(curTime.getTime()>=startTime.getTime())){
                         map.setMyLocationEnabled(true);
-                        timer.schedule(task,startdate,3000L);
+                        timer.schedule(task,startdate,10000L);
 
                     }
 
@@ -513,40 +516,41 @@ public class AttendeeActivity extends AppCompatActivity implements OnMapReadyCal
 
 
         public void sendRequest(final String presence) {
-
-    RequestQueue queue = Volley.newRequestQueue(this);
-    String url ="http://34.217.162.221:8000/createAttendenceRecord";
-    //Create request
-    final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-        //When the request is recieved:
-        @Override
-        public void onResponse(String response) {
-            try {
-                //Convert response to a json and check if the response what 200 (which means password is valid)
-                JSONObject jsonObj = new JSONObject(response.toString());
-                String result = jsonObj.getString("result");
-                Log.d("JoinLog", result);
-                Log.d("check presence", presence);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d("ERROR", "Error with request response.");
-        }
-    }) {
-        protected Map<String, String> getParams() {
-            //Format data that will make up the body of the post request (email and password)
-            Map<String, String> MyData = new HashMap<String, String>();
-            // String userID = getArguments().getString("userID");
-            MyData.put("user_id", "1");
-            MyData.put("event_id", "1");
-            MyData.put("present", presence);
-            return MyData;
-        }
-    };
+            RequestQueue queue = Volley.newRequestQueue(this);
+            Log.d(fragementIdentifier, "Timer running");
+            String url = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com/createAttendenceRecord";
+            //Create request
+            final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                //When the request is recieved:
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        //Convert response to a json and check if the response what 200 (which means password is valid)
+                        JSONObject jsonObj = new JSONObject(response.toString());
+                        String result = jsonObj.getString("result");
+                        Log.d(fragementIdentifier, "post request complete");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d(fragementIdentifier, "Error with request response.");
+                }
+            }) {
+                protected Map<String, String> getParams() {
+                    //Format data that will make up the body of the post request (email and password)
+                    Map<String, String> MyData = new HashMap<String, String>();
+                    Bundle extras = getIntent().getExtras();
+                    String event_id = extras.getString("event_id");
+                    String user_id = extras.getString("user_id");
+                    MyData.put("userID", user_id);
+                    MyData.put("eventID", event_id);
+                    MyData.put("response", presence);
+                    return MyData;
+                }
+            };
     // Add the request to the RequestQueue.
     queue.add(stringRequest);
 

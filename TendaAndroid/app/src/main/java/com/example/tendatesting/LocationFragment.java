@@ -110,9 +110,9 @@ public class LocationFragment extends Fragment {
 
                 //Format what is needed for request: place to go if verified, a request queue to send a request to the server, and url for server.
                 RequestQueue queueDet = Volley.newRequestQueue(getContext());
-                String urlDet = "http://34.217.162.221:8000/event/" + eventID + "/";
+                String url = "http://ec2-54-200-106-244.us-west-2.compute.amazonaws.com/attendenceData/"+eventID+"/";
                 //Create request
-                final StringRequest stringRequestDet = new StringRequest(Request.Method.GET, urlDet, new Response.Listener<String>() {
+                final StringRequest stringRequestDet = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     //When the request is recieved:
                     @Override
                     public void onResponse(String response) {

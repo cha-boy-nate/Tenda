@@ -18,27 +18,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".AttendeeActivity"
-            android:label="@string/title_activity_attendee">
 
-        </activity>
+        <activity android:name=".AttendeeActivity" />
         <activity android:name=".CreateEventActivity" />
         <activity android:name=".ManageEvent" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
+
         <activity
-            android:name=".RegisterActivity"
-            android:theme="@style/AppThemeRegistration" />
-        <activity
-            android:name=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
 
+        <activity
+            android:name=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
